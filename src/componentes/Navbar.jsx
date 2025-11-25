@@ -55,34 +55,16 @@ function ResponsiveAppBar() {
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5, mr: 2 }}>
               <a
                 href="/"
-                style={{ textDecoration: 'none' }}
+                style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', height: '160px', minHeight: '160px', maxHeight: '160px', padding: '0 12px' }}
               >
-                <video
-                  src="/Archivo2.mp4"
-                  width={88}
-                  height={44}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                  controls={false}
-                  disablePictureInPicture
-                  style={{ 
-                    objectFit: 'contain', 
-                    borderRadius: '12px', 
-                    padding: '4px'
-                  }}
-                >
-                  {/* Fallback para navegadores que no soporten el video */}
-                  <img 
-                    src="/medify.JPG" 
-                    alt="Medify logo" 
-                    width={88} 
-                    height={44}
-                    style={{ objectFit: 'contain', borderRadius: '12px', padding: '4px' }}
-                  />
-                </video>
+                <Image
+                  src="/ico.png"
+                  alt="Medify logo"
+                  width={500}
+                  height={140}
+                  style={{ objectFit: 'contain', borderRadius: '16px', boxShadow: '0 4px 24px rgba(30,58,138,0.13)', background: '#fff', border: '2px solid #1e3a8a' }}
+                  priority
+                />
               </a>
               <Typography
                 className={michroma.className}

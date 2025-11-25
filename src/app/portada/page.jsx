@@ -9,12 +9,34 @@ import { HandThumbUpIcon, BoltIcon, ShieldCheckIcon, GlobeAltIcon } from "@heroi
 import Carousel from '../../componentes/Carousel';
 import LustreText from '@/components/ui/lustretext';
 import StatsCount from "@/components/ui/statscount";
+import { FeatureSteps } from "@/components/ui/featuresteps";
 
 export default function Portada() {
   const stats = [
     { value: 300, suffix: "+", label: "Profesionales de la salud confían en Medify" },
     { value: 1000, suffix: "+", label: "Pacientes gestionados mensualmente" },
     { value: 99, suffix: "%", label: "Cumplimiento de los estándares" },
+  ];
+
+  const features = [
+    {
+      step: "Clínica digital",
+      title: "Administra tu consulta médica",
+      content: "La gestión de pacientes, citas y registros médicos nunca ha sido tan sencilla.",
+      image: "/tablet.jpg"
+    },
+    {
+      step: "Moderniaza tu práctica médica", 
+      title: "Actualizate",
+      content: "Manten tu agenda como un profesional de la salud moderno, optimizando tiempos y mejorando la experiencia del paciente.",
+      image: "/proconfianza.jpg"
+    },
+    {
+      step: "Gestión de pacientes",
+      title: "Agenda en la nube",
+      content: "Nunca fue tan fácil tener todo bajo control, desde cualquier lugar y en cualquier momento.",
+      image: "/jovenprof.jpg"
+    }
   ];
 
   return (
@@ -48,37 +70,54 @@ export default function Portada() {
       </div> */}
 
       {/* Gradiente inferior sutil para transición */}
-      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0f172a]/80 via-[#0f172a]/45 to-transparent pointer-events-none z-5" />
+      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/45 to-transparent pointer-events-none z-5" />
       
       {/* Línea decorativa inferior */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent z-10" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent z-10" />
 
       {/* Contenido */}
       <div className="mt-16 relative w-full px-6 sm:px-6 md:px-8 lg:px-12 pt-16 pb-24 sm:pt-24 sm:pb-16">
-        {/* Cinta/top badge */}
-        <div className="flex justify-center">
+        {/* Cinta/top badge - Centrado superior */}
+        <div className="flex justify-center mb-12">
           <span className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[13px] font-semibold text-white/80 backdrop-blur ${spaceGrotesk.className}`}>
             <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
             El control total de tu propia consulta Médica
           </span>
         </div>
 
-        {/* Contenido centrado */}
-        <div className="mt-18 text-center max-w-4xl mx-auto">
-          <h1
-            className={`${michroma.className} antialiased text-[clamp(2rem,8.5vw,6rem)] md:text-[clamp(3rem,6.5vw,7rem)] lg:text-[clamp(3.5rem,5vw,8rem)] leading-[1.3] tracking-tight drop-shadow-[0_0_12px_rgba(255,255,255,0.9)] mb-8 py-4`}
-            style={{ fontFamily: michroma.style.fontFamily }}
-          >
-            <LustreText text="M e d i f y" />
-          </h1>
+        {/* Contenedor centrado */}
+        <div className="max-w-7xl mx-auto">
+          
+          {/* 1. TÍTULO MEDIFY */}
+          <div className="text-center mb-16">
+            <h1
+              className={`${michroma.className} antialiased text-[clamp(2rem,8.5vw,6rem)] md:text-[clamp(3rem,6.5vw,7rem)] lg:text-[clamp(3.5rem,5vw,8rem)] leading-[1.3] tracking-tight drop-shadow-[0_0_12px_rgba(255,255,255,0.9)] py-4`}
+              style={{ fontFamily: michroma.style.fontFamily }}
+            >
+              <LustreText text="M e d i f y" />
+            </h1>
+          </div>
 
-          <p className={`text-lg sm:text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-12 leading-relaxed ${spaceGrotesk.className}`}>
-            La herramienta perfecta para tener el control de tus consultas médicas, pacientes y reservas,
-            adaptando tus necesidades a tu servicio y manteniendo tus horarios de forma profesional.
-          </p>
+          {/* 2. FEATURE STEPS (Cómo empezar) */}
+          <div className="mb-20">
+            <FeatureSteps 
+              features={features}
+              title="Necesitas digitalizar tu consulta médica?"
+              autoPlayInterval={4000}
+              className="p-0"
+            />
+          </div>
 
-          {/* Stats Counter */}
-          <div className="mt-16 mb-16">
+          {/* 3. PÁRRAFO DESCRIPTIVO */}
+          <div className="text-center mb-20">
+            <p className={`text-lg sm:text-xl md:text-2xl text-white/80 max-w-4xl mx-auto leading-relaxed ${spaceGrotesk.className}`}>
+              La herramienta perfecta para tener el control de tus consultas médicas, pacientes y reservas,
+              adaptando tus necesidades a tu servicio y manteniendo tus horarios de forma profesional.
+            </p>
+          </div>
+
+          {/* 4. CONTADOR DE ESTADÍSTICAS */}
+          <div className="mb-20">
             <StatsCount
               stats={stats}
               title="RESULTADOS QUE HABLAN POR SÍ MISMOS"
@@ -87,13 +126,13 @@ export default function Portada() {
             />
           </div>
 
-          {/* CTA centrados */}
-          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* 5. CTA BOTONES */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="https://wa.me/56977889900?text=Quiero%20cotizar%20una%20solución%20médica%20de%20Medify"
               target="_blank"
               rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold text-white bg-blue-5 hover:bg-blue-500 shadow-[0_0_25px_rgba(59,130,246,0.8)] ring-1 ring-blue-400/40 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${spaceGrotesk.className}`}
+              className={`inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold text-white bg-blue-500 hover:bg-blue-600 shadow-[0_0_25px_rgba(59,130,246,0.8)] ring-1 ring-blue-400/40 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${spaceGrotesk.className}`}
               aria-label="Cotizar solución médica por WhatsApp"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
@@ -109,6 +148,7 @@ export default function Portada() {
               Nuestros servicios
             </Link>
           </div>
+
         </div>
 
         {/* Franja de logotipos / confianza (placeholders) */}
@@ -117,3 +157,5 @@ export default function Portada() {
     </div>
   );
 }
+
+

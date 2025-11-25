@@ -91,7 +91,7 @@ const medicalNavItems = [
 ];
 
 const CardNavMedical = ({ 
-  logo = "/medify.JPG", // Logo existente de Medify
+  logo = "/logomedify.png", // Logo existente de Medify
   logoAlt = "Medify - Plataforma Médica Digital",
   className = "medical-nav",
   buttonText = "Solicitar Demo"

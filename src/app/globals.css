@@ -1,3 +1,64 @@
+/* Botón flotante WhatsApp */
+.wsp-float-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(90deg,#2564eb9c 0%,#25D366 100%);
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1.08rem;
+  border: none;
+  box-shadow: 0 8px 32px rgba(30,58,138,0.18);
+  padding: 14px 28px 14px 20px;
+  cursor: pointer;
+  transition: box-shadow .2s, transform .2s, background .3s;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 100;
+}
+.wsp-float-btn:hover {
+  background: linear-gradient(90deg,#25d36589 0%,#2563eb 100%);
+  box-shadow: 0 16px 40px rgba(30,58,138,0.22);
+  transform: scale(1.04);
+}
+.wsp-float-btn:active {
+  transform: scale(0.97);
+}
+.wsp-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  box-shadow: 0 2px 8px rgba(30,58,138,0.10);
+  transition: background .3s;
+}
+.wsp-float-btn:hover .wsp-icon-wrap {
+  background: #18ad4e41;
+}
+.wsp-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+  transition: transform 1.2s;
+}
+.wsp-float-btn:hover .wsp-icon {
+  transform: rotate(250deg);
+}
+.wsp-text {
+  font-family: inherit;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.08rem;
+  margin-left: 2px;
+  text-shadow: 0 2px 8px rgba(30,58,138,0.10);
+}
 @import "tailwindcss";
 
 /* Optimizaciones de scroll y rendimiento */

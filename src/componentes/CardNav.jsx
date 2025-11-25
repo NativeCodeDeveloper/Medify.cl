@@ -5,8 +5,6 @@ import { GoArrowUpRight } from 'react-icons/go';
 import { Link } from 'next-view-transitions';
 
 const CardNav = ({
-  logo,
-  logoAlt = 'Logo',
   items,
   className = '',
   ease = 'power3.out',
@@ -14,7 +12,9 @@ const CardNav = ({
   menuColor,
   buttonBgColor,
   buttonTextColor
-}) => {
+  }) => {
+    const logo = '/lmedify.png';
+    const logoAlt = 'Medify logo';
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const navRef = useRef(null);
@@ -149,20 +149,8 @@ const CardNav = ({
             <div className="hamburger-line" />
           </div>
 
-          <div className="logo-container">
-            {logo?.endsWith('.mp4') || logo?.endsWith('.webm') ? (
-              <video 
-                src={logo} 
-                autoPlay 
-                muted 
-                loop 
-                playsInline
-                className="logo"
-                style={{ objectFit: 'contain' }}
-              />
-            ) : (
-              <img src={logo} alt={logoAlt} className="logo" />
-            )}
+          <div className="card-nav-logo">
+            <img src={logo} alt={logoAlt} style={{ objectFit: 'contain', borderRadius: '12px', padding: '4px', width: 88, height: 44 }} />
           </div>
 
           <Link

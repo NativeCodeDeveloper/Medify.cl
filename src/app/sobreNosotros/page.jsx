@@ -56,7 +56,7 @@ export default function SobreNosotros() {
             <div className="w-full md:w-3/4 lg:w-4/5">
               <Safari
                 url="medify.cl"
-                imageSrc="/medifylogin.jpg"
+                imageSrc="/loginmedifynew.jpg"
                 className="rounded-2xl md:rounded-3xl shadow-xl"
               />
             </div>
