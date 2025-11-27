@@ -43,7 +43,7 @@ export function FeatureSteps({
           {title}
         </h2>
 
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-0 border border-white/0 rounded-bl-4xl rounded-br-0 gradient-to-br from-blue-900/20 to-purple-900/20 shadow-2xl shadow-blue-500/50 relative">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-0 border border-white/0 rounded-bl-4xl rounded-br-0 gradient-to-br from-blue-900/10 to-purple-900/10 shadow-2xl shadow-blue-500/20 relative">
           <div 
             className="order-2 md:order-1 space-y-6 p-6 bg-white/0 backdrop-blur-sm border border-white/0"
             style={{ borderRadius: textBorderRadius, WebkitBorderRadius: textBorderRadius }}
@@ -60,7 +60,7 @@ export function FeatureSteps({
                   className={cn(
                     "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2",
                     index === currentFeature
-                      ? "bg-blue-500 border-blue-500 text-white scale-110"
+                      ? "bg-white-900 border-blue-800 text-blue-400 scale-110"
                       : "bg-white/10 border-white/30 text-white/60",
                   )}
                 >
@@ -72,10 +72,10 @@ export function FeatureSteps({
                 </motion.div>
 
                 <div className="flex-1">
-                  <h3 className="text-xl md:text-2xl font-semibold text-white">
+                  <h3 className="text-xl md:text-2xl font-semibold text-blue-900">
                     {feature.title || feature.step}
                   </h3>
-                  <p className="text-sm md:text-lg text-white/70">
+                  <p className="text-sm md:text-lg text-neutral-900/70">
                     {feature.content}
                   </p>
                 </div>
@@ -111,7 +111,7 @@ export function FeatureSteps({
                         height={500}
                       />
                       <div 
-                        className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black via-black/50 to-transparent" 
+                        className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black via-black/40 to-transparent" 
                         style={{ borderRadius: `0 0 ${corners.br} ${corners.bl}` }} 
                       />
                     </motion.div>

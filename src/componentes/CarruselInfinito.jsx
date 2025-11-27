@@ -109,7 +109,7 @@ export default function CarruselInfinito({ especialidades }) {
               key={`especialidad-${index}`}
               className="flex-shrink-0 w-80 md:w-96 lg:w-[450px] group"
             >
-              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-2 ring-blue-900/30 shadow-2xl hover:shadow-blue-900/40 hover:ring-blue-700/50 transition-all duration-500 hover:scale-[1.02]">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-2 ring-blue-900/10 shadow-2xl hover:shadow-blue-900/10 hover:ring-blue-700/10 transition-all duration-500 hover:scale-[1.02]">
                 {/* Imagen */}
                 <Image
                   src={especialidad.imagen}
@@ -126,7 +126,7 @@ export default function CarruselInfinito({ especialidades }) {
                 
 
                 {/* Línea decorativa azul */}
-                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-400 via-blue-600 to-transparent opacity-70" />
+                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-400 via-blue-600 to-transparent opacity-10" />
 
                 {/* Contenido */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">

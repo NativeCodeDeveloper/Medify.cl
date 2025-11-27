@@ -15,10 +15,10 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="relative bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white overflow-hidden">
+    <footer className="relative bg-white text-neutral-900 overflow-hidden border-t border-neutral-200">
       {/* Decorative background elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:30px_30px]"></div>
+      {/* Fondo decorativo removido para fondo blanco profesional */}
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         {/* Main Footer Content */}
@@ -27,8 +27,8 @@ export default function Footer() {
             {/* Left Column - Text Content */}
             <div className="space-y-6">
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-                <span className="block text-gray-100">La medicina digital</span>
-                <span className="text-center block text-gray-100 mt-2">
+                <span className="block text-neutral-900">La medicina digital</span>
+                <span className="text-center block text-neutral-900 mt-2">
                   hecha para ti con
                 </span>
                 <span className="block mt-4">
@@ -68,13 +68,13 @@ export default function Footer() {
             {/* Right Column - Logo */}
             <div className="flex justify-center lg:justify-end">
               <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-full blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/40 to-cyan-600/40 rounded-full blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative">
                   <Image
-                    src="/logoblancomedify.png"
+                    src="/logomedify1.png"
                     alt="Logo Medify"
-                    width={800}
-                    height={800}
+                    width={900}
+                    height={900}
                     className="w-72 h-72 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px] object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-110"
                     priority
                   />
@@ -85,7 +85,7 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-800/50"></div>
+        <div className="border-t border-gray-800/30"></div>
 
         {/* Bottom Footer */}
         <div className="py-8 lg:py-12">
@@ -118,7 +118,7 @@ export default function Footer() {
                 href="#"
                 rel="noreferrer"
                 target="_blank"
-                className="group flex h-10 w-10 items-center justify-center rounded-full bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-blue-600 hover:border-blue-500 hover:scale-110"
+                className="group flex h-10 w-10 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-blue-600 hover:border-blue-500 hover:scale-110"
                 aria-label="Facebook"
               >
                 <svg
@@ -138,7 +138,7 @@ export default function Footer() {
                 href="#"
                 rel="noreferrer"
                 target="_blank"
-                className="group flex h-10 w-10 items-center justify-center rounded-full bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 hover:border-pink-500 hover:scale-110"
+                className="group flex h-10 w-10 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 hover:border-pink-500 hover:scale-110"
                 aria-label="Instagram"
               >
                 <svg

@@ -169,7 +169,7 @@ export default function CarruselProfesionales({ images, autoPlayInterval = 4000 
       </div>
 
       {/* Contador */}
-      <div className="text-center mt-4 text-white/60 text-sm md:text-base">
+      <div className="text-center mt-4 text-neutral-900/60 text-sm md:text-base">
         {currentIndex + 1} / {images.length}
       </div>
     </div>

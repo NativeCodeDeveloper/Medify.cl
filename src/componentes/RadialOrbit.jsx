@@ -24,8 +24,8 @@ const armOfImg = (img) => img.closest('[data-arm]');
 
 export const RadialOrbit = ({
   orbitItems,
-  stageSize = 340,
-  imageSize = 80,
+  stageSize = 360,
+  imageSize = 100,
   centerImage,
 }) => {
   const step = 360 / orbitItems.length;

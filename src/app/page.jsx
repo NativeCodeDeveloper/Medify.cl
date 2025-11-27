@@ -15,7 +15,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", 
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-full bg-[#0f172a] relative">
+    <div className="min-h-screen w-full bg-[#ffffffcd] relative">
       {/* Blue Radial Glow Background */}
       <div
         className="absolute inset-0 z-0"
@@ -47,15 +47,15 @@ export default function Home() {
                         { id: 6, name: "Pagos", src: "/nutric.jpg" },
                         { id: 7, name: "Pagos", src: "/oftalm.jpg" },  
                       ]}
-                      stageSize={340}
-                      imageSize={80}
+                      stageSize={400}
+                      imageSize={110}
                       centerImage={{ src: "/logomedify.png", alt: "Medify" }}
                     />
               </div>
               {/* Texto principal right */}
               <div className="md:col-span-3">
-                <h2 className={`text-3xl md:text-6xl font-extrabold text-white tracking-tight leading-snug ${spaceGrotesk.className}`}>¿Necesitas <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">digitalizar</strong> tu práctica médica?</h2>
-                <p className={`mt-8 text-justify md:text-3xl text-white/85 leading-relaxed max-w-4xl ${spaceGrotesk.className}`}>Moderniza tu consulta con tecnología médica especializada. Desde sistemas de gestión de pacientes hasta reservas en linea: todas nuestras soluciones están diseñadas para optimizar la atención médica, proteger datos sensibles y darte la mejor herramienta para llevar tu gestión médica al siguiente nivel.</p>
+                <h2 className={`text-3xl md:text-6xl font-extrabold text-black tracking-tight leading-snug ${spaceGrotesk.className}`}>¿Necesitas <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">digitalizar</strong> tu práctica médica?</h2>
+                <p className={`mt-8 text-justify md:text-3xl text-black/85 leading-relaxed max-w-4xl ${spaceGrotesk.className}`}>Moderniza tu consulta con tecnología médica especializada. Desde sistemas de gestión de pacientes hasta reservas en linea: todas nuestras soluciones están diseñadas para optimizar la atención médica, proteger datos sensibles y darte la mejor herramienta para llevar tu gestión médica al siguiente nivel.</p>
               </div>
             </div>
           </div>
@@ -67,15 +67,15 @@ export default function Home() {
           </div>
         </FadeInSection>
 
-        <FadeInSection delay={0.4}>
+       {/* <FadeInSection delay={0.4}>
           <div className="my-32">
             <Portafolio></Portafolio>
           </div>
-        </FadeInSection>
+        </FadeInSection> */}
 
         <FadeInSection delay={0.5}>
           <SobreNosotros></SobreNosotros>
-        </FadeInSection>
+        </FadeInSection> 
 
         {/* Bloque 3: Actualización continua - Fondo wallet 
       <div

@@ -15,29 +15,21 @@ import Link from "next/link";
 
 export default function PaginasWeb() {
   return (
-    <div>
+    <div className="min-h-screen w-full bg-white text-neutral-900 px-4 py-8">
       <div>
-        <div>
-          <Aurora
-            colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
-            blend={0.5}
-            amplitude={1.0}
-            speed={0.5}
-          />
-          <h1 className={`${spaceGrotesk.className} titulosResponsive font-bold`}>
-          
-            Página Web Profesional Multipágina
-          </h1>
-        </div>
-
-        <div
-          className="
-         grid grid-cols-1 md:grid-cols-2
-         bg-[url('/landingFondo.png')] bg-cover"
-         >
+        <Aurora
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+        />
+        <h1 className={`${spaceGrotesk.className} titulosResponsive font-bold text-center text-3xl md:text-5xl mb-8`}>
+          Página Web Profesional Multipágina
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="flex-col justify-center">
             <div>
-              <p className="textoNormalResponsive p-12">
+              <p className="textoNormalResponsive p-12 text-neutral-700">
                 Sitio web moderno y multipágina con módulos adicionales para
                 potenciar tu negocio: agendamiento online, pagos, blog, correo
                 corporativo, entre otros. Pensado para quienes quieren

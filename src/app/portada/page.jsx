@@ -40,7 +40,7 @@ export default function Portada() {
   ];
 
   return (
-    <div className="relative w-full min-h-[88vh] sm:min-h-screen overflow-hidden bg-black">
+    <div className="relative w-full min-h-[88vh] sm:min-h-screen overflow-hidden bg-white text-neutral-900">
       {/* Imagen de fondo comentada - guardada para uso futuro */}
       {/* <Image
         src="/doctorfondo.jpg"
@@ -56,13 +56,7 @@ export default function Portada() {
       /> */}
       
       {/* Deep Ocean Glow Background */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(70% 55% at 50% 50%, #2a5d77 0%, #184058 18%, #0f2a43 34%, #0a1b30 50%, #071226 66%, #040d1c 80%, #020814 92%, #01040d 97%, #000309 100%), radial-gradient(160% 130% at 10% 10%, rgba(0,0,0,0) 38%, #000309 76%, #000208 100%), radial-gradient(160% 130% at 90% 90%, rgba(0,0,0,0) 38%, #000309 76%, #000208 100%)"
-        }}
-      />
+      {/* Fondo decorativo removido para fondo blanco profesional */}
       
       {/* Gradiente adicional comentado - guardado para uso futuro */}
       {/* <div className="absolute inset-0" style={{ willChange: 'auto' }}>
@@ -70,16 +64,16 @@ export default function Portada() {
       </div> */}
 
       {/* Gradiente inferior sutil para transición */}
-      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0f172a]/70 via-[#0f172a]/45 to-transparent pointer-events-none z-5" />
+      <div className="absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-[#0f172a]/0 via-[#0f172a]/0 to-transparent pointer-events-none z-0" />
       
       {/* Línea decorativa inferior */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent z-10" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-300/10 to-transparent z-5" />
 
       {/* Contenido */}
       <div className="mt-16 relative w-full px-6 sm:px-6 md:px-8 lg:px-12 pt-16 pb-24 sm:pt-24 sm:pb-16">
         {/* Cinta/top badge - Centrado superior */}
         <div className="flex justify-center mb-12">
-          <span className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[13px] font-semibold text-white/80 backdrop-blur ${spaceGrotesk.className}`}>
+          <span className={`inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue/10 px-4 py-1.5 text-[13px] font-semibold text-gradient/80 backdrop-blur ${spaceGrotesk.className}`}>
             <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
             El control total de tu propia consulta Médica
           </span>
@@ -89,7 +83,7 @@ export default function Portada() {
         <div className="max-w-7xl mx-auto">
           
           {/* 1. TÍTULO MEDIFY */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-20">
             <h1
               className={`${michroma.className} antialiased text-[clamp(2rem,8.5vw,6rem)] md:text-[clamp(3rem,6.5vw,7rem)] lg:text-[clamp(3.5rem,5vw,8rem)] leading-[1.3] tracking-tight drop-shadow-[0_0_12px_rgba(255,255,255,0.9)] py-4`}
               style={{ fontFamily: michroma.style.fontFamily }}
@@ -110,7 +104,7 @@ export default function Portada() {
 
           {/* 3. PÁRRAFO DESCRIPTIVO */}
           <div className="text-center mb-20">
-            <p className={`text-lg sm:text-xl md:text-2xl text-white/80 max-w-4xl mx-auto leading-relaxed ${spaceGrotesk.className}`}>
+            <p className={`text-lg sm:text-xl md:text-2xl text-blue-800/60 max-w-4xl mx-auto leading-relaxed ${spaceGrotesk.className}`}>
               La herramienta perfecta para tener el control de tus consultas médicas, pacientes y reservas,
               adaptando tus necesidades a tu servicio y manteniendo tus horarios de forma profesional.
             </p>
@@ -143,7 +137,7 @@ export default function Portada() {
 
             <Link
               href="/servicios"
-              className={`inline-flex items-center rounded-xl px-8 py-4 text-lg font-semibold text-blue-100 border border-blue-400/40 bg-white/5 backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.35)] hover:bg-white/10 hover:text-white transition-all ${spaceGrotesk.className}`}
+              className={`inline-flex items-center rounded-xl px-8 py-4 text-lg font-semibold text-blue-500 border border-blue-400/40 bg-white/5 backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.35)] hover:bg-blue-100 hover:text-blue-700 transition-all ${spaceGrotesk.className}`}
             >
               Nuestros servicios
             </Link>

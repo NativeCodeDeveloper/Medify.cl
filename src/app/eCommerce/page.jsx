@@ -14,7 +14,7 @@ import Link from "next/link";
 
 export default function Ecommerce() {
   return (
-    <div>
+    <div className="min-h-screen w-full bg-white text-neutral-900 px-4 py-8">
       <div>
         <Aurora
           colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
@@ -22,22 +22,11 @@ export default function Ecommerce() {
           amplitude={1.0}
           speed={0.5}
         />
-        <h1 className={`${spaceGrotesk.className} titulosResponsive font-bold`}>
-       E - Commerce
-        </h1>
+        <h1 className={`${spaceGrotesk.className} titulosResponsive font-bold text-center text-3xl md:text-5xl mb-8`}>E - Commerce</h1>
       </div>
-      <br />
-
-      <div
-        className="
-grid
-grid-rows-1
-gap-7
-"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 justify-items-center gap-16
-        bg-[url('/landingFondo.png')] bg-cover">
-          <div className=" px-10">
+      <div className="grid grid-rows-1 gap-7">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 justify-items-center gap-16">
+          <div className="px-10">
             <br />
             <br />
             <p className="textoNormalResponsive">

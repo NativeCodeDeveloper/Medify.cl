@@ -64,7 +64,7 @@ export default function StatsCount({ stats, title, showDividers = true, classNam
   return (
     <div ref={sectionRef} className={`w-full ${className}`}>
       {title && (
-        <h2 className="text-center text-sm font-semibold tracking-wider text-white/60 mb-8 uppercase">
+        <h2 className="text-center text-sm font-semibold tracking-wider text-neutral-600 mb-8 uppercase">
           {title}
         </h2>
       )}
@@ -72,11 +72,11 @@ export default function StatsCount({ stats, title, showDividers = true, classNam
         {stats.map((stat, index) => (
           <div key={index} className="relative text-center">
             <div className="flex flex-col items-center justify-center">
-              <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2">
+              <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-900 mb-2">
                 {counts[index]}
                 {stat.suffix}
               </div>
-              <p className="text-sm md:text-base text-white/70 max-w-xs">
+              <p className="text-sm md:text-base text-neutral-900/70 max-w-xs">
                 {stat.label}
               </p>
             </div>

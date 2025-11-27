@@ -7,34 +7,44 @@ import FadeInSection from "@/componentes/FadeInSection";
 import { Michroma, Space_Grotesk } from "next/font/google";
 import { Safari } from "@/components/ui/safari";
 import { Iphone } from "@/components/ui/iphone";
+import { SparklesText } from "@/components/ui/sparkles-text";
 import { LampContainer } from "@/components/ui/lamp";
 const michroma = Michroma({ subsets: ["latin"], weight: "400" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 
 export default function SobreNosotros() {
   return (
-    <div className="w-full space-y-12 scroll-smooth">
+    <div className="min-h-screen w-full bg-white text-neutral-900 space-y-12 scroll-smooth">
       {/* Bloque 1: Intro - Azul marino claro */}
       <FadeInSection delay={0}>
         <section className="space-x-4 md:space-x-6 lg:space-x-8 relative overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-12 lg:gap-16 px-6 sm:px-8 md:px-12 lg:px-16 py-8 sm:py-12 md:py-16 lg:py-24 ring-1 shadow-2xl backdrop-blur-sm rounded-3xl md:rounded-[2.5rem]" style={{
-          background: "radial-gradient(70% 55% at 50% 50%, #2a5d77 0%, #184058 18%, #0f2a43 34%, #0a1b30 50%, #071226 66%, #040d1c 80%, #020814 92%, #01040d 97%, #000309 100%)",
-          borderColor: "rgba(42, 93, 119, 0.3)",
-          boxShadow: "0 25px 50px -12px rgba(42, 93, 119, 0.5)"
+          background: "#fff",
+          borderColor: "rgba(42, 93, 119, 0.08)",
+          boxShadow: "0 8px 32px rgba(42, 93, 119, 0.08)"
         }}>
           <div>
             <h1
-              className={`${spaceGrotesk.className} leading-tight tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-bold`}
+              className={`${spaceGrotesk.className} leading-tight tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-neutral-900 font-bold`}
             >
-              Sobre Medify
+             <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Sobre Medify</strong>
             </h1>
-            <p className={`mt-4 sm:mt-6 text-justify sm:text-lg md:text-xl lg:text-2xl text-white/90 ${spaceGrotesk.className}`}>
+            <p className={`mt-4 sm:mt-6 text-justify sm:text-lg md:text-xl lg:text-2xl text-neutral-900/90 ${spaceGrotesk.className}`}>
+                            Somos especialistas en desarrollo de soluciones tecnológicas para
+                            el sector salud y especialidades que trabajen con sistema de
+                            reservas por medio de horas y calendarios, enfocados en crear
+                            sistemas seguros, intuitivos y conformes con los más altos
+                            estándares de confidencialidad.
+                            Nuestro objetivo es modernizar la práctica médica con herramientas
+                            digitales que optimizan la gestión clínica, mejoran la atención al
+                            paciente y simplifican los procesos administrativos de tu consulta
+                            o negocio.
               Somos especialistas en desarrollo de soluciones tecnológicas para
               el sector salud y especialidades que trabajen con sistema de
               reservas por medio de horas y calendarios, enfocados en crear
               sistemas seguros, intuitivos y conformes con los más altos
               estándares de confidencialidad.
             </p>
-            <p className={`mt-4 sm:mt-6 text-justify sm:text-lg md:text-xl lg:text-2xl text-white/90 ${spaceGrotesk.className}`}>
+            <p className={`mt-4 sm:mt-6 text-justify sm:text-lg md:text-xl lg:text-2xl text-neutral-900/90 ${spaceGrotesk.className}`}>
               Nuestro objetivo es modernizar la práctica médica con herramientas
               digitales que optimizan la gestión clínica, mejoran la atención al
               paciente y simplifican los procesos administrativos de tu consulta
@@ -90,19 +100,19 @@ export default function SobreNosotros() {
       {/* Bloque 2: Especialidades Médicas - Azul marino medio */}
       <FadeInSection delay={0.2}>
         <section className="relative overflow-hidden px-6 sm:px-8 md:px-12 lg:px-16 py-8 sm:py-12 md:py-16 lg:py-20 ring-1 shadow-2xl backdrop-blur-sm rounded-3xl md:rounded-[2.5rem]" style={{
-          background: "radial-gradient(70% 55% at 50% 50%, #2a5d77 0%, #184058 18%, #0f2a43 34%, #0a1b30 50%, #071226 66%, #040d1c 80%, #020814 92%, #01040d 97%, #000309 100%)",
-          borderColor: "rgba(42, 93, 119, 0.3)",
-          boxShadow: "0 25px 50px -12px rgba(42, 93, 119, 0.4)"
+          background: "#fff",
+          borderColor: "rgba(42, 93, 119, 0.08)",
+          boxShadow: "0 8px 32px rgba(42, 93, 119, 0.08)"
         }}>
           <div className="text-center mb-12 md:mb-16">
             <h2
-              className={`${spaceGrotesk.className} leading-tight tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white font-bold`}
+              className={`${spaceGrotesk.className} leading-tight tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-neutral-900 font-bold`}
             >
-              Medify es lo que tu consulta necesita
+              <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Medify es lo que tu Consulta necesita</strong>
             </h2>
-            <p className={`mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto ${spaceGrotesk.className}`}>
-              Solución tecnológica especializada para cada área de
-              especialidad
+            <p className={`mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-neutral-900/90 max-w-3xl mx-auto ${spaceGrotesk.className}`}>
+                            Solución tecnológica especializada para cada área de
+                            especialidad
             </p>
           </div>
 
@@ -111,7 +121,7 @@ export default function SobreNosotros() {
               {
                 nombre: "Pediatría",
                 imagen: "/terapeuta.jpg",
-               /* descripcion:
+              /* descripcion:
                   "Cuidado infantil especializado con seguimiento del desarrollo y sistemas de agenda online",
                 tecnologias: [
                   "Control niño sano",
@@ -304,7 +314,7 @@ export default function SobreNosotros() {
         </div>
       </section>
       */}
-      {/* Bloque 4: CTA con animación Lamp */}
+      {/* Bloque 4: CTA con animación Lamp 
       <LampContainer className="rounded-4xl h-[300px] md:h-[600px]">
         <motion.h2
           initial={{ opacity: 0.5, y: 100 }}
@@ -316,9 +326,14 @@ export default function SobreNosotros() {
           }}
           className={`${spaceGrotesk.className} rounded-4xl mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-transparent`}
         >
-          ¿Listo para modernizar tu consulta? 
+        <strong className="bg-gradient-to-r from-teal-400 to-teal-400 bg-clip-text text-transparent">¿Listo para modernizar tu consulta?</strong> 
         </motion.h2>
-      </LampContainer>
+      </LampContainer>*/}
+      <div className="flex justify-center rounded-2xl items-center py-24 px-4 md:px-24 lg:px-24 ">
+      <SparklesText colors={{ first: "#00FFD0", second: "#FF00C3" }} className="text-center bg-blend-color-burn text-6xl">
+       <strong className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">¿Listo para modernizar tu consulta?</strong>
+      </SparklesText>
+      </div>
     </div>
   );
 }

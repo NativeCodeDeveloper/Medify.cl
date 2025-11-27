@@ -66,12 +66,18 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 2rem;
   overflow-x: hidden;
+  background: #fff !important;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #fff !important;
+  color: #222;
+  min-height: 100vh;
 }
 
 /* Optimización GPU para animaciones */
@@ -105,9 +111,9 @@ body {
 }
 
 :root {
-  --background: linear-gradient(135deg, #0c1426 0%, #172554 50%, #1e3a8a 100%);
-  --background-solid: #0c1426;
-  --foreground: #f8fafc;
+  --background: #fff;
+  --background-solid: #fff;
+  --foreground: #222;
 
   /* Medify - Paleta de colores para sector salud */
   --medical-blue-primary: #0066cc;
@@ -459,7 +465,7 @@ body {
 
 /* Estilos específicos para tarjetas médicas */
 .custom-spotlight-card {
-  background: rgba(12, 20, 38, 0.4);
+  background: rgba(12, 20, 38, 0.38);
   border: 1px solid rgba(0, 229, 255, 0.2);
   backdrop-filter: blur(15px);
 }
@@ -472,7 +478,7 @@ body {
 .carousel-container {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(42, 93, 119, 0.4);
+  border: 1px solid rgba(42, 93, 119, 0);
   border-radius: 20px;
   padding: 18px;
   --outer-r: 20px;
@@ -482,7 +488,7 @@ body {
   backdrop-filter: blur(12px);
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 4px 20px rgba(42, 93, 119, 0.25);
+  box-shadow: 0 4px 20px rgba(42, 93, 119, 0.788);
   will-change: transform;
   transform: translateZ(0);
 }
@@ -509,7 +515,7 @@ body {
   transition: all 0.3s ease;
   min-height: 160px;
   aspect-ratio: 7/3;
-  box-shadow: 0 2px 15px rgba(42, 93, 119, 0.2);
+  box-shadow: 0 2px 15px rgba(24, 52, 66, 0.888);
   will-change: transform;
   transform: translateZ(0);
 }
@@ -772,7 +778,7 @@ body {
     rgba(59, 130, 246, 0.15) 0%, 
     rgba(37, 99, 235, 0.08) 50%, 
     rgba(29, 78, 216, 0.12) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(59, 131, 246, 0.176);
   backdrop-filter: blur(20px);
   box-shadow: 
     0 8px 32px rgba(59, 130, 246, 0.1),
@@ -1379,13 +1385,13 @@ html:has(:root.transitioning) {
 .lustre-text {
   display: inline-block;
   font-weight: 800;
-  color: transparent;
+  color: var(--medical-blue-light);
   background-clip: text;
   -webkit-background-clip: text;
   background-size: 200% auto;
   background-position: 0% center;
   animation: shine 4s linear infinite;
-  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+  filter: drop-shadow(0 0 20px rgb(20, 103, 155));
   padding: 0.25rem 0;
   overflow: visible;
 }
@@ -1396,7 +1402,7 @@ html:has(:root.transitioning) {
     rgba(0, 0, 0, 0.05) 0%,
     rgba(0, 0, 0, 0.3) 30%,
     rgba(0, 0, 0, 0.7) 45%,
-    #ffffff 50%,
+    #ffffff 60%,
     rgba(0, 0, 0, 0.7) 55%,
     rgba(0, 0, 0, 0.3) 70%,
     rgba(0, 0, 0, 0.05) 100%
