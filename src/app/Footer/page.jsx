@@ -27,9 +27,9 @@ export default function Footer() {
             {/* Left Column - Text Content */}
             <div className="space-y-6">
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-                <span className="block text-neutral-900">La medicina digital</span>
+                <span className="block text-neutral-900">Tú consulta digital</span>
                 <span className="text-center block text-neutral-900 mt-2">
-                  hecha para ti con
+                  y a tu medida con
                 </span>
                 <span className="block mt-4">
                   <GradientText>M e d i f y</GradientText>
@@ -37,9 +37,8 @@ export default function Footer() {
               </h2>
 
               <p className="text-justify text-gray-400 max-w-xl leading-relaxed">
-                Únete a la revolución de la gestión digital. Transforma la
-                manera de administrar tus consultas médicas con Medify,
-                intuitiva y adaptada a tus requerimientos.
+              Optimiza tu consulta con una plataforma diseñada especialmente para profesionales de la salud. Agenda, 
+              fichas clínicas y gestión completa en un sistema simple, seguro y adaptable a tu forma de trabajo
               </p>
 
               <div className="pt-6 flex justify-center lg:justify-center">

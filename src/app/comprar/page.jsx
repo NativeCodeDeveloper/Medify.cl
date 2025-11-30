@@ -9,8 +9,8 @@ export default function Comprar(){
                   <div>
                     <Aurora></Aurora>
                   </div>
-                   <div>
-                   </div>
+                  <div>
+                  </div>
 <section className="relative overflow-hidden rounded-4xl shadow-2xl border border-neutral-200">
   <div className="relative px-6 md:px-10 lg:px-14 py-16 md:py-24">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
@@ -97,7 +97,7 @@ export default function Comprar(){
         <div className="absolute -inset-8 rounded-3xl bg-gradient-to-tr from-purple-600/30 via-fuchsia-500/20 to-cyan-400/30 blur-3xl" aria-hidden="true"></div>
         <div className="relative rounded-3xl ring-1 ring-white/10 bg-white/5 backdrop-blur-md p-4 shadow-2xl transition hover:scale-105">
           <Image
-            src="/portada1.jpg"
+            src="/profesionales2.jpg"
             width={1200}
             height={1200}
             alt="Portada del servicio"

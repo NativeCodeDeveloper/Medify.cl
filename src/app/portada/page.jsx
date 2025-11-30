@@ -13,28 +13,28 @@ import { FeatureSteps } from "@/components/ui/featuresteps";
 
 export default function Portada() {
   const stats = [
-    { value: 300, suffix: "+", label: "Profesionales de la salud confían en Medify" },
-    { value: 1000, suffix: "+", label: "Pacientes gestionados mensualmente" },
-    { value: 99, suffix: "%", label: "Cumplimiento de los estándares" },
+    { value: 50, suffix: "+", label: "Profesionales interesados en implementar su plataforma" },
+    { value: 200, suffix: "+", label: "Pacientes gestionados en nuestras soluciones personalizadas" },
+    { value: 90, suffix: "%", label: "Valoración positiva en experiencia y diseño clínico" },
   ];
 
   const features = [
     {
       step: "Clínica digital",
       title: "Administra tu consulta médica",
-      content: "La gestión de pacientes, citas y registros médicos nunca ha sido tan sencilla.",
+      content: "Gestiona pacientes, fichas, citas y registros médicos en una sola plataforma.",
       image: "/tablet.jpg"
     },
     {
       step: "Moderniaza tu práctica médica", 
       title: "Actualizate",
-      content: "Manten tu agenda como un profesional de la salud moderno, optimizando tiempos y mejorando la experiencia del paciente.",
+      content: "Obtén una presencia digital profesional y moderna. Ahorra tiempo, ordénate mejor y mejora la experiencia de tus pacientes.",
       image: "/proconfianza.jpg"
     },
     {
       step: "Gestión de pacientes",
       title: "Agenda en la nube",
-      content: "Nunca fue tan fácil tener todo bajo control, desde cualquier lugar y en cualquier momento.",
+      content: "Ten tu consulta bajo control estés donde estés. Accede desde cualquier dispositivo y mantén tu trabajo seguro.",
       image: "/jovenprof.jpg"
     }
   ];
@@ -58,7 +58,7 @@ export default function Portada() {
       {/* Deep Ocean Glow Background */}
       {/* Fondo decorativo removido para fondo blanco profesional */}
       
-      {/* Gradiente adicional comentado - guardado para uso futuro */}
+      {/* Gradiente adicional comentado - guardada para uso futuro */}
       {/* <div className="absolute inset-0" style={{ willChange: 'auto' }}>
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F1A]/5 via-[#0B0F1A]/10 to-black" />
       </div> */}
@@ -75,7 +75,7 @@ export default function Portada() {
         <div className="flex justify-center mb-12">
           <span className={`inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue/10 px-4 py-1.5 text-[13px] font-semibold text-gradient/80 backdrop-blur ${spaceGrotesk.className}`}>
             <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
-            El control total de tu propia consulta Médica
+            El control total de tu consulta, con la imagen que tu trabajo merece.
           </span>
         </div>
 
@@ -84,19 +84,29 @@ export default function Portada() {
           
           {/* 1. TÍTULO MEDIFY */}
           <div className="text-center mb-20">
+            
+            <Image
+              src="/lmedify.png"
+              alt="Medify Logo"
+              width={700}
+              height={700}
+              className="mx-auto mb-6"
+            />
+
+            {/*
             <h1
               className={`${michroma.className} antialiased text-[clamp(2rem,8.5vw,6rem)] md:text-[clamp(3rem,6.5vw,7rem)] lg:text-[clamp(3.5rem,5vw,8rem)] leading-[1.3] tracking-tight drop-shadow-[0_0_12px_rgba(255,255,255,0.9)] py-4`}
               style={{ fontFamily: michroma.style.fontFamily }}
             >
               <LustreText text="M e d i f y" />
-            </h1>
+            </h1>*/}
           </div>
 
           {/* 2. FEATURE STEPS (Cómo empezar) */}
           <div className="mb-20">
             <FeatureSteps 
               features={features}
-              title="Necesitas digitalizar tu consulta médica?"
+              title={<><strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Haz que tu consulta destaque. Digitaliza, profesionaliza y crece.</strong> </>}
               autoPlayInterval={4000}
               className="p-0"
             />
@@ -104,9 +114,9 @@ export default function Portada() {
 
           {/* 3. PÁRRAFO DESCRIPTIVO */}
           <div className="text-center mb-20">
-            <p className={`text-lg sm:text-xl md:text-2xl text-blue-800/60 max-w-4xl mx-auto leading-relaxed ${spaceGrotesk.className}`}>
-              La herramienta perfecta para tener el control de tus consultas médicas, pacientes y reservas,
-              adaptando tus necesidades a tu servicio y manteniendo tus horarios de forma profesional.
+            <p className={`text-lg sm:text-xl md:text-2xl text-blue-800/60 max-w-6xl mx-auto leading-relaxed ${spaceGrotesk.className}`}>
+              La herramienta que necesitas para organizar tus consultas, optimizar tu agenda, gestionar pacientes y mantener tu práctica profesional al máximo nivel. 
+              Todo en una plataforma segura, intuitiva y diseñada para ti.
             </p>
           </div>
 

@@ -54,8 +54,8 @@ export default function Home() {
               </div>
               {/* Texto principal right */}
               <div className="md:col-span-3">
-                <h2 className={`text-3xl md:text-6xl font-extrabold text-black tracking-tight leading-snug ${spaceGrotesk.className}`}>¿Necesitas <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">digitalizar</strong> tu práctica médica?</h2>
-                <p className={`mt-8 text-justify md:text-3xl text-black/85 leading-relaxed max-w-4xl ${spaceGrotesk.className}`}>Moderniza tu consulta con tecnología médica especializada. Desde sistemas de gestión de pacientes hasta reservas en linea: todas nuestras soluciones están diseñadas para optimizar la atención médica, proteger datos sensibles y darte la mejor herramienta para llevar tu gestión médica al siguiente nivel.</p>
+                <h2 className={`text-center text-3xl md:text-5xl font-extrabold text-black tracking-tight leading-snug max-w-4xl ${spaceGrotesk.className}`}><strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Digitaliza tu práctica médica y lleva tu consulta al siguiente nivel.</strong> </h2>
+                <p className={`mt-10 text-justify md:text-3xl text-black/85 leading-relaxed max-w-4xl ${spaceGrotesk.className}`}>Moderniza tu consulta con una plataforma diseñada para profesionales de la salud. Donde podrás gestionar tus pacientes, agenda, fichas clínicas y reservas online desde un mismo lugar, optimizando tu tiempo y mejorando la experiencia de quienes confían en ti.</p>
               </div>
             </div>
           </div>

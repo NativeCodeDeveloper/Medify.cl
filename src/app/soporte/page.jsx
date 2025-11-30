@@ -78,7 +78,7 @@ export default function () {
           <div className="relative rounded-3xl ring-1 ring-white/10 bg-white/5 backdrop-blur-md p-4 shadow-2xl transition hover:scale-105">
             <Image
               alt="Portada del servicio"
-              src={"/portada1.jpg"}
+              src={"/circular.jpg"}
               height={700}
               width={500}
               className="rounded-2xl w-full h-auto object-cover"

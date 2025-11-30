@@ -24,31 +24,30 @@ export default function SobreNosotros() {
         }}>
           <div>
             <h1
-              className={`${spaceGrotesk.className} leading-tight tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-neutral-900 font-bold`}
-            >
-             <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Sobre Medify</strong>
+              className={`${spaceGrotesk.className} leading-tight tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-neutral-900 font-bold`}>
+            <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Sobre Medify</strong>
             </h1>
             <p className={`mt-4 sm:mt-6 text-justify sm:text-lg md:text-xl lg:text-2xl text-neutral-900/90 ${spaceGrotesk.className}`}>
-                            Somos especialistas en desarrollo de soluciones tecnológicas para
-                            el sector salud y especialidades que trabajen con sistema de
-                            reservas por medio de horas y calendarios, enfocados en crear
-                            sistemas seguros, intuitivos y conformes con los más altos
-                            estándares de confidencialidad.
-                            Nuestro objetivo es modernizar la práctica médica con herramientas
-                            digitales que optimizan la gestión clínica, mejoran la atención al
-                            paciente y simplifican los procesos administrativos de tu consulta
-                            o negocio.
-              Somos especialistas en desarrollo de soluciones tecnológicas para
-              el sector salud y especialidades que trabajen con sistema de
-              reservas por medio de horas y calendarios, enfocados en crear
-              sistemas seguros, intuitivos y conformes con los más altos
-              estándares de confidencialidad.
+              Somos un equipo de profesionales de la salud e informática que desarrolla soluciones digitales para modernizar la práctica clínica. 
+              Nuestro objetivo es entregar plataformas personalizadas que integren agenda online, fichas clínicas, gestión de pacientes.
             </p>
+
+          <h4
+              className={`${spaceGrotesk.className} mt-4 leading-tight tracking-tight text-2xl sm:text-2xl md:text-4xl lg:text-4xl text-neutral-900 font-bold`}>
+            <strong className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">Misión</strong>
+            </h4>
             <p className={`mt-4 sm:mt-6 text-justify sm:text-lg md:text-xl lg:text-2xl text-neutral-900/90 ${spaceGrotesk.className}`}>
-              Nuestro objetivo es modernizar la práctica médica con herramientas
-              digitales que optimizan la gestión clínica, mejoran la atención al
-              paciente y simplifican los procesos administrativos de tu consulta
-              o negocio.
+              Facilitar el trabajo de los profesionales de la salud entregando herramientas digitales simples, 
+              seguras y personalizadas que mejoren la gestión clínica, optimicen el tiempo y fortalezcan la experiencia del paciente.
+            </p>
+
+            <h4
+              className={`${spaceGrotesk.className} mt-4 leading-tight tracking-tight text-2xl sm:text-2xl md:text-4xl lg:text-4xl text-neutral-900 font-bold`}>
+            <strong className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">Visión</strong>
+            </h4>
+            <p className={`mt-4 sm:mt-6 text-justify sm:text-lg md:text-xl lg:text-2xl text-neutral-900/90 ${spaceGrotesk.className}`}>
+              Convertirnos en la plataforma digital de referencia para la modernización de consultas de salud en Chile y Latinoamérica, 
+              impulsando un ecosistema clínico más profesional, accesible e innovador.
             </p>
           </div>
 
@@ -108,11 +107,10 @@ export default function SobreNosotros() {
             <h2
               className={`${spaceGrotesk.className} leading-tight tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-neutral-900 font-bold`}
             >
-              <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Medify es lo que tu Consulta necesita</strong>
+              <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Medify se adapta a tu especialidad</strong>
             </h2>
-            <p className={`mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-neutral-900/90 max-w-3xl mx-auto ${spaceGrotesk.className}`}>
-                            Solución tecnológica especializada para cada área de
-                            especialidad
+            <p className={`mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-neutral-900/90 max-w-4xl mx-auto ${spaceGrotesk.className}`}>
+              Plataformas personalizadas para cada área de la salud
             </p>
           </div>
 
@@ -158,21 +156,9 @@ export default function SobreNosotros() {
               },
 
               {
-                nombre: "Salón de maquillaje",
-                imagen: "/maquilladora2.jpg",
-               /* descripcion:
-                  "Maquillaje profesional con asesoría personalizada y gestión de citas eficiente",
-                tecnologias: [
-                  "Maquillajes Profesionales",
-                  "Maquillaje para eventos",
-                  "Agenda online",
-                  "Cuidado de la piel",
-                ], */
-              },
-              {
                 nombre: "Psicología",
                 imagen: "/psico.jpg",
-               /* descripcion:
+              /* descripcion:
                   "Salud mental digital con telepsiquiatría segura y máxima protección de la privacidad del paciente",
                 tecnologias: 
                 ["Telepsiquiatría", 
@@ -209,7 +195,7 @@ export default function SobreNosotros() {
               {
                 nombre: "Kinesiología",
                 imagen: "/kine.jpg",
-               /* descripcion:
+              /* descripcion:
                   "Optimización del rendimiento deportivo con prevención de lesiones y rehabilitación especializada",
                 tecnologias: [
                   "Evaluación Física",
@@ -331,7 +317,7 @@ export default function SobreNosotros() {
       </LampContainer>*/}
       <div className="flex justify-center rounded-2xl items-center py-24 px-4 md:px-24 lg:px-24 ">
       <SparklesText colors={{ first: "#00FFD0", second: "#FF00C3" }} className="text-center bg-blend-color-burn text-6xl">
-       <strong className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">¿Listo para modernizar tu consulta?</strong>
+       <strong className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">¿Listo para dar el siguiente paso en tu consulta?</strong>
       </SparklesText>
       </div>
     </div>

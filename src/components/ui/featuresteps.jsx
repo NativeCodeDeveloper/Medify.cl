@@ -107,11 +107,11 @@ export function FeatureSteps({
                         alt={feature.step}
                         className="w-full h-full object-cover transition-transform transform"
                         style={{ borderRadius, WebkitBorderRadius: borderRadius }}
-                        width={1000}
-                        height={500}
+                        width={1080}
+                        height={1000}
                       />
                       <div 
-                        className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black via-black/40 to-transparent" 
+                        className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-white via-white/60 to-transparent" 
                         style={{ borderRadius: `0 0 ${corners.br} ${corners.bl}` }} 
                       />
                     </motion.div>
