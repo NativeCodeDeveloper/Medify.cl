@@ -86,7 +86,7 @@ export default function Portada() {
           <div className="text-center mb-20">
             
             <Image
-              src="/lmedify.png"
+              src="/medifyopt.png"
               alt="Medify Logo"
               width={700}
               height={700}

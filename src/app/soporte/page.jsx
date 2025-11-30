@@ -6,16 +6,15 @@ import Image from "next/image";
 
 export default function () {
   return (
-    <div>
+    <div className="mt-32">
       <div>
-        <Aurora />
       </div>
 
       <div
         className="
           relative overflow-hidden
-          bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]
-          ring-1 ring-white/10 rounded-4xl shadow-2xl backdrop-blur-sm
+          bg-gradient-to-br from-[#ffffff] via-[#a9a4e3d8] to-[#bcbcebce]
+          ring-1 ring-white/90 rounded-4xl shadow-2xl backdrop-blur-sm
           grid grid-cols-1 md:grid-cols-3 justify-items-center gap-10 md:gap-14
           px-6 md:px-10 lg:px-14 py-16 md:py-24
         "
@@ -23,7 +22,7 @@ export default function () {
         <div className="absolute inset-0 bg-black/35" aria-hidden="true"></div>
 
         {/* Columna izquierda: texto e información de contacto */}
-        <div className="relative col-span-2 w-full space-y-8">
+        <div className="relative col-span-2 w-full space-y-4 md:space-y-6">
           <header>
             <h2 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent">
               Desarrollo y Soporte

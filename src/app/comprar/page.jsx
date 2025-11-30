@@ -5,10 +5,7 @@ import Image from "next/image";
 
 export default function Comprar(){
     return(
-        <div className="min-h-screen w-full bg-white text-neutral-900 px-4 py-8">
-                  <div>
-                    <Aurora></Aurora>
-                  </div>
+        <div className="min-h-screen w-full bg-white text-neutral-900 px-4 py-24">
                   <div>
                   </div>
 <section className="relative overflow-hidden rounded-4xl shadow-2xl border border-neutral-200">
@@ -78,7 +75,7 @@ export default function Comprar(){
         <div className="rounded-3xl ring-1 ring-white/10 bg-white/5 backdrop-blur-md p-6 shadow-xl">
           <h3 className="text-lg font-semibold text-neutral-900 tracking-tight">Instrucciones</h3>
           <ul className="mt-3 list-disc list-inside text-sm md:text-base text-neutral-700 space-y-1.5">
-            <li>En el asunto de la transferencia indica: <span className="text-neutral-900">Servicio + Nombre de tu institución médica</span>.</li>
+            <li>En el asunto de la transferencia indica: <span className="text-neutral-900">Servicio + Nombre de tu institución médica o profesión</span>.</li>
             <li>Envía el comprobante a <span className="text-neutral-900">ventas@medify.cl</span> o al WhatsApp <span className="text-neutral-900">+56 9 7788 9900</span>.</li>
             <li>Te contactaremos para levantar requerimientos médicos y calendarizar la implementación.</li>
           </ul>
