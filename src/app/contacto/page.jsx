@@ -118,7 +118,7 @@ export default function Contacto() {
             {/* Formulario de Contacto */}
             <div className="rounded-3xl ring-1 ring-white/10 bg-white/5 backdrop-blur-md p-8 shadow-xl">
               <h2 className={`${spaceGrotesk.className} text-2xl text-neutral-800 mb-6 font-bold`}>
-                Solicitar Información
+                Solicitar información
               </h2>
               
               <form className="space-y-6">
@@ -222,7 +222,7 @@ export default function Contacto() {
                   type="submit"
                   className="w-full bg-gradient-to-r from-blue-500 to-teal-600 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:from-blue-600 hover:to-teal-700 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition duration-300 transform hover:scale-[1.02]"
                 >
-                  Solicitar Información
+                  Solicitar información
                 </button>
               </form>
             </div>
@@ -245,7 +245,7 @@ export default function Contacto() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg hover:bg-green-700 transition duration-300"
                 >
-                  Demo por WhatsApp
+                  También escribenos a WhatsApp
                 </a>
                 <Link
                   href="/servicios"

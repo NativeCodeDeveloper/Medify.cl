@@ -21,11 +21,12 @@ const pages = [
   { label: 'Soluciones', href: '/servicios' },
   { label: 'Sobre Medify', href: '/sobreNosotros' },
   { label: 'Contacto', href: '/soporte' },
-  { label: 'Solicitar Demo', href: '/comprar' }
+  { label: 'Solicitar información', href: '/comprar' }
 ];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [hoveredMenu, setHoveredMenu] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -33,6 +34,14 @@ function ResponsiveAppBar() {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleMouseEnter = (event) => {
+    setHoveredMenu(event.currentTarget);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredMenu(null);
   };
 
   return (
@@ -53,22 +62,23 @@ function ResponsiveAppBar() {
         <Box style={{ color: '#1e3a8a' }}>
           <Toolbar disableGutters sx={{ minHeight: { xs: 64, md: 72 }, gap: { xs: 1, md: 2 } }}>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5, mr: 2 }}>
-              <a
+              <Link
                 href="/"
-                style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', height: '160px', minHeight: '160px', maxHeight: '160px', padding: '0 12px' }}
+                style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', height: '160px', minHeight: '160px', maxHeight: '160px', padding: '0 12px', cursor: 'pointer' }}
               >
                 <Image
                   src="/ico.png"
-                  alt="Medify logo"
+                  alt="Medify logo - Volver al inicio"
                   width={500}
                   height={140}
-                  style={{ objectFit: 'contain', borderRadius: '16px', boxShadow: '0 4px 24px rgba(30,58,138,0.13)', background: '#fff', border: '2px solid #1e3a8a' }}
+                  style={{ objectFit: 'contain', borderRadius: '16px', boxShadow: '0 4px 24px rgba(30,58,138,0.13)', background: '#fff', border: '2px solid #1e3a8a', transition: 'transform 0.2s ease' }}
+                  className="hover:scale-105"
                   priority
                 />
-              </a>
+              </Link>
               <Typography
                 className={michroma.className}
-                component="a"
+                component={Link}
                 href="/"
                 style={{ color: '#1e3a8a', fontFamily: michroma.style.fontFamily }}
                 sx={{
@@ -80,6 +90,8 @@ function ResponsiveAppBar() {
                   fontSize: '1.0rem',
                   lineHeight: 1.05,
                   opacity: 0.92,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
                   '&:hover': { opacity: 1, color: '#0c1426' }
                 }}
               >
@@ -129,7 +141,7 @@ function ResponsiveAppBar() {
                   <MenuItem key={page.label} onClick={handleCloseNavMenu} sx={{ px: 2, py: 1.25 }}>
                     <Typography
                       className={michroma.className}
-                      component="a"
+                      component={Link}
                       href={page.href}
                       sx={{
                         color: '#1e3a8a',
@@ -142,6 +154,7 @@ function ResponsiveAppBar() {
                         width: '100%',
                         lineHeight: 1.2,
                         whiteSpace: 'normal',
+                        transition: 'color 0.2s ease',
                         '&:hover': { color: '#0c1426' }
                       }}
                     >
@@ -154,7 +167,7 @@ function ResponsiveAppBar() {
 
             <Typography
               className={michroma.className}
-              component="a"
+              component={Link}
               href="/"
               style={{ color: '#1e3a8a', fontFamily: michroma.style.fontFamily }}
               sx={{
@@ -170,43 +183,94 @@ function ResponsiveAppBar() {
                 whiteSpace: 'normal',
                 wordBreak: 'break-word',
                 overflow: 'visible',
+                cursor: 'pointer',
+                transition: 'color 0.2s ease',
                 '&:hover': { color: '#0c1426' }
               }}
             >
-             Ingenieria de Software
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', alignItems: 'center', gap: 0 }}>
               {pages.map((page) => (
-                <Button
-                  key={page.label}
-                  onClick={handleCloseNavMenu}
-                  className={michroma.className}
-                  component="a"
-                  href={page.href}
-                  sx={{
-                    my: 1.5,
-                    mx: 0.5,
-                    px: 2.25,
-                    py: 1,
-                    color: '#1e3a8a',
-                    fontFamily: michroma.style.fontFamily,
-                    fontWeight: 700,
-                    fontSize: '0.92rem',
-                    letterSpacing: '.08em',
-                    textTransform: 'none',
-                    borderRadius: 2,
-                    opacity: 0.9,
-                    transition: 'all .2s ease',
-                    '&:hover': {
-                      opacity: 1,
-                      backgroundColor: 'rgba(30, 58, 138, 0.08)',
-                      transform: 'translateY(-1px)',
-                      color: '#0c1426'
-                    }
-                  }}
-                >
-                  {page.label}
-                </Button>
+                <Box key={page.label} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    className={michroma.className}
+                    component={Link}
+                    href={page.href}
+                    sx={{
+                      my: 1.5,
+                      mx: 0.5,
+                      px: 2.25,
+                      py: 1,
+                      color: '#1e3a8a',
+                      fontFamily: michroma.style.fontFamily,
+                      fontWeight: 700,
+                      fontSize: '0.92rem',
+                      letterSpacing: '.08em',
+                      textTransform: 'none',
+                      borderRadius: 2,
+                      opacity: 0.9,
+                      transition: 'all .2s ease',
+                      '&:hover': {
+                        opacity: 1,
+                        backgroundColor: 'rgba(30, 58, 138, 0.08)',
+                        transform: 'translateY(-1px)',
+                        color: '#0c1426'
+                      }
+                    }}
+                  >
+                    {page.label}
+                  </Button>
+                  <Menu
+                    anchorEl={hoveredMenu}
+                    open={Boolean(hoveredMenu)}
+                    onClose={handleMouseLeave}
+                    MenuListProps={{
+                      onMouseLeave: handleMouseLeave,
+                    }}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                    PaperProps={{
+                      sx: {
+                        backgroundColor: '#ffffff',
+                        color: '#1e3a8a',
+                        borderRadius: 2,
+                        border: '1px solid rgba(30, 58, 138, 0.12)',
+                        boxShadow: '0 8px 32px rgba(30, 58, 138, 0.18)',
+                        mt: 0.5,
+                        fontFamily: michroma.style.fontFamily,
+                      }
+                    }}
+                  >
+                    <MenuItem onClick={handleMouseLeave} sx={{ px: 2, py: 1.25 }}>
+                      <Typography
+                        className={michroma.className}
+                        component={Link}
+                        href={page.href}
+                        sx={{
+                          color: '#1e3a8a',
+                          textDecoration: 'none',
+                          fontSize: '0.92rem',
+                          fontWeight: 700,
+                          fontFamily: michroma.style.fontFamily,
+                          letterSpacing: '.06em',
+                          display: 'block',
+                          width: '100%',
+                          transition: 'color 0.2s ease',
+                          '&:hover': { color: '#0c1426' }
+                        }}
+                      >
+                        {page.label}
+                      </Typography>
+                    </MenuItem>
+                  </Menu>
+                </Box>
               ))}
               <Button
                 component="a"

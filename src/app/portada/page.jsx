@@ -103,12 +103,12 @@ export default function Portada() {
           </div>
 
           {/* 2. FEATURE STEPS (Cómo empezar) */}
-          <div className="mb-20">
+          <div className="mb-20 mt-4">
             <FeatureSteps 
               features={features}
               title={<><strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Haz que tu consulta destaque. Digitaliza, profesionaliza y crece.</strong> </>}
               autoPlayInterval={4000}
-              className="p-0"
+              className="p-0 mt-4"
             />
           </div>
 

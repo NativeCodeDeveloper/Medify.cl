@@ -109,7 +109,7 @@ export default function CarruselInfinito({ especialidades }) {
               key={`especialidad-${index}`}
               className="flex-shrink-0 w-80 md:w-96 lg:w-[450px] group"
             >
-              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl ring-2 ring-blue-900/10 shadow-2xl hover:shadow-blue-900/10 hover:ring-blue-700/10 transition-all duration-500 hover:scale-[1.02]">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgba(37,99,235,0.15)] transition-all duration-500 hover:scale-[1.02]">
                 {/* Imagen */}
                 <Image
                   src={especialidad.imagen}
@@ -123,10 +123,6 @@ export default function CarruselInfinito({ especialidades }) {
                 
                 {/* Gradient overlay - Oscuro y sutil */}
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent" />
-                
-
-                {/* Línea decorativa azul */}
-                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-400 via-blue-600 to-transparent opacity-10" />
 
                 {/* Contenido */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
@@ -146,13 +142,13 @@ export default function CarruselInfinito({ especialidades }) {
                       {especialidad.tecnologias.slice(0, 3).map((tech, idx) => (
                         <span
                           key={idx}
-                          className="px-3 py-1.5 rounded-lg bg-blue-800/40 backdrop-blur-sm text-blue-100 text-xs md:text-sm font-medium ring-1 ring-blue-400/20 hover:bg-blue-700/50 hover:ring-blue-400/40 transition-all duration-300"
+                          className="px-3 py-1.5 rounded-lg bg-blue-600/30 backdrop-blur-md text-white text-xs md:text-sm font-medium shadow-lg hover:bg-blue-500/40 transition-all duration-300"
                         >
                           {tech}
                         </span>
                       ))}
                       {especialidad.tecnologias.length > 3 && (
-                        <span className="px-3 py-1.5 rounded-lg bg-blue-800/40 backdrop-blur-sm text-blue-100 text-xs md:text-sm font-medium ring-1 ring-blue-400/20">
+                        <span className="px-3 py-1.5 rounded-lg bg-blue-600/30 backdrop-blur-md text-white text-xs md:text-sm font-medium shadow-lg">
                           +{especialidad.tecnologias.length - 3} más
                         </span>
                       )}
@@ -170,9 +166,9 @@ export default function CarruselInfinito({ especialidades }) {
           ))}
         </div>
 
-        {/* Fade gradients en los bordes - Azul marino profesional y elegante */}
-        <div className="absolute top-0 left-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-blue-950/70 via-blue-950/30 to-transparent z-10 pointer-events-none" />
-        <div className="absolute top-0 right-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-blue-950/70 via-blue-950/30 to-transparent z-10 pointer-events-none" />
+        {/* Fade gradients en los bordes - Sutiles y profesionales */}
+        <div className="absolute top-0 left-0 bottom-0 w-32 md:w-48 bg-gradient-to-r from-white via-white/60 to-transparent z-10 pointer-events-none" />
+        <div className="absolute top-0 right-0 bottom-0 w-32 md:w-48 bg-gradient-to-l from-white via-white/60 to-transparent z-10 pointer-events-none" />
       </div>
 
       {/* Indicador profesional */}

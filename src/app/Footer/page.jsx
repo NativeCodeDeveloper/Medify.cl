@@ -93,22 +93,22 @@ export default function Footer() {
             <nav className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4">
               <Link
                 href="/contacto"
-                className="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
+                className="text-sm font-medium text-gray-400 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
               >
                 Contacto Especializado
               </Link>
               <Link
                 href="/soporte"
-                className="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
+                className="text-sm font-medium text-gray-400 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
               >
                 Soporte Especializado
               </Link>
-              <a
-                href="#"
-                className="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
+              <Link
+                href="/politica"
+                className="text-sm font-medium text-gray-400 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
               >
-                Privacidad de Datos
-              </a>
+                Políticas y Privacidad
+              </Link>
             </nav>
 
             {/* Social Links */}

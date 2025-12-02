@@ -1,4 +1,4 @@
-import { Check, MoveRight, PhoneCall } from "lucide-react";
+import { Check, MoveRight, PhoneCall, Shield } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 // Dummy Card, CardHeader, CardTitle, CardContent, CardDescription, Button, Badge
@@ -18,7 +18,7 @@ const Card = ({ children, className }) => {
     return (
         <div
             ref={ref}
-            className={`bg-white border border-blue-100 rounded-lg shadow-sm p-6 transition-all duration-700 ease-out hover:shadow-2xl hover:scale-105 hover:border-blue-400 opacity-0 translate-y-8 ${className}`}
+            className={`bg-white/95 border border-blue-100/60 rounded-2xl shadow-md p-6 transition-all duration-700 ease-out hover:shadow-2xl hover:scale-105 hover:border-teal-300 hover:ring-2 hover:ring-teal-200/50 opacity-0 translate-y-8 ${className}`}
             style={{ willChange: 'transform, box-shadow, opacity' }}
         >
             {children}
@@ -30,34 +30,38 @@ const CardTitle = ({ children }) => <h4 className="text-xl font-semibold mb-2">{
 const CardContent = ({ children }) => <div>{children}</div>;
 const CardDescription = ({ children }) => <p className="text-gray-500 mb-4">{children}</p>;
 const Button = ({ children, className, variant }) => <button className={`px-4 py-2 rounded ${variant === "outline" ? "border" : "bg-blue-600 text-white"} ${className}`}>{children}</button>;
-const Badge = ({ children }) => <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-2">{children}</span>;
+const Badge = ({ children }) => <span className="inline-block bg-gradient-to-r from-blue-50 to-teal-50 text-blue-800 border border-blue-200/50 px-4 py-1.5 rounded-full text-xs font-semibold mb-2 shadow-sm">{children}</span>;
 
 export default function Pricing1() {
     return (
         <div className="py-20 lg:py-40">
             <div className="container mx-auto">
                 <div className="flex text-center justify-center items-center gap-4 flex-col">
-                    <Badge>Servicios a sus disposición</Badge>
+                    <Badge>La plataforma que transforma consultas médicas</Badge>
                     <div className="flex gap-2 flex-col">
-                        <h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl text-center font-regular">
-                            <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Evoluciona, gestiona y administra.</strong>
+                        <h2 className="text-3xl md:text-5xl tracking-tighter max-w-2xl text-center font-regular mt-8">
+                            <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Dedica más tiempo a tus pacientes, menos al papeleo.</strong>
                         </h2>
-                        <p className="text-lg leading-relaxed tracking-tight text-muted-foreground max-w-xl text-center">
-                            <strong className="bg-gradient-to-r from-gray-400 to-blue-500 bg-clip-text text-transparent">Nuestros servicios están diseñados para ofrecer soluciones adaptadas a las necesidades de tu consulta médica.</strong>
+                        <p className="text-lg leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center mt-4">
+                            <strong className="bg-gradient-to-r from-gray-400 to-blue-500 bg-clip-text text-transparent">Los profesionales ya confían en Medify. Sistema 100% legal, seguro y diseñado específicamente para el sector salud en Chile.</strong>
                         </p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200/50 rounded-xl shadow-sm">
+                        <Shield className="w-5 h-5 text-teal-600" />
+                        <span className="text-sm font-medium text-teal-800">✓ Certificado legal | ✓ Datos protegidos | ✓ Respaldo en la nube</span>
                     </div>
                     <div className="grid pt-20 text-left grid-cols-1 lg:grid-cols-3 w-full mt-2 gap-8">
                         <div className="relative mt-12">
-                            <div className="absolute -inset-8 rounded-3xl bg-gradient-to-tr from-blue-500/20 via-teal-500/10 to-white-200/50 blur-3xl" aria-hidden="true"></div>
-                            <Card className="relative rounded-3xl ring-1 ring-white/10 bg-white/5 backdrop-blur-md p-4 shadow-2xl transition hover:scale-105 w-full">
+                            <div className="absolute -inset-8 rounded-3xl bg-gradient-to-tr from-blue-400/15 via-teal-400/10 to-transparent blur-2xl" aria-hidden="true"></div>
+                            <Card className="relative rounded-3xl ring-1 ring-blue-100/50 bg-gradient-to-br from-white via-blue-50/30 to-white backdrop-blur-sm p-6 shadow-xl transition hover:scale-105 w-full">
                                 <CardHeader>
                                     <CardTitle>
                                         <span className="flex flex-row gap-4 items-center font-normal">
-                                            <strong>Profesionales de la salud independientes</strong>
+                                            <strong>Esencial</strong>
                                         </span>
                                     </CardTitle>
                                     <CardDescription>
-                                        La forma más simple y rápida de digitalizar tu conuslta médica sin complicarte con tegnología.
+                                        Perfecto para iniciar tu transformación digital. Todo lo esencial para administrar tu consulta profesionalmente, sin papeles ni complicaciones.
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
@@ -69,29 +73,29 @@ export default function Pricing1() {
                                         <div className="flex flex-col gap-4 justify-start">
                                             <div className="flex flex-col gap-4 justify-start">
                                                 <div className="flex flex-row gap-4">
-                                                    <Check className="w-4 h-4 mt-2 text-primary" />
+                                                    <Check className="w-4 h-4 mt-2 text-teal-600" />
                                                     <div className="flex flex-col">
-                                                        <p>Ficha clínica</p>
+                                                        <p className="font-semibold">Fichas clínicas 100% digitales y legales</p>
                                                         <p className="text-muted-foreground text-sm">
-                                                            Registra cosnsultas y tratamientos de manera ordenanda y segura.
+                                                            Olvídate del papel. Registra consultas desde cualquier dispositivo con total respaldo legal.
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-row gap-4">
-                                                    <Check className="w-4 h-4 mt-2 text-primary" />
+                                                    <Check className="w-4 h-4 mt-2 text-teal-600" />
                                                     <div className="flex flex-col">
-                                                        <p>Agenda inteligente</p>
+                                                        <p className="font-semibold">Reduce inasistencias hasta 40%</p>
                                                         <p className="text-muted-foreground text-sm">
-                                                            Gestión automática de horas, confirmaciones y recordatorios.
+                                                            Recordatorios automáticos vía correo electrónico. Tus pacientes nunca olvidarán su cita.
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-row gap-4">
-                                                    <Check className="w-4 h-4 mt-2 text-primary" />
+                                                    <Check className="w-4 h-4 mt-2 text-teal-600" />
                                                     <div className="flex flex-col">
-                                                        <p>Pagos en línea</p>
+                                                        <p className="font-semibold">Cobra más rápido y fácil</p>
                                                         <p className="text-muted-foreground text-sm">
-                                                            Recibe pagos con credito o debito desde un solo lugar
+                                                            Tus pacientes pagan con tarjeta al instante. El dinero llega directo a tu cuenta.
                                                         </p>
                                                     </div>
                                                 </div>
@@ -102,16 +106,16 @@ export default function Pricing1() {
                             </Card>
                         </div>
                         <div className="relative">
-                            <div className="absolute -inset-8 rounded-3xl bg-gradient-to-tr from-blue-500/10 via-teal-500/20 to-white-300/50 blur-3xl" aria-hidden="true"></div>
-                            <Card className="relative rounded-3xl ring-1 ring-white/10 bg-white/5 backdrop-blur-md p-4 shadow-2xl transition hover:scale-105 w-full">
+                            <div className="absolute -inset-8 rounded-3xl bg-gradient-to-tr from-blue-500/20 via-teal-500/15 to-transparent blur-2xl" aria-hidden="true"></div>
+                            <Card className="relative rounded-3xl ring-2 ring-blue-200/60 bg-gradient-to-br from-white via-teal-50/40 to-blue-50/30 backdrop-blur-sm p-6 shadow-2xl transition hover:scale-105 w-full border-2 border-blue-100/40">
                                 <CardHeader>
                                     <CardTitle>
                                         <span className="flex flex-row gap-4 items-center font-normal">
-                                            <strong>Clínicas o grupos de profesionales</strong>
+                                            <strong>Profesional</strong>
                                         </span>
                                     </CardTitle>
                                     <CardDescription>
-                                        Diseñado para consultas que quieran crecer y necesitan coordinación, orden y control.
+                                        Escala tu práctica médica. Ideal para consultas en crecimiento y pequeñas clínicas que buscan eficiencia y control total.
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
@@ -123,29 +127,29 @@ export default function Pricing1() {
                                         <div className="flex flex-col gap-4 justify-start">
                                             <div className="flex flex-col gap-4 justify-start">
                                                 <div className="flex flex-row gap-4">
-                                                    <Check className="w-4 h-4 mt-2 text-primary" />
+                                                    <Check className="w-4 h-4 mt-2 text-blue-600" />
                                                     <div className="flex flex-col">
-                                                        <p>Automatización clave</p>
+                                                        <p className="font-semibold">Gestiona de forma profesional en un solo lugar</p>
                                                         <p className="text-muted-foreground text-sm">
-                                                            Recordatorios, programaciones y comunicación con pacientes.
+                                                            Coordina agendas, pacientes y gestiona tus reservas. Todo sin complicaciones.
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-row gap-4">
-                                                    <Check className="w-4 h-4 mt-2 text-primary" />
+                                                    <Check className="w-4 h-4 mt-2 text-blue-600" />
                                                     <div className="flex flex-col">
-                                                        <p>Múltiples profesionales</p>
+                                                        <p className="font-semibold">Facturación automática</p>
                                                         <p className="text-muted-foreground text-sm">
-                                                            Administra agendas, reservas y a tus pacientes.
+                                                            Emite bonos y facturas al SII sin errores. Ahorra hasta 10 horas semanales en administración.
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-row gap-4">
-                                                    <Check className="w-4 h-4 mt-2 text-primary" />
+                                                    <Check className="w-4 h-4 mt-2 text-blue-600" />
                                                     <div className="flex flex-col">
-                                                        <p>Reportes y métricas</p>
+                                                        <p className="font-semibold">Ve crecer tu negocio con datos reales</p>
                                                         <p className="text-muted-foreground text-sm">
-                                                            Visualiza ingresos, asistencia, tratamientos y rendimiento.
+                                                            Reportes de ingresos, ocupación y rendimiento. Toma decisiones basadas en información real.
                                                         </p>
                                                     </div>
                                                 </div>
@@ -170,16 +174,16 @@ export default function Pricing1() {
                             </Card>
                         </div>
                         <div className="relative mt-12">
-                            <div className="absolute -inset-8 rounded-3xl bg-gradient-to-tr from-blue-500/10 via-teal-500/10 to-white-300/50 blur-3xl" aria-hidden="true"></div>
-                            <Card className="relative rounded-3xl ring-1 ring-white/10 bg-white/5 backdrop-blur-md p-4 shadow-2xl transition hover:scale-105 w-full">
+                            <div className="absolute -inset-8 rounded-3xl bg-gradient-to-tr from-indigo-400/15 via-blue-400/10 to-transparent blur-2xl" aria-hidden="true"></div>
+                            <Card className="relative rounded-3xl ring-1 ring-indigo-100/50 bg-gradient-to-br from-white via-indigo-50/20 to-white backdrop-blur-sm p-6 shadow-xl transition hover:scale-105 w-full">
                                 <CardHeader>
                                     <CardTitle>
                                         <span className="flex flex-row gap-4 items-center font-normal">
-                                            <strong>Clínicas en desarrollo o expansión</strong>
+                                            <strong>Enterprise</strong>
                                         </span>
                                     </CardTitle>
                                     <CardDescription>
-                                        Solución Completa y escalable para instituciones de la salud que requieran eficiencia y trazabilidad.
+                                        Solución personalizada para clínicas que no se conforman con lo estándar. Desarrollamos lo que tu institución necesita.
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
@@ -190,29 +194,29 @@ export default function Pricing1() {
                                         </p>
                                         <div className="flex flex-col gap-4 justify-start">
                                             <div className="flex flex-row gap-4">
-                                                <Check className="w-4 h-4 mt-2 text-primary" />
+                                                <Check className="w-4 h-4 mt-2 text-indigo-600" />
                                                 <div className="flex flex-col">
-                                                    <p>Cumplimiento normativo</p>
+                                                    <p className="font-semibold">Seguridad bancaria para tus datos médicos</p>
                                                     <p className="text-muted-foreground text-sm">
-                                                        Seguridad avanzada, auditorías y respaldo según estándares de Salud.
+                                                        Máxima protección, cumplimiento legal garantizado y respaldo por 15 años. Duerme tranquilo.
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="flex flex-row gap-4">
-                                                <Check className="w-4 h-4 mt-2 text-primary" />
+                                                <Check className="w-4 h-4 mt-2 text-indigo-600" />
                                                 <div className="flex flex-col">
-                                                    <p>Reportes y trazabilidad</p>
+                                                    <p className="font-semibold">Conecta desde cualquier lugar por medio de la Nube</p>
                                                     <p className="text-muted-foreground text-sm">
-                                                        Generación de informes automáticos y seguimiento de procesos clínicos.
+                                                        Fichas clínicas, diagnósticos, tratamientos. Todo integrado en una sola plataforma.
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="flex flex-row gap-4">
-                                                <Check className="w-4 h-4 mt-2 text-primary" />
+                                                <Check className="w-4 h-4 mt-2 text-indigo-600" />
                                                 <div className="flex flex-col">
-                                                    <p>Integración avanzada</p>
+                                                    <p className="font-semibold">Tu equipo dedicado de soporte</p>
                                                     <p className="text-muted-foreground text-sm">
-                                                        Conexión de tus datos directamente en la nube.
+                                                        Respuesta inmediata, capacitación incluida y un experto asignado solo para ti.
                                                     </p>
                                                 </div>
                                             </div>

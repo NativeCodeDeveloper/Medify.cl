@@ -15,7 +15,7 @@ export function FeatureSteps({
   // e.g. { tl: '12px', tr: '0px', br: '24px', bl: '0px' }
   corners = { tl: '224px', tr: '0px', br: '0px', bl: '0px' },
   // textCorners for the text container (steps list)
-  textCorners = { tl: '0px', tr: '0px', br: '0px', bl: '30px' },
+  textCorners = { tl: '0px', tr: '0px', br: '0px', bl: '0px' },
 }) {
   const [currentFeature, setCurrentFeature] = useState(0)
   const [progress, setProgress] = useState(0)
@@ -43,10 +43,9 @@ export function FeatureSteps({
           {title}
         </h2>
 
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-0 border border-white/0 rounded-bl-4xl rounded-br-0 gradient-to-br from-blue-900/10 to-purple-900/10 shadow-2xl shadow-blue-500/20 relative">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 relative">
           <div 
-            className="order-2 md:order-1 space-y-6 p-6 bg-white/0 backdrop-blur-sm border border-white/0"
-            style={{ borderRadius: textBorderRadius, WebkitBorderRadius: textBorderRadius }}
+            className="order-2 md:order-1 space-y-6 p-4 md:p-6 lg:p-8 bg-white"
           >
             {features.map((feature, index) => (
               <motion.div
@@ -85,9 +84,8 @@ export function FeatureSteps({
 
           <div
             className={cn(
-              "order-1 md:order-2 relative h-[200px] md:h-[300px] lg:h-[400px] overflow-hidden"
+              "order-1 md:order-2 relative h-[250px] sm:h-[300px] md:h-[350px] lg:h-[450px] overflow-hidden rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_50px_rgba(37,99,235,0.12)] transition-all duration-500"
             )}
-            style={{ borderRadius, WebkitBorderRadius: borderRadius }}
           >
             <AnimatePresence mode="wait">
               {features.map(
@@ -95,8 +93,7 @@ export function FeatureSteps({
                   index === currentFeature && (
                     <motion.div
                       key={index}
-                      className="absolute inset-0 overflow-hidden"
-                      style={{ borderRadius, WebkitBorderRadius: borderRadius }}
+                      className="absolute inset-0 overflow-hidden rounded-2xl md:rounded-3xl"
                       initial={{ y: 100, opacity: 0, rotateX: -20 }}
                       animate={{ y: 0, opacity: 1, rotateX: 0 }}
                       exit={{ y: -100, opacity: 0, rotateX: 20 }}
@@ -105,14 +102,14 @@ export function FeatureSteps({
                       <Image
                         src={feature.image}
                         alt={feature.step}
-                        className="w-full h-full object-cover transition-transform transform"
-                        style={{ borderRadius, WebkitBorderRadius: borderRadius }}
-                        width={1080}
-                        height={1000}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 600px"
+                        className="object-cover transition-transform duration-700 hover:scale-105 rounded-2xl md:rounded-3xl"
+                        priority={index === 0}
+                        quality={90}
                       />
                       <div 
-                        className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-white via-white/60 to-transparent" 
-                        style={{ borderRadius: `0 0 ${corners.br} ${corners.bl}` }} 
+                        className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-white/100 via-white/30 to-transparent rounded-b-2xl md:rounded-b-3xl" 
                       />
                     </motion.div>
                   ),

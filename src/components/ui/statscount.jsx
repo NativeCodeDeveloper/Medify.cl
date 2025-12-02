@@ -64,24 +64,34 @@ export default function StatsCount({ stats, title, showDividers = true, classNam
   return (
     <div ref={sectionRef} className={`w-full ${className}`}>
       {title && (
-        <h2 className="text-center text-sm font-semibold tracking-wider text-neutral-600 mb-8 uppercase">
+        <h2 className="text-center text-sm font-bold tracking-widest text-blue-600/80 mb-12 uppercase">
           {title}
         </h2>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-12">
         {stats.map((stat, index) => (
-          <div key={index} className="relative text-center">
-            <div className="flex flex-col items-center justify-center">
-              <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-900 mb-2">
+          <div key={index} className="relative text-center group">
+            <div className="flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-white via-blue-50/30 to-teal-50/20 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105">
+              {/* Decorative gradient overlay */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              {/* Counter */}
+              <div className="relative text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-blue-500 to-teal-500 bg-clip-text text-transparent mb-3">
                 {counts[index]}
                 {stat.suffix}
               </div>
-              <p className="text-sm md:text-base text-neutral-900/70 max-w-xs">
+              
+              {/* Label */}
+              <p className="relative text-sm md:text-base lg:text-lg text-neutral-700 font-medium max-w-xs leading-relaxed">
                 {stat.label}
               </p>
+              
+              {/* Bottom accent line */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-blue-400 to-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
+            
             {showDividers && index < stats.length - 1 && (
-              <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 h-16 w-px bg-white/10" />
+              <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 h-20 w-px bg-gradient-to-b from-transparent via-blue-200 to-transparent" />
             )}
           </div>
         ))}
