@@ -24,7 +24,7 @@ export default function SobreNosotros() {
         }}>
           <div>
             <h1
-              className={`${spaceGrotesk.className} leading-tight tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-neutral-900 font-bold`}>
+              className={`${spaceGrotesk.className} leading-tight tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-neutral-900 font-Regular`}>
             <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Sobre Medify</strong>
             </h1>
             <p className={`mt-4 sm:mt-6 text-justify sm:text-lg md:text-xl lg:text-2xl text-neutral-900/90 ${spaceGrotesk.className}`}>
@@ -65,7 +65,7 @@ export default function SobreNosotros() {
             <div className="w-full md:w-3/4 lg:w-4/5">
               <Safari
                 url="medify.cl"
-                imageSrc="/medifysafari.jpg"
+                imageSrc="/medifysafari1.jpg"
                 className="rounded-2xl md:rounded-3xl shadow-xl"
               />
             </div>
@@ -116,8 +116,7 @@ export default function SobreNosotros() {
 
           <CarruselInfinito
             especialidades={[
-              {
-                nombre: "Pediatría",
+              {nombre: "Terapeuta Ocupacional",
                 imagen: "/terapeuta.jpg",
               /* descripcion:
                   "Cuidado infantil especializado con seguimiento del desarrollo y sistemas de agenda online",

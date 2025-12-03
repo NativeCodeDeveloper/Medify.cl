@@ -16,7 +16,7 @@ export default function Contacto() {
             </span>
           </h1>
           <p className={`mt-6 text-xl text-neutral-700 max-w-3xl mx-auto ${spaceGrotesk.className}`}>
-            Conéctate con nuestro equipo especializado en soluciones Tegnologicas. 
+            Conéctate con nuestro equipo especializado en soluciones tecnológicas. 
             Estamos aquí para digitalizar tu práctica médica.
           </p>
         </div>

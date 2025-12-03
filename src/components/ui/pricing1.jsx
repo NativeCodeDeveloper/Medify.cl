@@ -39,7 +39,7 @@ export default function Pricing1() {
                 <div className="flex text-center justify-center items-center gap-4 flex-col">
                     <Badge>La plataforma que transforma consultas médicas</Badge>
                     <div className="flex gap-2 flex-col">
-                        <h2 className="text-3xl md:text-5xl tracking-tighter max-w-2xl text-center font-regular mt-8">
+                        <h2 className="text-3xl md:text-5xl lg:text-5xl tracking-tighter max-w-2xl text-center font-regular leading-tight mb-6 mt-8">
                             <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Dedica más tiempo a tus pacientes, menos al papeleo.</strong>
                         </h2>
                         <p className="text-lg leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center mt-4">

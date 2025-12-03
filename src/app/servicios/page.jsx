@@ -24,7 +24,7 @@ export default function ServiciosPage() {
               <h2 className={`text-base/20 font-semibold text-[#0c3690] mb-4 ${spaceGrotesk.className}`}>
                 Gestión Médica Innovadora
               </h2>
-              <h1 className={`text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-neutral-900 mb-6 leading-tight ${spaceGrotesk.className}`}>
+              <h1 className={`text-3xl md:text-5xl lg:text-6xl font-regular tracking-tight text-neutral-900 mb-6 leading-tight ${spaceGrotesk.className}`}>
                 <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">
                   La forma de gestionar tu consulta ha cambiado.
                 </strong>

@@ -27,9 +27,9 @@ export default function Footer() {
             {/* Left Column - Text Content */}
             <div className="space-y-6">
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-                <span className="block text-neutral-900">Tú consulta digital</span>
+                <span className="block text-neutral-900">Tu consulta digital</span>
                 <span className="text-center block text-neutral-900 mt-2">
-                  y a tu medida con
+                  a tu medida con
                 </span>
                 <span className="block mt-4">
                   <GradientText>M e d i f y</GradientText>
@@ -38,7 +38,7 @@ export default function Footer() {
 
               <p className="text-justify text-gray-400 max-w-xl leading-relaxed">
               Optimiza tu consulta con una plataforma diseñada especialmente para profesionales de la salud. Agenda, 
-              fichas clínicas y gestión completa en un sistema simple, seguro y adaptable a tu forma de trabajo
+              fichas clínicas y gestión completa en un sistema simple, seguro y adaptable a tu forma de trabajo.
               </p>
 
               <div className="pt-6 flex justify-center lg:justify-center">
@@ -157,8 +157,8 @@ export default function Footer() {
 
           {/* Copyright */}
           <div className="mt-8 pt-8 border-t border-gray-800/50">
-            <p className="text-center text-sm text-gray-500"> Tegnología desarrollada por NativeCode.cl - 
-              © {new Date().getFullYear()} Medify.cl Todos los derechos
+            <p className="text-center text-sm text-gray-500">Tecnología desarrollada por NativeCode.cl - 
+              © {new Date().getFullYear()} Medify.cl. Todos los derechos
               reservados.
             </p>
           </div>

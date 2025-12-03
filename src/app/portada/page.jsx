@@ -12,13 +12,11 @@ import StatsCount from "@/components/ui/statscount";
 import { FeatureSteps } from "@/components/ui/featuresteps";
 
 export default function Portada() {
-  const stats = [
-    { value: 50, suffix: "+", label: "Profesionales interesados en implementar su plataforma" },
+    const stats = [
+    { value: 50, suffix: "+", label: "Profesionales interesados en implementar la plataforma" },
     { value: 200, suffix: "+", label: "Pacientes gestionados en nuestras soluciones personalizadas" },
     { value: 90, suffix: "%", label: "Valoración positiva en experiencia y diseño clínico" },
-  ];
-
-  const features = [
+  ];  const features = [
     {
       step: "Clínica digital",
       title: "Administra tu consulta médica",
@@ -26,9 +24,9 @@ export default function Portada() {
       image: "/tablet.jpg"
     },
     {
-      step: "Moderniaza tu práctica médica", 
-      title: "Actualizate",
-      content: "Obtén una presencia digital profesional y moderna. Ahorra tiempo, ordénate mejor y mejora la experiencia de tus pacientes.",
+      step: "Moderniza tu práctica médica", 
+      title: "Actualízate",
+      content: "Obtén una presencia digital profesional y moderna. Ahorra tiempo, organízate mejor y mejora la experiencia de tus pacientes.",
       image: "/proconfianza.jpg"
     },
     {
@@ -116,7 +114,7 @@ export default function Portada() {
           <div className="text-center mb-20">
             <p className={`text-lg sm:text-xl md:text-2xl text-blue-800/60 max-w-6xl mx-auto leading-relaxed ${spaceGrotesk.className}`}>
               La herramienta que necesitas para organizar tus consultas, optimizar tu agenda, gestionar pacientes y mantener tu práctica profesional al máximo nivel. 
-              Todo en una plataforma segura, intuitiva y diseñada para ti.
+              Todo en una plataforma segura, intuitiva y diseñada especialmente para ti.
             </p>
           </div>
 

@@ -54,7 +54,7 @@ export default function Home() {
               </div>
               {/* Texto principal right */}
               <div className="md:col-span-3">
-                <h2 className={`text-center text-3xl md:text-5xl font-extrabold text-black tracking-tight leading-snug max-w-4xl ${spaceGrotesk.className}`}><strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Digitaliza tu práctica médica y lleva tu consulta al siguiente nivel.</strong> </h2>
+                    <h2 className={`text-center text-3xl md:text-5xl font-extrabold text-black tracking-tight leading-snug max-w-4xl ${spaceGrotesk.className}`}><strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Digitaliza tu práctica médica y lleva tu consulta al siguiente nivel.</strong> </h2>
                 <p className={`mt-10 text-justify md:text-3xl text-black/85 leading-relaxed max-w-4xl ${spaceGrotesk.className}`}>Moderniza tu consulta con una plataforma diseñada para profesionales de la salud. Donde podrás gestionar tus pacientes, agenda, fichas clínicas y reservas online desde un mismo lugar, optimizando tu tiempo y mejorando la experiencia de quienes confían en ti.</p>
               </div>
             </div>
