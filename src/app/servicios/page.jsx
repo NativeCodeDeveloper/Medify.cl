@@ -23,7 +23,7 @@ export default function ServiciosPage() {
           <h1 className={`text-center lg:text-5xl xl:text-6xl font-bold tracking-tight text-neutral-900 mb-6 leading-tight ${spaceGrotesk.className}`}>
             <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">La forma de gestionar tu consulta ha cambiado.</strong>
           </h1>
-          <p className="text-justify lg:text-xl text-neutral-700 leading-relaxed mb-8">
+          <p className="text-center lg:text-xl text-neutral-700 leading-relaxed mb-12 px-6 sm:px-8 md:px-12 lg:px-0 max-w-2xl mx-auto">
             Descubre nuestras soluciones tecnológicas especializadas para el sector de la salud. 
             Desde gestión básica hasta sistemas de reservas en la nube.
           </p>

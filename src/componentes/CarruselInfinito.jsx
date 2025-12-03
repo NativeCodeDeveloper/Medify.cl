@@ -171,10 +171,10 @@ export default function CarruselInfinito({ especialidades }) {
         <div className="absolute top-0 right-0 bottom-0 w-32 md:w-48 bg-gradient-to-l from-white via-white/60 to-transparent z-10 pointer-events-none" />
       </div>
 
-      {/* Indicador profesional */}
+      {/* Indicador profesional 
       <div className="text-center mt-8 text-blue-400/60 text-sm font-medium tracking-wider uppercase">
         {isDragging ? "↔ Arrastrando" : isPaused ? "◼ Arrastra para explorar" : "▶ Desplazamiento automático"}
-      </div>
+      </div> */}
 
       {/* CSS para scrollbar oculto */}
       <style jsx>{`

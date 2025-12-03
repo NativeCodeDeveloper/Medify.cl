@@ -70,7 +70,7 @@ export default function Footer() {
                 <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/40 to-cyan-600/40 rounded-full blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative">
                   <Image
-                    src="/logomedify1.png"
+                    src="/pngmedify.png"
                     alt="Logo Medify"
                     width={900}
                     height={900}
