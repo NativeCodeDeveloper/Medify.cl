@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import Threads from "@/componentes/Threads";
 import CarruselInfinito from "@/componentes/CarruselInfinito";
 import FadeInSection from "@/componentes/FadeInSection";
