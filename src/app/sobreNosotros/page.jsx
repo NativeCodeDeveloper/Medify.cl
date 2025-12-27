@@ -55,7 +55,7 @@ export default function SobreNosotros() {
             {/* iPhone - Móvil */}
             <div className="w-32 md:w-1/4 lg:w-1/5 flex-shrink-0 md:relative md:z-40 md:mr-[-40px] lg:mr-[-35px] md:drop-shadow-2xl md:mt-6 lg:mt-12">
               <Iphone
-                src="/medifyceL.jpg"
+                src="/medifycel.jpg"
                 objectFit="cover"
                 objectPosition="30% 40%"
               />
