@@ -1,10 +1,14 @@
 "use client";
 import { Space_Grotesk, Michroma } from "next/font/google";
 import Image from "next/image";
+import { Space_Grotesk, Montserrat } from "next/font/google";
+import { Space_Grotesk, Inter } from "next/font/google";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["600", "700"], display: "swap" });
 const michroma = Michroma({ subsets: ["latin"], weight: "400", display: "swap" });
-
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["700"], display: "swap" });
+const inter = Inter({ subsets: ["latin"], weight: ["400", "700"], display: "swap" });
+  
 export default function Portada() {
   return (
     <main>
@@ -20,15 +24,15 @@ export default function Portada() {
           <div className="space-y-4 sm:space-y-6 md:space-y-8 flex flex-col items-center justify-center text-center">
             <p className="text-center text-xs sm:text-sm font-semibold text-cyan-700 uppercase tracking-wide">Plataforma para profesionales de la salud</p>
             
-            <h1 className={`${spaceGrotesk.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight 
-            font-bold leading-tight text-center mb-4 sm:mb-6 md:mb-8 mt-6 sm:mt-8 md:mt-12 breack-words`}>
+            <h1 className={`${inter.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight 
+            font-regular leading-tight text-center mb-4 sm:mb-6 md:mb-8 mt-6 sm:mt-8 md:mt-12 breack-words`}>
               <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">
                 GESTIÓN CLÍNICA EN LA NUBE
               </strong>
             </h1>
             
             {/* Contenedor con diseño profesional */}
-            <div className="bg-white/40 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-xl border border-slate-200/50 mt-6 sm:mt-8 md:mt-12 flex flex-col items-center text-center">
+            <div className="bg-white/40 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-xl border border-slate-200/50 mt-6 sm:mt-6 md:mt-8 flex flex-col items-center text-center">
               <p className="text-center text-base sm:text-lg text-slate-700 leading-relaxed mb-4 sm:mb-6">
                 Optimiza la gestión de tu consulta médica con nuestra plataforma integral diseñada para profesionales de la salud.
               </p>
@@ -67,7 +71,7 @@ export default function Portada() {
               </ul>
             </div>
 
-            <div className="flex flex-wrap gap-3 sm:gap-4 pt-2 items-center justify-center mt-6 sm:mt-8 md:mt-12">
+            <div className="flex flex-wrap gap-3 sm:gap-4 pt-2 items-center justify-center mt-6 sm:mt-6 md:mt-8">
               <a href="/contacto" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 bg-cyan-600 text-white 
               rounded-lg shadow-lg hover:bg-cyan-700 hover:shadow-xl transition-all font-semibold text-sm sm:text-base">
                 Comienza ahora
