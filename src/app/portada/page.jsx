@@ -20,8 +20,8 @@ export default function Portada() {
           <div className="space-y-4 sm:space-y-6 md:space-y-8 flex flex-col items-center justify-center text-center">
             <p className="text-center text-xs sm:text-sm font-semibold text-cyan-700 uppercase tracking-wide">Plataforma para profesionales de la salud</p>
             
-            <h1 className={`${spaceGrotesk.className} text-4xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight 
-            font-bold leading-tight text-center mb-4 sm:mb-6 md:mb-8 mt-6 sm:mt-8 md:mt-12 whitespace-nowrap`}>
+            <h1 className={`${spaceGrotesk.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight 
+            font-bold leading-tight text-center mb-4 sm:mb-6 md:mb-8 mt-6 sm:mt-8 md:mt-12 breack-words`}>
               <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">
                 GESTIÓN CLÍNICA EN LA NUBE
               </strong>
