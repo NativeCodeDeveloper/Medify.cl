@@ -20,35 +20,35 @@ export default function Footer() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
       {/* Fondo decorativo removido para fondo blanco profesional */}
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="py-16 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="py-12 sm:py-16 lg:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             {/* Left Column - Text Content */}
-            <div className="space-y-6">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+            <div className="space-y-4 sm:space-y-6 text-center lg:text-left">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
                 <span className="block text-neutral-900">Tu consulta digital</span>
-                <span className="text-center block text-neutral-900 mt-2">
+                <span className="block text-neutral-900 mt-2">
                   a tu medida con
                 </span>
-                <span className="block mt-4">
+                <span className="block mt-3 sm:mt-4">
                   <GradientText>M e d i f y</GradientText>
                 </span>
               </h2>
 
-              <p className="text-justify text-gray-400 max-w-xl leading-relaxed">
+              <p className="text-center lg:text-left text-sm sm:text-base text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0">
               Optimiza tu consulta con una plataforma diseñada especialmente para profesionales de la salud. Agenda, 
               fichas clínicas y gestión completa en un sistema simple, seguro y adaptable a tu forma de trabajo.
               </p>
 
-              <div className="pt-6 flex justify-center lg:justify-center">
+              <div className="pt-4 sm:pt-6 flex justify-center lg:justify-start">
                 <a
                   href="/"
-                  className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/60 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                  className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-white shadow-lg shadow-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/60 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Volver a Medify
                   <svg
-                    className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                    className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -65,16 +65,16 @@ export default function Footer() {
             </div>
 
             {/* Right Column - Logo */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/40 to-cyan-600/40 rounded-full blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="flex justify-center lg:justify-end mt-8 lg:mt-0">
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/40 to-cyan-600/40 rounded-full blur-2xl opacity-75"></div>
                 <div className="relative">
                   <Image
                     src="/pngmedify.png"
                     alt="Logo Medify"
                     width={900}
                     height={900}
-                    className="w-72 h-72 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px] object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-110"
+                    className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 xl:w-[500px] xl:h-[500px] object-contain drop-shadow-2xl"
                     priority
                   />
                 </div>
@@ -87,41 +87,41 @@ export default function Footer() {
         <div className="border-t border-gray-800/30"></div>
 
         {/* Bottom Footer */}
-        <div className="py-8 lg:py-12">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div className="py-6 sm:py-8 lg:py-12">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 sm:gap-8">
             {/* Links */}
-            <nav className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4">
+            <nav className="flex flex-wrap justify-center lg:justify-start gap-x-4 sm:gap-x-8 gap-y-3 sm:gap-y-4 px-4 sm:px-0">
               <Link
                 href="/contacto"
-                className="text-sm font-medium text-gray-400 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
+                className="text-xs sm:text-sm font-medium text-gray-600 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
               >
                 Contacto Especializado
               </Link>
               <Link
                 href="/soporte"
-                className="text-sm font-medium text-gray-400 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
+                className="text-xs sm:text-sm font-medium text-gray-600 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
               >
                 Soporte Especializado
               </Link>
               <Link
                 href="/politica"
-                className="text-sm font-medium text-gray-400 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
+                className="text-xs sm:text-sm font-medium text-gray-600 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
               >
                 Políticas y Privacidad
               </Link>
             </nav>
 
             {/* Social Links */}
-            <div className="flex justify-center lg:justify-end gap-4">
+            <div className="flex justify-center lg:justify-end gap-3 sm:gap-4">
               <a
                 href="#"
                 rel="noreferrer"
                 target="_blank"
-                className="group flex h-10 w-10 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-blue-600 hover:border-blue-500 hover:scale-110"
+                className="group flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-blue-600 hover:border-blue-500 hover:scale-110"
                 aria-label="Facebook"
               >
                 <svg
-                  className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors"
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white transition-colors"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -137,11 +137,11 @@ export default function Footer() {
                 href="#"
                 rel="noreferrer"
                 target="_blank"
-                className="group flex h-10 w-10 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 hover:border-pink-500 hover:scale-110"
+                className="group flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 hover:border-pink-500 hover:scale-110"
                 aria-label="Instagram"
               >
                 <svg
-                  className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors"
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white transition-colors"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -156,8 +156,8 @@ export default function Footer() {
           </div>
 
           {/* Copyright */}
-          <div className="mt-8 pt-8 border-t border-gray-800/50">
-            <p className="text-center text-sm text-gray-500">Tecnología desarrollada por NativeCode.cl - 
+          <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-800/50">
+            <p className="text-center text-xs sm:text-sm text-gray-500 px-4">Tecnología desarrollada por NativeCode.cl - 
               © {new Date().getFullYear()} Medify.cl. Todos los derechos
               reservados.
             </p>

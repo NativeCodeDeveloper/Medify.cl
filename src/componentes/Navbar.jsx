@@ -20,8 +20,7 @@ const pages = [
   { label: 'Casos de Éxito', href: '/portafolio' },
   { label: 'Soluciones', href: '/servicios' },
   { label: 'Sobre Medify', href: '/sobreNosotros' },
-  { label: 'Contacto', href: '/soporte' },
-  { label: 'Solicitar información', href: '/comprar' }
+  { label: 'Contacto', href: '/soporte' }
 ];
 
 function ResponsiveAppBar() {
