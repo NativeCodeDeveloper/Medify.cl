@@ -10,6 +10,7 @@ import Image from "next/image";
 import BotonBlanco from "@/componentes/BotonBlanco";
 import Link from "next/link";
 import { RadialOrbit } from "../componentes/RadialOrbit";
+import PortadaCelulares from "@/app/portadaCelulares/page";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 
@@ -29,6 +30,7 @@ export default function Home() {
         <FadeInSection delay={0}>
           <div className="-mx-4 sm:-mx-6 md:-mx-8 lg:-mx-12">
             <Portada></Portada>
+              <PortadaCelulares/>
           </div>
         </FadeInSection>
 

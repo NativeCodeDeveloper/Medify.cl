@@ -1,14 +1,15 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Poppins, Dancing_Script } from "next/font/google";
+import { Poppins } from "next/font/google";
 import Footer from "./Footer/page";
-import ClientCardNav from "@/componentes/ClientCardNav";
 import Script from "next/script";
 import { ViewTransitions } from 'next-view-transitions';
+import NavbarMedify from "@/componentes/navbarMedify";
 
 // ==========================
 // SEO Metadata (App Router)
 // ==========================
+
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   applicationName: 'Medify',
@@ -104,11 +105,6 @@ const poppins = Poppins({
   weight: ["400", "600"],
 });
 
-const dancing = Dancing_Script({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-});
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -160,8 +156,7 @@ export default function RootLayout({ children }) {
       <body className={`${poppins.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="min-h-screen flex flex-col relative">
           {/* CardNav moderno con animaciones GSAP */}
-          <ClientCardNav />
-          
+<NavbarMedify />
           <main className="flex-1">
             {children}
           </main>

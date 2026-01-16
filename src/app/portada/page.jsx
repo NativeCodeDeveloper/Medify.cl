@@ -13,14 +13,15 @@ export default function Portada() {
   return (
     <main>
       <section
-        className="relative min-h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('/doctorfondo.jpg')" }}
+        className="relative min-h-50 bg-cover bg-center hidden md:block"
+        style={{ backgroundImage: "url('/pruebitas6.png')" }}
       >
         {/* Overlay */}
         <div className="absolute inset-0 mt-16 sm:mt-20" />
 
         <div className="relative z-12 max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 md:pt-40 pb-16 sm:pb-20 md:pb-24 grid grid-cols-1 md:grid-cols-2 items-center gap-6 sm:gap-8">
           {/* Columna izquierda: texto principal */}
+<<<<<<< HEAD
           <div className="space-y-4 sm:space-y-6 md:space-y-8 flex flex-col items-center justify-center text-center">
             <p className="text-center text-xs sm:text-sm font-semibold text-cyan-700 uppercase tracking-wide">Plataforma para profesionales de la salud</p>
             
@@ -69,13 +70,45 @@ export default function Portada() {
                   <span className="text-sm sm:text-base font-medium">Pagos y cobros automatizados</span>
                 </li>
               </ul>
+=======
+          <div className="space-y-6 md:pr-8 ">
+              <p className="text-sm font-semibold text-cyan-700">Plataforma para profesionales de la salud</p>
+              <h1 className={`${spaceGrotesk.className} text-3xl sm:text-4xl  md:text-5xl tra font-extrabold text-cyan-900 leading-tight tracking-tight`}>Medify: el ecosistema clínico digital para profesionales de la salud</h1>
+              <p className="text-2xl font-bold text-slate-800  max-w-2xl leading-relaxed tracking-wide">Ordena tu consulta, atrae más pacientes y gestiona tu trabajo.</p>
+
+             <div className="flex flex-wrap gap-4 mt-4">
+              <a href="#" className="inline-block px-6 py-3 bg-cyan-600 text-white rounded-lg shadow hover:bg-cyan-700 transition font-semibold text-base">Comienza a atender online ahora</a>
+             </div>
+
+
+            {/* Logo para móviles (visible solo en <md), con texto junto al logo */}
+            <div className="mt-8 flex justify-center md:hidden">
+              <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-4 shadow-lg overflow-hidden">
+                <div className="flex items-center gap-3">
+                  {/* texto responsive en móvil */}
+
+                </div>
+              </div>
+>>>>>>> 4721932 (adasd)
             </div>
 
+<<<<<<< HEAD
             <div className="flex flex-wrap gap-3 sm:gap-4 pt-2 items-center justify-center mt-6 sm:mt-6 md:mt-8">
               <a href="/contacto" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 bg-cyan-600 text-white 
               rounded-lg shadow-lg hover:bg-cyan-700 hover:shadow-xl transition-all font-semibold text-sm sm:text-base">
                 Comienza ahora
               </a>
+=======
+            {/* Columna derecha: logo con fondo translúcido que cubre las letras (visible en md+) */}
+            <div className="hidden md:flex items-center justify-end">
+              <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-xl overflow-hidden">
+                <div className="flex items-center gap-4 lg:gap-6">
+                  {/* texto responsive en escritorio */}
+                  {/* logo responsive: controlar anchura con clases */}
+
+                </div>
+              </div>
+>>>>>>> 4721932 (adasd)
             </div>
           </div>
 
