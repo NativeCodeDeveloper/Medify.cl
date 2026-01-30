@@ -4,6 +4,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 // Navbar estilo Medify (similar a la referencia):
 // - Fondo blanco con borde inferior
@@ -25,42 +26,42 @@ export default function NavbarMedify() {
   }, []);
 
   const links = [
-    { label: "Quiénes Somos", href: "#quienes-somos" },
-    { label: "Marketplace", href: "#marketplace" },
-    { label: "Socios", href: "#socios" },
-    { label: "Planes", href: "#precios" },
-    { label: "Contacto", href: "#contacto" },
+    { label: "Quiénes Somos", href: "/sobreNosotros" },
+    { label: "Marketplace", href: "/marketplace" },
+    { label: "Planes", href: "/precios" },
+    { label: "Cómo funciona", href: "/comoFunciona" },
+    { label: "Contacto", href: "/contacto" },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-slate-200">
+    <header className="sticky top-0 z-50 w-full bg-white/75 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 border-b border-slate-200/50">
       <nav className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="h-16 flex items-center justify-between gap-3">
           {/* Logo */}
-          <a
+          <Link
             href="/"
             className="flex items-center gap-2 min-w-[140px]"
             aria-label="Ir al inicio"
           >
             {/* Reemplaza /logo-medify.svg por tu logo */}
             <img
-              src="/medifylogo.png"
+              src="/lmedify.png"
               alt="Medify"
               className="h-10 w-auto"
             />
-          </a>
+          </Link>
 
           {/* Links (desktop) */}
           <div className="hidden lg:flex flex-1 items-center justify-center">
             <ul className="flex items-center gap-8">
               {links.map((l) => (
                 <li key={l.href}>
-                  <a
+                  <Link
                     href={l.href}
                     className="text-base font-bold text-cyan-700 hover:text-slate-900 transition-all duration-200 ease-out transform hover:-translate-y-0.5 hover:scale-[1.04]"
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -68,8 +69,8 @@ export default function NavbarMedify() {
 
           {/* CTA (desktop) */}
           <div className="hidden lg:flex items-center justify-end min-w-[220px]">
-            <a
-              href="#solicitar"
+            <Link
+              href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify" target="_blank"
               className="inline-flex items-center gap-2 rounded-full border border-teal-300/70 bg-white px-4 py-2 text-[14px] font-semibold text-slate-700 shadow-sm hover:shadow transition-shadow hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
             >
               <span className="grid place-items-center h-8 w-8 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
@@ -97,7 +98,7 @@ export default function NavbarMedify() {
                 </svg>
               </span>
               <span>Solicitar Información</span>
-            </a>
+            </Link>
           </div>
 
           {/* Botón menú (móvil) */}
@@ -164,15 +165,14 @@ export default function NavbarMedify() {
 
         {/* Menú móvil */}
         <div
-          className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-300 ${
-            open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-300 ${open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           <div className="pb-4">
             <ul className="flex flex-col gap-1 pt-2">
               {links.map((l) => (
                 <li key={l.href}>
-                  <a
+                  <Link
                     href={l.href}
                     onClick={() => setOpen(false)}
                     className="flex items-center justify-between rounded-xl px-3 py-2 text-[15px] font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900"
@@ -195,14 +195,14 @@ export default function NavbarMedify() {
                         strokeLinejoin="round"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
 
             <div className="pt-3">
-              <a
-                href="#solicitar"
+              <Link
+                href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify" target="_blank"
                 onClick={() => setOpen(false)}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-teal-300/70 bg-white px-4 py-2.5 text-[14px] font-semibold text-slate-700 shadow-sm hover:shadow transition-shadow hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
               >
@@ -230,7 +230,7 @@ export default function NavbarMedify() {
                   </svg>
                 </span>
                 <span>Solicitar Información</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

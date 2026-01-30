@@ -24,15 +24,14 @@ export default function PortadaCelulares() {
                     <div className="space-y-4">
 
 
-
                         <h1 className={`${spaceGrotesk.className} mx-auto max-w-[22ch] text-balance text-3xl font-bold tracking-tight text-slate-900`}>
                             Menos desorden.
                         </h1>
-
+                        <br />
                         <h1 className={`${spaceGrotesk.className} -mt-10 mx-auto max-w-[22ch] text-balance text-3xl font-extrabold tracking-tight text-cyan-600 `}>
                             Mejor atención.
                         </h1>
-                        <br/>
+                        <br />
                         <p className="mx-auto text-base font-bold text-pretty  leading-relaxed text-slate-600">
                             Ordena tu consulta, atrae más pacientes y gestiona tu trabajo.
                         </p>

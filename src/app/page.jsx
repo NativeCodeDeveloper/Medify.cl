@@ -1,7 +1,7 @@
 "use client";
-import { Space_Grotesk } from "next/font/google";
+import { Poppins } from "next/font/google";
 import Portada from "./portada/page";
-import SobreNosotros from "./sobreNosotros/page";
+import ComoFunciona from "./comoFunciona/page";
 import Servicios from "./servicios/page";
 import Footer from "./Footer/page";
 import Portafolio from "./portafolio/page";
@@ -12,7 +12,7 @@ import Link from "next/link";
 import { RadialOrbit } from "../componentes/RadialOrbit";
 import PortadaCelulares from "@/app/portadaCelulares/page";
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "600"], display: "swap" });
 
 export default function Home() {
   return (
@@ -25,42 +25,228 @@ export default function Home() {
         }}
       />
 
+
       {/* Contenido */}
       <div className="relative z-10 px-4 sm:px-6 md:px-8 lg:px-12">
         <FadeInSection delay={0}>
           <div className="-mx-4 sm:-mx-6 md:-mx-8 lg:-mx-12">
-            <Portada></Portada>
-              <PortadaCelulares/>
+            <div className="hidden md:block">
+              <Portada />
+            </div>
+            <div className="block md:hidden">
+              <PortadaCelulares />
+            </div>
           </div>
         </FadeInSection>
 
         <FadeInSection delay={0} y={80}>
           <div className="-mx-6 sm:-mx-6 md:-mx-8 lg:-mx-20">
-            <div className="relative grid grid-cols-1 md:grid-cols-5 items-center px-12 md:px-20 lg:px-14 py-30 md:py-32 gap-8">
-              {/* Orbit animation left */}
-              <div className="hidden md:flex md:col-span-2 justify-center items-center">
-                    <RadialOrbit
-                      orbitItems={[
-                        { id: 1, name: "Paciente", src: "/medgenlog.jpg" },
-                        { id: 2, name: "Agenda", src: "/psicol.jpg" },
-                        { id: 3, name: "Historial", src: "/cardio.jpg" },
-                        { id: 4, name: "Recetas", src: "/kines.jpg" },
-                        { id: 5, name: "Pagos", src: "/pediatria.jpg" },
-                        { id: 6, name: "Pagos", src: "/nutric.jpg" },
-                        { id: 7, name: "Pagos", src: "/oftalm.jpg" },  
-                      ]}
-                      stageSize={400}
-                      imageSize={110}
-                      centerImage={{ src: "/logomedify.png", alt: "Medify" }}
-                    />
+            <div className="relative grid grid-cols-1 md:grid-cols-5 items-center justify-items-center px-12 md:px-20 lg:px-14 py-30 md:py-32 gap-6">
+              {/* Orbit animation left - Centrado */}
+              <div className="hidden lg:flex md:col-span-2 justify-center items-center">
+                <RadialOrbit
+                  orbitItems={[
+                    { id: 1, name: "Paciente", src: "/medgenlog.jpg" },
+                    { id: 2, name: "Agenda", src: "/psicol.jpg" },
+                    { id: 3, name: "Historial", src: "/cardio.jpg" },
+                    { id: 4, name: "Recetas", src: "/kines.jpg" },
+                    { id: 5, name: "Pagos", src: "/pediatria.jpg" },
+                    { id: 6, name: "Pagos", src: "/nutric.jpg" },
+                    { id: 7, name: "Pagos", src: "/oftalm.jpg" },
+                  ]}
+                  stageSize={400}
+                  imageSize={110}
+                  centerImage={{ src: "/logomedify.png", alt: "Medify" }}
+                />
               </div>
-              {/* Texto principal right */}
-              <div className="md:col-span-3">
-                    <h2 className={`text-center text-3xl md:text-5xl font-extrabold text-black tracking-tight leading-snug max-w-4xl ${spaceGrotesk.className}`}><strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Digitaliza tu práctica médica y lleva tu consulta al siguiente nivel.</strong> </h2>
-                <p className={`mt-10 text-justify md:text-3xl text-black/85 leading-relaxed max-w-4xl ${spaceGrotesk.className}`}>Moderniza tu consulta con una plataforma diseñada para profesionales de la salud. Donde podrás gestionar tus pacientes, agenda, fichas clínicas y reservas online desde un mismo lugar, optimizando tu tiempo y mejorando la experiencia de quienes confían en ti.</p>
+
+              {/* Columna Derecha: Nueva integración de features - Centrado */}
+              <div className="md:col-span-3 flex items-center justify-center">
+                <div className="space-y-6 max-w-xl">
+
+                  {/* Feature 1: Agendamiento online */}
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className={`${poppins.className} text-xl md:text-2xl font-normal text-slate-800`}>
+                      Agendamiento online
+                    </h3>
+                  </div>
+
+                  {/* Feature 2: Fichas e historial clínico */}
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className={`${poppins.className} text-xl md:text-2xl font-normal text-slate-800`}>
+                      Fichas e historial clínico
+                    </h3>
+                  </div>
+
+                  {/* Feature 3: Pagos y control financiero */}
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className={`${poppins.className} text-xl md:text-2xl font-normal text-slate-800`}>
+                      Pagos y control financiero
+                    </h3>
+                  </div>
+
+                  {/* Feature 4: Recordatorios automáticos */}
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className={`${poppins.className} text-xl md:text-2xl font-normal text-slate-800`}>
+                      Recordatorios automáticos
+                    </h3>
+                  </div>
+
+                  {/* Feature 5: Mensajes y seguimiento */}
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className={`${poppins.className} text-xl md:text-2xl font-normal text-slate-800`}>
+                      Mensajes y seguimiento
+                    </h3>
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="pt-4">
+                    <a
+                      href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-3 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-semibold text-base md:text-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                    >
+                      <span>Todo en un solo lugar, hecho para profesionales</span>
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                      </svg>
+                    </a>
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
+        </FadeInSection>
+
+        {/* Nueva Sección: ¿Cuáles problemas soluciona Medify? */}
+        <FadeInSection delay={0.2}>
+          <section className="w-full bg-white py-20 md:py-24">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
+
+              {/* Título y Subtítulo */}
+              <div className="text-center mb-16">
+                <h2 className={`${poppins.className} text-3xl sm:text-4xl md:text-5xl font-normal tracking-tighter text-slate-900 mb-4`}>
+                  ¿Qué problemas soluciona Medify?
+                </h2>
+                <p className={`${poppins.className} text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto`}>
+                  Todo lo que necesitas para tu consulta en un solo lugar.
+                </p>
+              </div>
+
+              {/* Grid de 3 Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                {/* Card 1: Más orden */}
+                <div className="bg-slate-50 rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300">
+                  {/* Icono */}
+                  <div className="w-16 h-16 rounded-xl bg-teal-100 flex items-center justify-center mb-6">
+                    <svg className="w-8 h-8 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                  </div>
+
+                  {/* Título */}
+                  <h3 className={`${poppins.className} text-2xl font-normal text-slate-900 mb-4`}>
+                    Más orden
+                  </h3>
+
+                  {/* Descripción */}
+                  <p className={`${poppins.className} text-base text-slate-600 leading-relaxed mb-6`}>
+                    Gestiona tu agenda, pagos y fichas sin enredarte en el papeleo.
+                  </p>
+
+                  {/* 
+                    TODO: Integrar imagen aquí cuando estén listas (descomentar y reemplazar src)
+                    <div className="relative w-full h-40 rounded-xl overflow-hidden mt-6">
+                      <Image src="/ruta-imagen-orden.jpg" alt="Más orden" fill className="object-cover" />
+                    </div>
+                  */}
+                </div>
+
+                {/* Card 2: Más pacientes */}
+                <div className="bg-slate-50 rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300">
+                  {/* Icono */}
+                  <div className="w-16 h-16 rounded-xl bg-teal-100 flex items-center justify-center mb-6">
+                    <svg className="w-8 h-8 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+
+                  {/* Título */}
+                  <h3 className={`${poppins.className} text-2xl font-normal text-slate-900 mb-4`}>
+                    Más pacientes
+                  </h3>
+
+                  {/* Descripción */}
+                  <p className={`${poppins.className} text-base text-slate-600 leading-relaxed mb-6`}>
+                    Aumenta tu visibilidad y llega a más pacientes en nuestro ecosistema.
+                  </p>
+
+                  {/* 
+                    TODO: Integrar imagen aquí cuando estén listas (descomentar y reemplazar src)
+                    <div className="relative w-full h-40 rounded-xl overflow-hidden mt-6">
+                      <Image src="/ruta-imagen-pacientes.jpg" alt="Más pacientes" fill className="object-cover" />
+                    </div>
+                  */}
+                </div>
+
+                {/* Card 3: Más control */}
+                <div className="bg-slate-50 rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300">
+                  {/* Icono */}
+                  <div className="w-16 h-16 rounded-xl bg-teal-100 flex items-center justify-center mb-6">
+                    <svg className="w-8 h-8 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+
+                  {/* Título */}
+                  <h3 className={`${poppins.className} text-2xl font-normal text-slate-900 mb-4`}>
+                    Más control
+                  </h3>
+
+                  {/* Descripción */}
+                  <p className={`${poppins.className} text-base text-slate-600 leading-relaxed mb-6`}>
+                    Simplifica tus pagos, recordatorios y tareas desde un solo lugar.
+                  </p>
+
+                  {/*   
+                    TODO: Integrar imagen aquí cuando estén listas (descomentar y reemplazar src)
+                    <div className="relative w-full h-40 rounded-xl overflow-hidden mt-6">
+                      <Image src="/ruta-imagen-control.jpg" alt="Más control" fill className="object-cover" />
+                    </div>
+                  */}
+                </div>
+
+              </div>
+            </div>
+          </section>
         </FadeInSection>
 
         <FadeInSection delay={0.3}>
@@ -69,15 +255,15 @@ export default function Home() {
           </div>
         </FadeInSection>
 
-       {/* <FadeInSection delay={0.4}>
+        {/* <FadeInSection delay={0.4}>
           <div className="my-32">
             <Portafolio></Portafolio>
           </div>
         </FadeInSection> */}
 
         <FadeInSection delay={0.5}>
-          <SobreNosotros></SobreNosotros>
-        </FadeInSection> 
+          <ComoFunciona />
+        </FadeInSection>
 
         {/* Bloque 3: Actualización continua - Fondo wallet 
       <div
@@ -138,7 +324,7 @@ export default function Home() {
           href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify"
           target="_blank"
           rel="noopener noreferrer"
-          className={`wsp-float-btn ${spaceGrotesk.className}`}
+          className={`wsp-float-btn ${poppins.className}`}
           aria-label="Contáctanos"
         >
           <span className="wsp-icon-wrap">

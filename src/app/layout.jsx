@@ -14,7 +14,7 @@ export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   applicationName: 'Medify',
   title: {
-    default: 'Medify | Soluciones digitales para profesionales de la salud',
+    default: 'Medify.cl',
     template: '%s | Medify',
   },
   description: 'Medify: sistemas médicos especializados, plataformas de telemedicina y gestión de pacientes. Cumplimiento HIPAA, seguridad de datos médicos y tecnología de vanguardia para profesionales de la salud.',
@@ -129,41 +129,41 @@ export default function RootLayout({ children }) {
               "name": "Medify.cl",
               "url": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
               "logo": (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000") + "/og.jpg",
-            "sameAs": [
-              "https://www.instagram.com/",
-              "https://www.linkedin.com/"
-            ]
-          })
-        }}
-      />
-      <Script
-        id="ld-website"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "Medify.cl",
-            "url": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000") + "/buscar?q={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          })
-        }}
-      />
-      <body className={`${poppins.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="min-h-screen flex flex-col relative">
-          {/* CardNav moderno con animaciones GSAP */}
-<NavbarMedify />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </div>
-      </body>
-    </html>
+              "sameAs": [
+                "https://www.instagram.com/",
+                "https://www.linkedin.com/"
+              ]
+            })
+          }}
+        />
+        <Script
+          id="ld-website"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Medify.cl",
+              "url": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000") + "/buscar?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+        <body className={`${poppins.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <div className="min-h-screen flex flex-col relative">
+            {/* CardNav moderno con animaciones GSAP */}
+            <NavbarMedify />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </body>
+      </html>
     </ViewTransitions>
   );
 }

@@ -1,3 +1,4 @@
+"use client";
 import { Check, MoveRight, PhoneCall, Shield } from "lucide-react";
 import { useEffect, useRef } from "react";
 
@@ -37,7 +38,7 @@ export default function Pricing1() {
         <div className="py-20 lg:py-40">
             <div className="container mx-auto">
                 <div className="flex text-center justify-center items-center gap-4 flex-col">
-                    <Badge>La plataforma que transforma consultas médicas</Badge>
+                    {/*  <Badge>La plataforma que transforma consultas médicas</Badge> */}
                     <div className="flex gap-2 flex-col">
                         <h2 className="text-3xl md:text-5xl lg:text-5xl tracking-tighter max-w-2xl text-center font-regular leading-tight mb-6 mt-8">
                             <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Dedica más tiempo a tus pacientes, menos al papeleo.</strong>
@@ -67,8 +68,8 @@ export default function Pricing1() {
                                 <CardContent>
                                     <div className="flex flex-col gap-8 justify-start">
                                         <p className="flex flex-row  items-center gap-2 text-xl">
-                                            <span className="text-4xl"></span>
-                                            <span className="text-sm text-muted-foreground"></span>
+                                            <span className="text-4xl">$0</span>
+                                            <span className="text-sm text-muted-foreground">con límites</span>
                                         </p>
                                         <div className="flex flex-col gap-4 justify-start">
                                             <div className="flex flex-col gap-4 justify-start">
@@ -121,8 +122,8 @@ export default function Pricing1() {
                                 <CardContent>
                                     <div className="flex flex-col gap-8 justify-start">
                                         <p className="flex flex-row  items-center gap-2 text-xl">
-                                            <span className="text-4xl">$120.000</span>
-                                            <span className="text-sm text-muted-foreground"> / + IVA</span>
+                                            <span className="text-4xl">$19.900</span>
+                                            <span className="text-sm text-muted-foreground"> CLP/mes + IVA</span>
                                         </p>
                                         <div className="flex flex-col gap-4 justify-start">
                                             <div className="flex flex-col gap-4 justify-start">
@@ -179,7 +180,7 @@ export default function Pricing1() {
                                 <CardHeader>
                                     <CardTitle>
                                         <span className="flex flex-row gap-4 items-center font-normal">
-                                            <strong>Enterprise</strong>
+                                            <strong>Avanzado</strong>
                                         </span>
                                     </CardTitle>
                                     <CardDescription>
@@ -189,8 +190,8 @@ export default function Pricing1() {
                                 <CardContent>
                                     <div className="flex flex-col gap-8 justify-start">
                                         <p className="flex flex-row  items-center gap-2 text-xl">
-                                            <span className="text-4xl"></span>
-                                            <span className="text-sm text-muted-foreground"> </span>
+                                            <span className="text-4xl">$29.900</span>
+                                            <span className="text-sm text-muted-foreground"> CLP/mes + IVA</span>
                                         </p>
                                         <div className="flex flex-col gap-4 justify-start">
                                             <div className="flex flex-row gap-4">
