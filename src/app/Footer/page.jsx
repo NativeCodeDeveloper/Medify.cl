@@ -26,7 +26,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             {/* Left Column - Text Content */}
             <div className="space-y-4 sm:space-y-6 text-center lg:text-left">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+              <h2 className="text-3xl text-center sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
                 <span className="block text-neutral-900">Tu consulta digital</span>
                 <span className="block text-neutral-900 mt-2">
                   a tu medida con
@@ -36,9 +36,10 @@ export default function Footer() {
                 </span>
               </h2>
 
-              <p className="text-center lg:text-left text-sm sm:text-base text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0">
-                Optimiza tu consulta con una plataforma diseñada especialmente para profesionales de la salud. Agenda,
-                fichas clínicas y gestión completa en un sistema simple, seguro y adaptable a tu forma de trabajo.
+              <p className="text-justify lg:text-left text-sm sm:text-base text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0">
+                Optimiza tu consulta con una plataforma diseñada especialmente para profesionales de la salud.
+                <br />
+                Agenda, fichas clínicas y gestión completa en un sistema simple, seguro y adaptable a tu forma de trabajo.
               </p>
 
               <div className="pt-4 sm:pt-6 flex justify-center lg:justify-start">
@@ -95,13 +96,13 @@ export default function Footer() {
                 href="/contacto"
                 className="text-xs sm:text-sm font-medium text-gray-600 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
               >
-                Contacto Especializado
+                Contacto
               </Link>
               <Link
                 href="/soporte"
                 className="text-xs sm:text-sm font-medium text-gray-600 hover:text-blue-500 transition-colors duration-200 hover:underline decoration-blue-500 underline-offset-4"
               >
-                Soporte Especializado
+                Soporte 
               </Link>
               <Link
                 href="/politica"
@@ -157,7 +158,7 @@ export default function Footer() {
 
           {/* Copyright */}
           <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-800/50">
-            <p className="text-center text-xs sm:text-sm text-gray-500 px-4">Tecnología desarrollada por NativeCode.cl -
+            <p className="text-center text-xs sm:text-sm text-gray-500 px-4">Tecnología desarrollada por <a href="https://www.nativecode.cl/" target="_blank" className="text-blue-500 underline decoration-blue-500 underline-offset-4">Nativecode.cl</a> - 
               © {new Date().getFullYear()} Medify.cl. Todos los derechos
               reservados.
             </p>
