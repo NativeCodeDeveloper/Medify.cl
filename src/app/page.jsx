@@ -3,12 +3,7 @@ import { Poppins } from "next/font/google";
 import Portada from "./portada/page";
 import ComoFunciona from "./comoFunciona/page";
 import Servicios from "./servicios/page";
-import Footer from "./Footer/page";
-import Portafolio from "./portafolio/page";
 import FadeInSection from "../componentes/FadeInSection";
-import Image from "next/image";
-import BotonBlanco from "@/componentes/BotonBlanco";
-import Link from "next/link";
 import { RadialOrbit } from "../componentes/RadialOrbit";
 import PortadaCelulares from "@/app/portadaCelulares/page";
 
@@ -40,8 +35,8 @@ export default function Home() {
         </FadeInSection>
 
         <FadeInSection delay={0} y={80}>
-          <div className="-mx-6 sm:-mx-6 md:-mx-8 lg:-mx-20">
-            <div className="relative grid grid-cols-1 md:grid-cols-5 items-center justify-items-center px-12 md:px-20 lg:px-14 py-30 md:py-32 gap-6">
+          <div className="-mx-4 sm:-mx-6 md:-mx-8 lg:-mx-20">
+            <div className="relative grid grid-cols-1 md:grid-cols-5 items-center justify-items-center px-4 sm:px-6 md:px-20 lg:px-14 py-14 sm:py-16 md:py-32 gap-6">
               {/* Orbit animation left - Centrado */}
               <div className="hidden lg:flex md:col-span-2 justify-center items-center">
                 <RadialOrbit
@@ -130,9 +125,9 @@ export default function Home() {
                       href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-3 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-semibold text-base md:text-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                      className="inline-flex w-full sm:w-auto items-center justify-center gap-3 bg-teal-600 hover:bg-teal-700 text-white px-5 sm:px-6 py-3 rounded-full font-semibold text-sm sm:text-base md:text-lg text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
                     >
-                      <span>Todo en un solo lugar, hecho para profesionales</span>
+                      <span className="leading-snug">Todo en un solo lugar, hecho para profesionales</span>
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                       </svg>

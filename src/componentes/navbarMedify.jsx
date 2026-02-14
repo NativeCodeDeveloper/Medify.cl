@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ArrowRight, MessageCircle } from "lucide-react";
 
 // Navbar estilo Medify (similar a la referencia):
 // - Fondo blanco con borde inferior
@@ -15,6 +16,7 @@ import Link from "next/link";
 
 export default function NavbarMedify() {
   const [open, setOpen] = useState(false);
+  const whatsappCtaUrl = "https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify";
 
   // Cierra el menú al pasar a desktop
   useEffect(() => {
@@ -70,34 +72,19 @@ export default function NavbarMedify() {
           {/* CTA (desktop) */}
           <div className="hidden lg:flex items-center justify-end min-w-[220px]">
             <Link
-              href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify" target="_blank"
-              className="inline-flex items-center gap-2 rounded-full border border-teal-300/70 bg-white px-4 py-2 text-[14px] font-semibold text-slate-700 shadow-sm hover:shadow transition-shadow hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
+              href={whatsappCtaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 rounded-full border border-teal-300/70 bg-white px-4 py-2 text-[14px] font-semibold text-slate-700 shadow-sm hover:shadow-md transition-all duration-200 hover:border-teal-400 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
+              aria-label="Hablar con un asesor por WhatsApp"
             >
-              <span className="grid place-items-center h-8 w-8 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                {/* Icono "i" dentro de círculo */}
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M12 17V11"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M12 8.2H12.01"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                </svg>
+              <span className="grid place-items-center h-8 w-8 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                <MessageCircle className="h-4 w-4" />
               </span>
-              <span>Solicitar Información</span>
+              <span>Solcitar información</span>
+              <span className="grid place-items-center h-7 w-7 rounded-full bg-slate-100 text-slate-500 border border-slate-200 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <ArrowRight className="h-3.5 w-3.5" />
+              </span>
             </Link>
           </div>
 
@@ -202,34 +189,20 @@ export default function NavbarMedify() {
 
             <div className="pt-3">
               <Link
-                href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify" target="_blank"
+                href={whatsappCtaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-teal-300/70 bg-white px-4 py-2.5 text-[14px] font-semibold text-slate-700 shadow-sm hover:shadow transition-shadow hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
+                className="group w-full inline-flex items-center justify-center gap-2 rounded-full border border-teal-300/70 bg-white px-4 py-2.5 text-[14px] font-semibold text-slate-700 shadow-sm hover:shadow-md transition-all duration-200 hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
+                aria-label="Hablar con un asesor por WhatsApp"
               >
-                <span className="grid place-items-center h-8 w-8 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M12 17V11"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M12 8.2H12.01"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                  </svg>
+                <span className="grid place-items-center h-8 w-8 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                  <MessageCircle className="h-4 w-4" />
                 </span>
-                <span>Solicitar Información</span>
+                <span>Hablar con un asesor</span>
+                <span className="grid place-items-center h-7 w-7 rounded-full bg-slate-100 text-slate-500 border border-slate-200 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
               </Link>
             </div>
           </div>

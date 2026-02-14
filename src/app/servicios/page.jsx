@@ -21,9 +21,6 @@ export default function ServiciosPage() {
         <ContainerScroll
           titleComponent={
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className={`text-base/20 font-semibold text-[#0c3690] mb-4 ${spaceGrotesk.className}`}>
-                Gestión Médica Innovadora
-              </h2>
               <h1 className={`text-3xl md:text-5xl lg:text-6xl font-regular tracking-tight text-neutral-900 mb-6 leading-tight ${spaceGrotesk.className}`}>
                 <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">
                   La forma de gestionar tu consulta ha cambiado.
@@ -41,7 +38,7 @@ export default function ServiciosPage() {
             alt="Plataforma de gestión médica Medify"
             height={720}
             width={1400}
-            className="mx-auto rounded-2xl object-contain object-center md:object-cover h-full"
+            className="mx-auto rounded-2xl object-cover object-center h-full w-full"
             draggable={false}
           />
         </ContainerScroll>
@@ -55,7 +52,7 @@ export default function ServiciosPage() {
       </FadeInSection>
 
 
-      {/* Call to Action Section */}
+      {/* Call to Action Section
       <FadeInSection delay={0.2}>
         <div className="max-w-4xl mx-auto text-center mt-24 mb-12 px-6 lg:px-12 py-12 md:py-16">
           <h3 className={`text-pretty text-4xl font-bold tracking-tight text-neutral-900 sm:text-5xl lg:text-balance mb-6 ${spaceGrotesk.className}`}>
@@ -75,6 +72,7 @@ export default function ServiciosPage() {
           </p>
         </div>
       </FadeInSection>
+       Aquí puedes agregar más secciones o componentes según sea necesario */}
 
 
 

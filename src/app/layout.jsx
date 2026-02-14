@@ -1,6 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Poppins } from "next/font/google";
 import Footer from "./Footer/page";
 import Script from "next/script";
 import { ViewTransitions } from 'next-view-transitions';
@@ -100,21 +98,6 @@ export const viewport = {
   maximumScale: 5,
 };
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export default function RootLayout({ children }) {
   return (
     <ViewTransitions>
@@ -153,11 +136,11 @@ export default function RootLayout({ children }) {
             })
           }}
         />
-        <body className={`${poppins.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body className="antialiased">
           <div className="min-h-screen flex flex-col relative">
             {/* CardNav moderno con animaciones GSAP */}
             <NavbarMedify />
-            <main className="flex-1">
+            <main className="flex-1 premium-shell">
               {children}
             </main>
             <Footer />

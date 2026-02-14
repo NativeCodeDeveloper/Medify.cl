@@ -3,49 +3,20 @@ import React from 'react';
 import { Poppins, Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { PROFESSIONALS } from "../data/professionals";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
-
-// Mock Data (Duplicated for simplicity in this artifact)
-const PROFESSIONALS = [
-    {
-        id: "isidora-jimenez",
-        name: "Isidora Jiménez",
-        role: "Nutricionista",
-        rating: 4.9,
-        reviews: 204,
-        description: "Nutricionista experta en alimentación saludable y personalizada. Enfoque en cambios de hábitos sostenibles y nutrición clínica.",
-        fullBio: "Soy Nutricionista con más de 5 años de experiencia clínica. Me especializo en el tratamiento de enfermedades crónicas no transmisibles como diabetes, hipertensión y dislipidemias, así como en nutrición deportiva. Mi enfoque es totalmente personalizado, buscando adaptar la alimentación a tu estilo de vida, gustos y horarios, para lograr resultados duraderos sin dietas restrictivas.",
-        location: "Av. Providencia 1234, Of. 601, Providencia, Santiago.",
-        email: "contacto@isidorajimenez.cl",
-        phone: "+56 9 1234 5678",
-        image: "/doctores1.png",
-        availability: "Lunes a Viernes, 9:00 - 18:00",
-    },
-    {
-        id: "javier-carrasco",
-        name: "Javier Carrasco",
-        role: "Psicólogo",
-        rating: 4.8,
-        reviews: 180,
-        description: "Psicólogo clínico especializado en terapia cognitivo-conductual.",
-        fullBio: "Psicólogo clínico Universidad de Chile. Especialista en trastornos de ansiedad, depresión y manejo del estrés. Utilizo un enfoque Cognitivo-Conductual basado en la evidencia para ayudarte a desarrollar herramientas prácticas que mejoren tu calidad de vida.",
-        location: "Online",
-        email: "javier.carrasco@medify.cl",
-        phone: "+56 9 8765 4321",
-        image: "/doctores1.png",
-        availability: "Lunes a Jueves, 14:00 - 20:00",
-    },
-    // ... maps to other IDs if visited, defaulting to 'not found' behavior if not in list or generic fallback
-];
 
 export default function ProfessionalProfile() {
     const params = useParams();
 
     // Find professional by ID that matches the URL param (some string manipulation might be needed if IDs vary, but simplicity first)
     const professional = PROFESSIONALS.find(p => p.id === params.id);
+    const whatsappHref = professional?.whatsappNumber
+        ? `https://wa.me/${professional.whatsappNumber}?text=${encodeURIComponent(`Hola ${professional.name}, vi tu perfil en Medify y me gustaría agendar una hora.`)}`
+        : `https://wa.me/?text=${encodeURIComponent(`Hola ${professional?.name || ""}`)}`;
 
     if (!professional) {
         return (
@@ -81,8 +52,13 @@ export default function ProfessionalProfile() {
 
                     {/* Main Info */}
                     <div className="flex-grow text-center md:text-left">
-                        <div className="inline-block bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm font-medium mb-3">
-                            {professional.role}
+                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-3">
+                            <div className="inline-block bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm font-medium">
+                                {professional.role}
+                            </div>
+                            <div className="inline-block bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-sm font-medium">
+                                Modalidad: {professional.consultationMode || "No especificada"}
+                            </div>
                         </div>
                         <h1 className={`${poppins.className} text-3xl md:text-5xl font-bold text-slate-900 mb-2`}>
                             {professional.name}
@@ -122,10 +98,11 @@ export default function ProfessionalProfile() {
                         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
                             <h2 className={`${poppins.className} text-xl font-bold text-slate-900 mb-4`}>Especialidades</h2>
                             <div className="flex flex-wrap gap-2">
-                                {/* Mock specialties */}
-                                <span className="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-sm">Adultos</span>
-                                <span className="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-sm">Enfermedades crónicas</span>
-                                <span className="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-sm">Preventiva</span>
+                                {professional.specialties?.map((item) => (
+                                    <span key={item} className="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-sm">
+                                        {item}
+                                    </span>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -162,12 +139,29 @@ export default function ProfessionalProfile() {
                                     </div>
                                 </div>
 
-                                {/* Action Button */}
-                                <button className="w-full bg-[#648D98] hover:bg-[#53767F] text-white py-3 rounded-xl font-semibold shadow-lg shadow-teal-900/10 transition-all active:scale-[0.98] mt-2">
-                                    Agendar Hora
-                                </button>
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center flex-shrink-0 text-indigo-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 3h14a2 2 0 012 2v8H3V5a2 2 0 012-2z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Modalidad</p>
+                                        <p className="text-slate-700 text-sm">{professional.consultationMode || "No especificada"}</p>
+                                    </div>
+                                </div>
 
-                                <a href={`https://wa.me/?text=Hola%20${professional.name}`} target="_blank" className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                                {/* Action Button */}
+                                <a
+                                    href={professional.personalWebsite}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex w-full items-center justify-center bg-[#648D98] hover:bg-[#53767F] text-white py-3 rounded-xl font-semibold shadow-lg shadow-teal-900/10 transition-all active:scale-[0.98] mt-2"
+                                >
+                                    Agendar Hora
+                                </a>
+
+                                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z" />
                                     </svg>

@@ -59,6 +59,42 @@
   margin-left: 2px;
   text-shadow: 0 2px 8px rgba(30,58,138,0.10);
 }
+
+@media (max-width: 768px) {
+  .wsp-float-btn {
+    right: 14px;
+    bottom: 14px;
+    padding: 10px 14px 10px 12px;
+    gap: 10px;
+    border-radius: 14px;
+  }
+
+  .wsp-icon-wrap {
+    width: 32px;
+    height: 32px;
+  }
+
+  .wsp-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .wsp-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wsp-float-btn {
+    right: 10px;
+    bottom: 10px;
+    padding: 10px;
+  }
+
+  .wsp-text {
+    display: none;
+  }
+}
 @import "tailwindcss";
 
 /* Optimizaciones de scroll y rendimiento */
@@ -1432,4 +1468,113 @@ html:has(:root.transitioning) {
   }
 }
 
+/* ========================================
+   Global Apple-Like Typography
+   ======================================== */
+:root {
+  --font-apple-sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 
+html,
+body,
+body * {
+  font-family: var(--font-apple-sans) !important;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+/* ========================================
+   Apple Premium Visual Layer (Non-Destructive)
+   ======================================== */
+:root {
+  --apple-premium-surface: rgba(255, 255, 255, 0.78);
+  --apple-premium-border: rgba(15, 23, 42, 0.08);
+  --apple-premium-shadow: 0 8px 30px rgba(2, 8, 23, 0.08);
+  --apple-premium-shadow-strong: 0 16px 40px rgba(2, 8, 23, 0.12);
+}
+
+.premium-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.premium-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 700px at 12% -5%, rgba(59, 130, 246, 0.08), transparent 60%),
+    radial-gradient(900px 600px at 88% 8%, rgba(13, 148, 136, 0.07), transparent 55%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
+}
+
+.premium-shell :where(h1, h2, h3, h4, h5, h6) {
+  letter-spacing: -0.018em;
+}
+
+.premium-shell :where(h1, h2) {
+  font-weight: 700;
+}
+
+.premium-shell :where(
+    a,
+    button,
+    [role="button"],
+    input,
+    textarea,
+    select
+  ) {
+  transition:
+    color 200ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.premium-shell :where(.bg-white, .bg-white\/95, .bg-white\/90) {
+  background-color: var(--apple-premium-surface) !important;
+  border-color: var(--apple-premium-border) !important;
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+}
+
+.premium-shell :where(
+    .shadow-sm,
+    .shadow-md,
+    .shadow-lg,
+    .shadow-xl,
+    .shadow-2xl
+  ) {
+  box-shadow: var(--apple-premium-shadow) !important;
+}
+
+.premium-shell :where(
+    .rounded-xl,
+    .rounded-2xl,
+    .rounded-3xl,
+    .rounded-\[2\.5rem\]
+  ):hover {
+  box-shadow: var(--apple-premium-shadow-strong) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-shell :where(
+      a,
+      button,
+      [role="button"],
+      input,
+      textarea,
+      select
+    ) {
+    transition: none !important;
+  }
+}
