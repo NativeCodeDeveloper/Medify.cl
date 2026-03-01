@@ -8,11 +8,11 @@ const lora = Lora({ subsets: ["latin"], weight: ["400", "500", "600", "700"], di
 
 export default function Portada() {
   return (
-    <main className="bg-white min-h-screen overflow-x-hidden">
+    <main className="bg-white min-h-screen px-3 sm:px-6 lg:px-8 overflow-x-hidden md:p-4">
       {/* HERO SECTION */}
-      <section className="relative w-full aspect-[3/2] md:aspect-[1.7/0.8] min-h-[500px] overflow-hidden">
+      <section className="relative w-full aspect-[3/2] md:aspect-[1.7/0.8] min-h-[500px] rounded-3xl overflow-hidden">
         {/* Full Width Background Image */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden">
           <Image
             src="/doctores2.png"
             alt="Personal de salud profesional"
@@ -22,9 +22,9 @@ export default function Portada() {
           />
 
           {/* Gradient Overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/55 via-blue-900/40 to-blue-900/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-950/70 via-blue-950/10 to-blue-950/0" />
           {/* Additional bottom fade for smooth transition */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-900/20 via-blue-900/10 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-900/25 via-blue-900/10 to-transparent" />
         </div>
 
         {/* Content Container - Posicionado arriba a la izquierda */}
@@ -41,8 +41,34 @@ export default function Portada() {
                 <strong className="bg-gradient-to-r from-white to-white bg-clip-text text-transparent">Transforma tu consulta, eleva tu impacto.</strong>
               </p>
             </div>
+
+            <div className="mt-12 text-justify grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
+              {[
+                { label: "todo en un solo lugar, agenda, pacientes y pagos.", value: "Organiza" },
+                { label: "tu agenda ya no será la preocupación.", value: "Ordena" },
+                { label: "Medify se encarga del resto.", value: "Prioriza" },
+              ].map((item) => (
+                <article
+                  key={item.label}
+                  className="min-w-0 rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm backdrop-blur sm:p-5"
+                >
+                  <p className="truncate text-base font-semibold leading-tight text-slate-900 sm:text-xl">
+                    {item.value}
+                  </p>
+                  <p className="mt-2 text-[11px] leading-snug text-slate-600 sm:text-xs">
+                    {item.label}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+
+
           </div>
         </div>
+
+
+
       </section>
 
       {/* FEATURES SECTION - Rediseñada según referencia */}
