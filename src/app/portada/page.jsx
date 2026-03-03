@@ -31,7 +31,7 @@ export default function Portada() {
           <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-6">
             <div className="max-w-2xl">
               <p className={`${inter.className} text-sm sm:text-base font-semibold tracking-widest text-teal-300 uppercase mb-4`}>
-                Plataforma de salud digital · Chile
+                Plataforma de salud digital
               </p>
               <h1 className={`${poppins.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-tight mb-6`}>
                 El ecosistema de salud digital para profesionales.
@@ -43,8 +43,8 @@ export default function Portada() {
 
             <div className="grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
               {[
-                { label: "todo en un solo lugar, agenda, pacientes y pagos.", value: "Organiza" },
-                { label: "tu agenda ya no será la preocupación.", value: "Ordena" },
+                { label: "Todo en un solo lugar, agenda, pacientes y pagos.", value: "Organiza" },
+                { label: "Tu agenda ya no será la preocupación.", value: "Ordena" },
                 { label: "Medify se encarga del resto.", value: "Prioriza" },
               ].map((item) => (
                 <article

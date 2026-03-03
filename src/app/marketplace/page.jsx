@@ -66,7 +66,7 @@ export default function Marketplace() {
             </div>
 
             {/* Filters Bar */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
                 <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-wrap gap-4 items-center justify-between">
 
                     {/* Search */}
