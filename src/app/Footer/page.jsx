@@ -135,7 +135,7 @@ export default function Footer() {
               </a>
 
               <a
-                href="#"
+                href="https://www.instagram.com/medify.chile?igsh=MWo3YTIzczM4dWpqbw=="
                 rel="noreferrer"
                 target="_blank"
                 className="group flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-gray-700/50 transition-all duration-300 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 hover:border-pink-500 hover:scale-110"

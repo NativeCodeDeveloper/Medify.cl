@@ -29,7 +29,7 @@ export default function ClientCardNav() {
           textColor: "#fff",
           links: [
             { label: "Soporte", href: "/soporte", ariaLabel: "Soporte técnico especializado" },
-            { label: "WhatsApp", href: "https://wa.me/56912345678", ariaLabel: "Contactar por WhatsApp" }
+            { label: "WhatsApp", href: "https://wa.me/56991749964", ariaLabel: "Contactar por WhatsApp" }
           ]
         }
       ]}

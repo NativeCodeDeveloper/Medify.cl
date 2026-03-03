@@ -101,14 +101,14 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 2rem;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: #fff !important;
   min-height: 100%;
   box-sizing: border-box;
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #fff !important;

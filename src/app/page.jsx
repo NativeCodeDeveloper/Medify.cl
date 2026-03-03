@@ -122,7 +122,7 @@ export default function Home() {
                   {/* CTA Button */}
                   <div className="pt-4">
                     <a
-                      href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify"
+                      href="https://wa.me/56991749964?text=Hola,%20quiero%20información%20sobre%20Medify"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex w-full sm:w-auto items-center justify-center gap-3 bg-teal-600 hover:bg-teal-700 text-white px-5 sm:px-6 py-3 rounded-full font-semibold text-sm sm:text-base md:text-lg text-center transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
@@ -316,7 +316,7 @@ export default function Home() {
         <div></div>
         {/* Botón flotante WhatsApp profesional y en contexto */}
         <a
-          href="https://wa.me/56977889900?text=Hola,%20quiero%20información%20sobre%20Medify"
+          href="https://wa.me/56991749964?text=Hola,%20quiero%20información%20sobre%20Medify"
           target="_blank"
           rel="noopener noreferrer"
           className={`wsp-float-btn ${poppins.className}`}

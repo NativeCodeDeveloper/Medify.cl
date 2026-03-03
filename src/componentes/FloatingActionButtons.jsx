@@ -52,7 +52,7 @@ export default function FloatingActionButtons({
 
 // Default props for ease of use
 FloatingActionButtons.defaultProps = {
-  onClick: () => window.open('https://wa.me/56977889900?text=Quiero%20información%20sobre%20Medify', '_blank'),
+  onClick: () => window.open('https://wa.me/56991749964?text=Quiero%20información%20sobre%20Medify', '_blank'),
   color: 'success',
   icon: <WhatsAppIcon />,
   tooltip: 'WhatsApp',

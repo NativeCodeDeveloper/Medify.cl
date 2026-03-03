@@ -8,11 +8,11 @@ const lora = Lora({ subsets: ["latin"], weight: ["400", "500", "600", "700"], di
 
 export default function Portada() {
   return (
-    <main className="bg-white min-h-screen px-3 sm:px-6 lg:px-8 overflow-x-hidden md:p-4">
+    <main className="bg-white min-h-screen px-3 sm:px-6 lg:px-8 md:px-4 md:pt-4 md:pb-4">
       {/* HERO SECTION */}
-      <section className="relative w-full aspect-[3/2] md:aspect-[1.7/0.8] min-h-[500px] rounded-3xl overflow-hidden">
+      <section className="relative w-full h-[calc(100vh-4rem-2rem)] rounded-3xl overflow-hidden">
         {/* Full Width Background Image */}
-        <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden">
+        <div className="absolute inset-0 z-0">
           <Image
             src="/doctores2.png"
             alt="Personal de salud profesional"
@@ -20,29 +20,28 @@ export default function Portada() {
             className="object-cover object-center"
             priority
           />
-
-          {/* Gradient Overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-950/70 via-blue-950/10 to-blue-950/0" />
-          {/* Additional bottom fade for smooth transition */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-900/25 via-blue-900/10 to-transparent" />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-950/75 via-blue-950/20 to-blue-950/0" />
+          {/* Bottom fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-blue-950/40 via-blue-900/10 to-transparent" />
         </div>
 
-        {/* Content Container - Posicionado arriba a la izquierda */}
-        <div className="relative z-10 w-full h-full flex items-start">
-          <div className="w-full max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 md:pt-20 md:pb-20">
+        {/* Content Container - centrado verticalmente */}
+        <div className="relative z-10 w-full h-full flex items-center">
+          <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-6">
             <div className="max-w-2xl">
-              <h1 className={`${poppins.className} mt-10 text-3xl text-left sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-slate-900 leading-tight mb-8`}>
-                <strong className="bg-gradient-to-r from-white to-white bg-clip-text text-transparent">Medify:</strong>
-                <br />
-                <div className="mt-6 text-left text-7xl text-slate-900 text-white font-bold mb-12">El ecosistema de salud digital para profesionales.</div>
+              <p className={`${inter.className} text-sm sm:text-base font-semibold tracking-widest text-teal-300 uppercase mb-4`}>
+                Plataforma de salud digital · Chile
+              </p>
+              <h1 className={`${poppins.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-tight mb-6`}>
+                El ecosistema de salud digital para profesionales.
               </h1>
-
-              <p className={`${inter.className} text-xl text-left sm:text-2xl md:text-3xl text-slate-700 font-normal leading-relaxed`}>
-                <strong className="bg-gradient-to-r from-white to-white bg-clip-text text-transparent">Transforma tu consulta, eleva tu impacto.</strong>
+              <p className={`${inter.className} text-lg sm:text-xl md:text-2xl text-white/80 font-normal leading-relaxed mb-10`}>
+                Transforma tu consulta, eleva tu impacto.
               </p>
             </div>
 
-            <div className="mt-12 text-justify grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
+            <div className="grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
               {[
                 { label: "todo en un solo lugar, agenda, pacientes y pagos.", value: "Organiza" },
                 { label: "tu agenda ya no será la preocupación.", value: "Ordena" },
@@ -50,25 +49,19 @@ export default function Portada() {
               ].map((item) => (
                 <article
                   key={item.label}
-                  className="min-w-0 rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm backdrop-blur sm:p-5"
+                  className="min-w-0 rounded-2xl border border-white/30 bg-white/15 p-4 shadow-sm backdrop-blur-md sm:p-5"
                 >
-                  <p className="truncate text-base font-semibold leading-tight text-slate-900 sm:text-xl">
+                  <p className="truncate text-base font-semibold leading-tight text-white sm:text-lg">
                     {item.value}
                   </p>
-                  <p className="mt-2 text-[11px] leading-snug text-slate-600 sm:text-xs">
+                  <p className="mt-1 text-[11px] leading-snug text-white/70 sm:text-xs">
                     {item.label}
                   </p>
                 </article>
               ))}
             </div>
-
-
-
           </div>
         </div>
-
-
-
       </section>
 
       {/* FEATURES SECTION - Rediseñada según referencia */}

@@ -9,27 +9,35 @@ const PLAN_GROUPS = {
         plans: [
             {
                 id: "esencial",
-                name: "Esencial",
+                name: "Plan Esencial",
                 description:
-                    "Perfecto para iniciar tu transformación digital. Todo lo esencial para administrar tu consulta profesionalmente, sin papeles ni complicaciones.",
+                    "Perfecto para iniciar tu transformación digital. Todo lo esencial para administrar tu consulta profesionalmente, sin complicaciones.",
                 price: "$0",
-                priceNote: "con límites",
+                priceNote: "Posicón y agenda",
                 features: [
                     {
-                        title: "Fichas clínicas 100% digitales y legales",
-                        description: "Olvídate del papel. Registra consultas desde cualquier dispositivo con total respaldo legal.",
+                        title: "Perfil profesional",
+                        description: "Tu perfil profesional publicado en nuestro Marketplace.",
                     },
                     {
-                        title: "Reduce inasistencias hasta 40%",
-                        description: "Recordatorios automáticos vía correo electrónico. Tus pacientes nunca olvidarán su cita.",
+                        title: "Botón WhatsApp",
+                        description: "Has que te contacten y agenden directo a tu WhatsApp",
                     },
                     {
-                        title: "Cobra más rápido y fácil",
-                        description: "Tus pacientes pagan con tarjeta al instante. El dinero llega directo a tu cuenta.",
+                        title: "Información de contacto",
+                        description: "Toda tu información o canales para que se contacten contigo.",
+                    },
+                    {
+                        title: "Información académica y especialidades",
+                        description: "Tu información en un solo lugar, tus pacientes podrán saber quien eres.",
+                    },
+                    {
+                        title: "Acceso a redes sociales",
+                        description: "Medify te publicará como profesional activo en sus redes sociales.",
                     },
                 ],
                 ctaLabel: "Comenzar gratis",
-                ctaHref: "https://wa.me/56977889900?text=Quiero%20comenzar%20con%20el%20plan%20Esencial%20de%20Medify",
+                ctaHref: "https://wa.me/56991749964?text=Quiero%20comenzar%20con%20el%20plan%20Esencial%20de%20Medify",
                 glowClass: "bg-gradient-to-tr from-blue-400/15 via-teal-400/10 to-transparent",
                 cardClass: "ring-1 ring-blue-100/50 bg-gradient-to-br from-white via-blue-50/30 to-white border border-blue-100/40",
                 checkClass: "text-teal-600",
@@ -38,27 +46,57 @@ const PLAN_GROUPS = {
             },
             {
                 id: "profesional",
-                name: "Profesional",
+                name: "Plan Profesional - Individual",
                 description:
-                    "Escala tu práctica médica. Ideal para consultas en crecimiento y pequeñas clínicas que buscan eficiencia y control total.",
-                price: "$19.900",
+                    "Crece con tu práctica médica",
+                price: "$16.990",
                 priceNote: "CLP/mes + IVA",
                 features: [
                     {
-                        title: "Gestiona de forma profesional en un solo lugar",
-                        description: "Coordina agendas, pacientes y gestiona tus reservas. Todo sin complicaciones.",
+                        title: "Todo lo del Plan Esencial",
+                        description: "",
                     },
                     {
-                        title: "Facturación automática",
-                        description: "Emite bonos y facturas al SII sin errores. Ahorra hasta 10 horas semanales en administración.",
+                        title: "Agendamiento Automático",
+                        description: "",
                     },
                     {
-                        title: "Ve crecer tu negocio con datos reales",
-                        description: "Reportes de ingresos, ocupación y rendimiento. Toma decisiones basadas en información real.",
+                        title: "Calendario dígital.",
+                        description: "",
                     },
+                    {
+                        title: "Ficha clínica general.",
+                        description: "",
+                    },
+                    {
+                        title: "Bloques de horarios por jornada.",
+                        description: "",
+                    },
+                    {
+                        title: "Pagos por medio de Mercado Pago.",
+                        description: "",
+                    },
+                    {
+                        title: "Gestión de información de pacientes.",
+                        description: "",
+                    },
+                    {
+                        title: "Edición de fichas clínicas.",
+                        description: "",
+                    },
+                    {
+                        title: "Estado de reservaciones.",
+                        description: "",
+                    },
+                    {
+                        title: "Envío de correos desde la paltaforma de seguimiento.",
+                        description: "",
+                    },
+                    
                 ],
                 ctaLabel: "Solicitar consulta",
-                ctaHref: "https://wa.me/56977889900?text=Quiero%20cotizar%20el%20plan%20Profesional%20de%20Medify",
+                ctaHref: "https://wa.me/56991749964?text=Quiero%20cotizar%20el%20plan%20Profesional%20de%20Medify",
+                ctaNote: "Integración Sistema de emisión de Boletas y Facturación · $20.000 CLP adicional.",
                 glowClass: "bg-gradient-to-tr from-blue-500/20 via-teal-500/15 to-transparent",
                 cardClass: "ring-2 ring-blue-200/60 bg-gradient-to-br from-white via-teal-50/40 to-blue-50/30 border-2 border-blue-100/40",
                 checkClass: "text-blue-600",
@@ -67,27 +105,39 @@ const PLAN_GROUPS = {
             },
             {
                 id: "avanzado",
-                name: "Avanzado",
+                name: "Plan Avanzado",
                 description:
-                    "Solución potente para consultas que necesitan más control, automatización y soporte dedicado.",
-                price: "$29.900",
+                    "Solución potente para consultas que necesitan más control, automatización y soporte dedicado, opción hasta 3 profesionales en una sola cuenta.",
+                price: "$26.990",
                 priceNote: "CLP/mes + IVA",
                 features: [
                     {
-                        title: "Seguridad bancaria para tus datos médicos",
-                        description: "Máxima protección, cumplimiento legal garantizado y respaldo por 15 años.",
+                        title: "Todo lo del Plan Profesional.",
+                        description: "",
                     },
                     {
-                        title: "Conecta desde cualquier lugar por medio de la nube",
-                        description: "Fichas clínicas, diagnósticos y tratamientos, todo integrado en una sola plataforma.",
+                        title: "Ficha Clínica Avanzada (Específica por profesional).",
+                        description: "",
                     },
                     {
-                        title: "Tu equipo dedicado de soporte",
-                        description: "Respuesta rápida, capacitación incluida y acompañamiento para tu operación.",
+                        title: "Recordatorio de reserva automáticos por correo a tus pacientes(cada 6 y 12 horas).",
+                        description: "",
+                    },
+                    {
+                        title: "Recordatorios vía WhatsApp a tus pacientes.",
+                        description: "",
+                    },
+                    {
+                        title: "Control de pagos online y reportes en formato Excel y PDF.",
+                        description: "",
+                    },
+                    {
+                        title: "Saludo de Cumpleaños para tus pacientes.",
+                        description: "",
                     },
                 ],
                 ctaLabel: "Solicitar demo avanzada",
-                ctaHref: "https://wa.me/56977889900?text=Quiero%20conocer%20el%20plan%20Avanzado%20de%20Medify",
+                ctaHref: "https://wa.me/56991749964?text=Quiero%20conocer%20el%20plan%20Avanzado%20de%20Medify",
                 glowClass: "bg-gradient-to-tr from-indigo-400/15 via-blue-400/10 to-transparent",
                 cardClass: "ring-1 ring-indigo-100/50 bg-gradient-to-br from-white via-indigo-50/20 to-white border border-indigo-100/40",
                 checkClass: "text-indigo-600",
@@ -97,10 +147,11 @@ const PLAN_GROUPS = {
         ],
     },
     business: {
-        label: "Planes empresas y clínicas",
+        label: "Planes Coorporaciones y clínicas",
         helperText: "Diseñados para equipos, centros médicos y clínicas que requieren operación multiusuario y mayor trazabilidad.",
         plans: [
-            {
+
+            /* {
                 id: "clinica-start",
                 name: "Clínica Start",
                 description: "Para centros pequeños que buscan centralizar agendas, fichas y cobros de su equipo médico.",
@@ -127,11 +178,11 @@ const PLAN_GROUPS = {
                 checkClass: "text-teal-600",
                 ctaClass: "bg-slate-800 hover:bg-slate-900 shadow-[0_0_20px_rgba(15,23,42,0.25)] ring-slate-700/30",
                 offsetClass: "mt-12",
-            },
+            }, */
             {
-                id: "clinica-pro",
-                name: "Clínica Pro",
-                description: "Ideal para clínicas en crecimiento que requieren control financiero y trazabilidad clínica avanzada.",
+                id: "Plan C",
+                name: "Clínica Coorporativo",
+                description: "Ideal para clínicas en crecimiento + 3 profesionales en una sola cuenta, que requieren control financiero y trazabilidad clínica avanzada.",
                 price: "$129.900",
                 priceNote: "CLP/mes + IVA",
                 features: [
@@ -149,7 +200,7 @@ const PLAN_GROUPS = {
                     },
                 ],
                 ctaLabel: "Solicitar asesoría",
-                ctaHref: "https://wa.me/56977889900?text=Quiero%20cotizar%20el%20plan%20Cl%C3%ADnica%20Pro%20de%20Medify",
+                ctaHref: "https://wa.me/56991749964?text=Quiero%20cotizar%20el%20plan%20Cl%C3%ADnica%20Pro%20de%20Medify",
                 glowClass: "bg-gradient-to-tr from-blue-500/20 via-teal-500/15 to-transparent",
                 cardClass: "ring-2 ring-blue-200/60 bg-gradient-to-br from-white via-teal-50/40 to-blue-50/30 border-2 border-blue-100/40",
                 checkClass: "text-blue-600",
@@ -176,13 +227,12 @@ const PLAN_GROUPS = {
                         description: "Capas avanzadas de continuidad y cumplimiento para organizaciones exigentes.",
                     },
                 ],
-                ctaLabel: "Contactar equipo enterprise",
-                ctaHref: "https://wa.me/56977889900?text=Quiero%20informaci%C3%B3n%20del%20plan%20Enterprise%20de%20Medify",
+                ctaLabel: "Contactar a Medify",
+                ctaHref: "https://wa.me/56991749964?text=Quiero%20informaci%C3%B3n%20del%20plan%20Enterprise%20de%20Medify",
                 glowClass: "bg-gradient-to-tr from-indigo-400/15 via-blue-400/10 to-transparent",
                 cardClass: "ring-1 ring-indigo-100/50 bg-gradient-to-br from-white via-indigo-50/20 to-white border border-indigo-100/40",
                 checkClass: "text-indigo-600",
                 ctaClass: "bg-indigo-500 hover:bg-indigo-600 shadow-[0_0_25px_rgba(99,102,241,0.55)] ring-indigo-400/40",
-                offsetClass: "mt-12",
             },
         ],
     },
@@ -209,7 +259,7 @@ const Card = ({ children, className, delay = 0 }) => {
     return (
         <div
             ref={ref}
-            className={`bg-white/95 rounded-2xl shadow-md p-6 transition-all duration-700 ease-out hover:shadow-2xl hover:scale-105 opacity-0 translate-y-8 ${className}`}
+            className={`bg-white/95 rounded-2xl shadow-md p-6 transition-all duration-700 ease-out hover:shadow-2xl hover:scale-105 opacity-0 translate-y-8 flex flex-col h-full ${className}`}
             style={{ willChange: "transform, box-shadow, opacity" }}
         >
             {children}
@@ -218,7 +268,7 @@ const Card = ({ children, className, delay = 0 }) => {
 };
 const CardHeader = ({ children }) => <div className="mb-4">{children}</div>;
 const CardTitle = ({ children }) => <h4 className="text-xl font-semibold mb-2">{children}</h4>;
-const CardContent = ({ children }) => <div>{children}</div>;
+const CardContent = ({ children }) => <div className="flex-1 flex flex-col">{children}</div>;
 const CardDescription = ({ children }) => <p className="text-gray-500 mb-4">{children}</p>;
 
 export default function Pricing1() {
@@ -234,7 +284,7 @@ export default function Pricing1() {
                             <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">Dedica más tiempo a tus pacientes, menos al papeleo.</strong>
                         </h2>
                         <p className="text-lg leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center mt-4">
-                            <strong className="bg-gradient-to-r from-gray-400 to-blue-500 bg-clip-text text-transparent">Los profesionales ya confían en Medify. Sistema 100% legal, seguro y diseñado específicamente para el sector salud en Chile.</strong>
+                            <strong className="bg-gradient-to-r from-gray-400 to-blue-500 bg-clip-text text-transparent">Los profesionales ya confían en Medify, Sistema 100% legal, seguro y diseñado específicamente para el sector salud en Chile.</strong>
                         </p>
                     </div>
                     <div className="flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200/50 rounded-xl shadow-sm">
@@ -259,7 +309,7 @@ export default function Pricing1() {
                                 : "text-slate-600 hover:bg-slate-100"
                                 }`}
                         >
-                            Empresas y clínicas
+                            Corporaciones y clínicas
                         </button>
                     </div>
 
@@ -267,9 +317,9 @@ export default function Pricing1() {
                         {currentGroup.helperText}
                     </p>
 
-                    <div className="grid pt-20 text-left grid-cols-1 lg:grid-cols-3 w-full mt-2 gap-8">
+                    <div className={`grid pt-20 text-left w-full mt-2 gap-8 ${currentGroup.plans.length === 2 ? "grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto" : "grid-cols-1 lg:grid-cols-3"}`}>
                         {currentGroup.plans.map((plan, index) => (
-                            <div key={`${activeGroup}-${plan.id}`} className={`relative ${plan.offsetClass || ""}`}>
+                            <div key={`${activeGroup}-${plan.id}`} className={`relative h-full ${plan.offsetClass || ""}`}>
                                 <div className={`absolute -inset-8 rounded-3xl blur-2xl ${plan.glowClass}`} aria-hidden="true"></div>
                                 <Card delay={index * 80} className={`relative rounded-3xl backdrop-blur-sm p-6 shadow-xl w-full ${plan.cardClass}`}>
                                     <CardHeader>
@@ -286,7 +336,7 @@ export default function Pricing1() {
                                         <CardDescription>{plan.description}</CardDescription>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="flex flex-col gap-8 justify-start">
+                                        <div className="flex flex-col gap-8 flex-1 justify-between">
                                             <p className="flex flex-row items-center gap-2 text-xl">
                                                 <span className="text-4xl">{plan.price}</span>
                                                 <span className="text-sm text-muted-foreground">{plan.priceNote}</span>
@@ -304,6 +354,11 @@ export default function Pricing1() {
                                                 ))}
                                             </div>
 
+                                            {plan.ctaNote && (
+                                                <p className="text-center text-xs text-slate-500 bg-slate-50 border border-slate-200/70 rounded-lg px-3 py-2">
+                                                    {plan.ctaNote}
+                                                </p>
+                                            )}
                                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-2">
                                                 <a
                                                     href={plan.ctaHref}

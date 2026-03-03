@@ -39,9 +39,9 @@ export default function Contacto() {
                     </div>
                     <div>
                       <h3 className="text-neutral-900 font-semibold">WhatsApp</h3>
-                      <p className="text-neutral-700">+56 9 7788 9900</p>
+                      <p className="text-neutral-700">+56 9 9174 9964</p>
                       <a
-                        href="https://wa.me/56977889900?text=Hola,%20me%20interesa%20conocer%20las%20soluciones%20médicas%20de%20Medify"
+                        href="https://wa.me/56991749964?text=Hola,%20me%20interesa%20conocer%20las%20soluciones%20médicas%20de%20Medify"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center mt-2 text-sm text-[#4a8da7] hover:text-[#357a96] transition"
@@ -240,7 +240,7 @@ export default function Contacto() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="https://wa.me/56977889900?text=Quiero%20una%20demostración%20de%20Medify"
+                  href="https://wa.me/56991749964?text=Quiero%20una%20demostración%20de%20Medify"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg hover:bg-green-700 transition duration-300"

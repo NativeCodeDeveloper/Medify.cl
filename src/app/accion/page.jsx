@@ -46,7 +46,7 @@ export default function Accion() {
               </Link>
               
               <a
-                href="https://wa.me/56977889900?text=Quiero%20una%20consultoría%20médica%20personalizada%20con%20Medify"
+                href="https://wa.me/56991749964?text=Quiero%20una%20consultoría%20médica%20personalizada%20con%20Medify"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white border-2 border-white/30 rounded-2xl hover:bg-white/10 transform hover:scale-105 transition duration-300"

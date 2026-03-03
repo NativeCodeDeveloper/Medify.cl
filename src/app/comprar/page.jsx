@@ -84,7 +84,7 @@ export default function Comprar(){
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <a href="mailto:ventas@medify.cl" className="inline-flex items-center rounded-xl px-4 py-2 bg-gradient-to-r from-blue-500 to-teal-600 text-white font-semibold shadow hover:opacity-90 transition">Escribir por correo</a>
-            <a href="https://wa.me/56977889900" target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-xl px-4 py-2 bg-gradient-to-r from-blue-500 to-teal-600 text-white font-semibold shadow hover:opacity-90 transition">Escribir por WhatsApp</a>
+            <a href="https://wa.me/56991749964" target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-xl px-4 py-2 bg-gradient-to-r from-blue-500 to-teal-600 text-white font-semibold shadow hover:opacity-90 transition">Escribir por WhatsApp</a>
           </div>
         </div>
       </div>

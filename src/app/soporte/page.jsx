@@ -39,9 +39,9 @@ export default function () {
             {/* WhatsApp */}
             <div className="rounded-3xl ring-1 ring-blue-200 bg-white backdrop-blur-md p-6 shadow-xl transition hover:scale-105 hover:ring-blue-400">
               <h4 className="text-neutral-900 font-semibold tracking-tight">WhatsApp</h4>
-              <p className="mt-1 text-neutral-700">+56 9 7788 9900</p>
+              <p className="mt-1 text-neutral-700">+56 9 9174 9964</p>
               <a
-                href="https://wa.me/56977889900?text=Hola,%20necesito%20soporte%20técnico%20para%20Medify"
+                href="https://wa.me/56991749964?text=Hola,%20necesito%20soporte%20técnico%20para%20Medify"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-3 inline-flex items-center rounded-xl px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold shadow hover:opacity-90 transition"
