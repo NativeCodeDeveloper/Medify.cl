@@ -3,54 +3,113 @@ import React, { useState } from "react";
 import { Poppins, Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { PROFESSIONALS } from "./data/professionals";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
+
+// Mock Data
+const PROFESSIONALS = [
+    {
+        id: "dennis-beltran",
+        name: "Dennis Beltrán",
+        role: "Psicóloga",
+        rating: 4.9,
+        reviews: 204,
+        description: "Psicóloga clínica especializada en terapia cognitivo-conductual.",
+
+        image: "/dennisbeltran.png", // Using placeholder for now
+        location: "Chillán",
+        available: true,
+    },
+    {
+        id: "marcelo-vilches",
+        name: "Marcelo Vilches",
+        role: "Tecnólogo Médico",
+        rating: 4.8,
+        reviews: 180,
+        description: "Tecnólogo Médico especializado en morfofisiopatología y citodiagnóstico.",
+        image: "/marcelovilches.png", // Using placeholder for now
+        location: "Chillán",
+        available: true,
+    },
+    {
+        id: "cristian-becerra",
+        name: "Cristian Becerra",
+        role: "Medicina Complementaria",
+        rating: 4.7,
+        reviews: 139,
+        description: "Medicina Complementaria, especializado en Medicina Tradicional China, acupuntura y Reiki.",
+        image: "/cristianbecerra.png", // Placeholder
+        location: "Chillán",
+        available: true,
+    },
+    /*
+    {
+        id: "javiera-carreno",
+        name: "Javiera Carreño",
+        role: "Enfermera",
+        rating: 4.9,
+        reviews: 267,
+        description: "Enfermera dedicada al cuidado de personas mayores.",
+        image: "/doctores1.png",
+        location: "Santiago",
+        available: true,
+    },
+    {
+        id: "daniel-munoz",
+        name: "Daniel Muñoz",
+        role: "Médico General",
+        rating: 4.9,
+        reviews: 312,
+        description: "Médico con experiencia en atención primaria integral.",
+        image: "/doctores1.png",
+        location: "Valparaíso",
+        available: true,
+    },
+    {
+        id: "pedro-suazo",
+        name: "Pedro Suazo",
+        role: "Psiquiatra",
+        rating: 4.8,
+        reviews: 178,
+        description: "Psiquiatra comprometido con el bienestar mental de sus pacientes.",
+        image: "/doctores1.png",
+        location: "Santiago",
+        available: true,
+    },
+    {
+        id: "carolina-flores",
+        name: "Carolina Flores",
+        role: "Psicopedagoga",
+        rating: 4.7,
+        reviews: 141,
+        description: "Apoyo psicopedagógico para mejorar el aprendizaje.",
+        image: "/doctores1.png",
+        location: "La Serena",
+        available: true,
+    },
+    */
+];
 
 export default function Marketplace() {
     const [searchTerm, setSearchTerm] = useState("");
     const [specialty, setSpecialty] = useState("");
     const [city, setCity] = useState("");
-    const [consultationMode, setConsultationMode] = useState("");
     const [sort, setSort] = useState("Experiencia");
     const [availableNow, setAvailableNow] = useState(false);
-    const sortOptions = ["Experiencia", "Valoración", "Precio"];
 
     // Get unique values for filters
     const specialties = [...new Set(PROFESSIONALS.map(p => p.role))];
     const cities = [...new Set(PROFESSIONALS.map(p => p.location))];
-    const consultationModes = ["Online", "Presencial", "Ambas"].filter((mode) =>
-        PROFESSIONALS.some((p) => p.consultationMode === mode)
-    );
 
-    // Filter + sort logic
-    const visibleProfessionals = PROFESSIONALS.filter((p) => {
+    // Filter Logic
+    const filteredProfessionals = PROFESSIONALS.filter((p) => {
         const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.role.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesSpecialty = specialty ? p.role === specialty : true;
         const matchesCity = city ? p.location === city : true;
-        const matchesConsultationMode = consultationMode ? p.consultationMode === consultationMode : true;
-        const matchesAvailable = availableNow ? p.available : true;
+        const matchesAvailable = availableNow ? p.available : true; // In mock all are available, but logic is here
 
-        return matchesSearch && matchesSpecialty && matchesCity && matchesConsultationMode && matchesAvailable;
-    }).sort((a, b) => {
-        if (sort === "Experiencia") {
-            return (b.yearsExperience ?? 0) - (a.yearsExperience ?? 0);
-        }
-
-        if (sort === "Valoración") {
-            if (b.rating === a.rating) {
-                return (b.reviews ?? 0) - (a.reviews ?? 0);
-            }
-
-            return (b.rating ?? 0) - (a.rating ?? 0);
-        }
-
-        if (sort === "Precio") {
-            return (a.price ?? Number.MAX_SAFE_INTEGER) - (b.price ?? Number.MAX_SAFE_INTEGER);
-        }
-
-        return 0;
+        return matchesSearch && matchesSpecialty && matchesCity && matchesAvailable;
     });
 
     return (
@@ -92,24 +151,18 @@ export default function Marketplace() {
                             onChange={setSpecialty}
                         />
                         <FilterDropdown
-                            label="Modalidad"
-                            options={consultationModes}
-                            value={consultationMode}
-                            onChange={setConsultationMode}
-                        />
-                        <FilterDropdown
                             label="Ciudad"
                             options={cities}
                             value={city}
                             onChange={setCity}
                         />
-                        <FilterDropdown
-                            label="Ordenar por"
-                            options={sortOptions}
-                            value={sort}
-                            onChange={setSort}
-                            allowAll={false}
-                        />
+                        <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-600">
+                            <span className="text-slate-400">Ordenar por:</span>
+                            <span className="font-medium text-slate-700">Experiencia</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
                     </div>
 
                     {/* Toggle Available */}
@@ -135,7 +188,7 @@ export default function Marketplace() {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                         </svg>
-                        <span>{visibleProfessionals.length} Profesionales disponibles</span>
+                        <span>{filteredProfessionals.length} Profesionales disponibles</span>
                     </div>
 
                     {/* Sidebar Filters Accordion Style */}
@@ -154,28 +207,15 @@ export default function Marketplace() {
                             onChange={setCity}
                         />
                         <SidebarFilterItem
-                            label="Modalidad"
-                            options={consultationModes}
-                            selected={consultationMode}
-                            onChange={setConsultationMode}
-                        />
-                        <SidebarFilterItem
                             label="Ordenar por"
-                            options={sortOptions}
+                            options={["Experiencia", "Valoración", "Precio"]} // Mock sort options
                             selected={sort}
                             onChange={setSort}
-                            allowAll={false}
                         />
 
-                        {(specialty || city || consultationMode || sort !== "Experiencia") && (
+                        {(specialty || city) && (
                             <button
-                                onClick={() => {
-                                    setSpecialty("");
-                                    setCity("");
-                                    setConsultationMode("");
-                                    setSort("Experiencia");
-                                    setAvailableNow(false);
-                                }}
+                                onClick={() => { setSpecialty(""); setCity(""); }}
                                 className="w-full py-3 text-sm text-teal-600 font-medium hover:bg-teal-50 transition-colors border-t border-slate-100"
                             >
                                 Limpiar filtros
@@ -186,33 +226,21 @@ export default function Marketplace() {
 
                 {/* Results Grid */}
                 <div className="flex-grow">
-                    {visibleProfessionals.length > 0 ? (
+                    {filteredProfessionals.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {visibleProfessionals.map((prof) => (
+                            {filteredProfessionals.map((prof) => (
                                 <ProfessionalCard key={prof.id} professional={prof} />
                             ))}
                         </div>
                     ) : (
                         <div className="text-center py-20 bg-white rounded-2xl border border-slate-100">
                             <p className="text-slate-500 mb-2">No encontramos profesionales con esos filtros.</p>
-                            <button
-                                onClick={() => {
-                                    setSearchTerm("");
-                                    setSpecialty("");
-                                    setCity("");
-                                    setConsultationMode("");
-                                    setSort("Experiencia");
-                                    setAvailableNow(false);
-                                }}
-                                className="text-teal-600 font-medium hover:underline"
-                            >
-                                Limpiar filtros
-                            </button>
+                            <button onClick={() => { setSearchTerm(""); setSpecialty(""); setCity(""); }} className="text-teal-600 font-medium hover:underline">Limpiar filtros</button>
                         </div>
                     )}
 
                     {/* Pagination / Load More */}
-                    {visibleProfessionals.length > 0 && (
+                    {filteredProfessionals.length > 0 && (
                         <div className="mt-12 text-center">
                             <button className="bg-[#648D98] hover:bg-[#53767F] text-white px-8 py-3 rounded-full font-medium shadow-md transition-colors inline-flex items-center gap-2">
                                 Ver más profesionales
@@ -229,7 +257,7 @@ export default function Marketplace() {
 }
 
 // Sub-components
-function FilterDropdown({ label, options, value, onChange, allowAll = true }) {
+function FilterDropdown({ label, options, value, onChange }) {
     const [open, setOpen] = useState(false);
 
     // Close on click outside could be implemented with refs, keeping it simple for now
@@ -248,14 +276,12 @@ function FilterDropdown({ label, options, value, onChange, allowAll = true }) {
 
             {open && (
                 <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
-                    {allowAll && (
-                        <div
-                            className="px-4 py-2 hover:bg-slate-50 cursor-pointer text-sm text-slate-500 border-b border-slate-50 mb-1"
-                            onClick={() => { onChange(""); setOpen(false); }}
-                        >
-                            Todas
-                        </div>
-                    )}
+                    <div
+                        className="px-4 py-2 hover:bg-slate-50 cursor-pointer text-sm text-slate-500 border-b border-slate-50 mb-1"
+                        onClick={() => { onChange(""); setOpen(false); }}
+                    >
+                        Todas
+                    </div>
                     {options.map(opt => (
                         <div
                             key={opt}
@@ -292,20 +318,14 @@ function SidebarFilterItem({ label, options = [], selected, onChange, defaultOpe
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                     )}
-                    {label === "Modalidad" && (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 3h14a2 2 0 012 2v8H3V5a2 2 0 012-2z" />
-                        </svg>
-                    )}
                     {label === "Ordenar por" && (
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
                         </svg>
                     )}
-
                     <span className={`${poppins.className} text-slate-700 font-medium`}>{label}</span>
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-slate-400 transition-transform ${open ? 'transform rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </div>
@@ -352,14 +372,6 @@ function ProfessionalCard({ professional }) {
                         <div>
                             <h3 className={`${poppins.className} text-lg font-bold text-slate-900 leading-tight mb-1`}>{professional.name}</h3>
                             <p className="text-slate-500 text-sm font-medium">{professional.role}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                                <span className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
-                                    {professional.consultationMode}
-                                </span>
-                                <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium">
-                                    ${professional.price?.toLocaleString("es-CL")}
-                                </span>
-                            </div>
                         </div>
                         {/* Heart icon could go here */}
                     </div>
@@ -381,20 +393,6 @@ function ProfessionalCard({ professional }) {
             <p className="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
                 {professional.description}
             </p>
-            {professional.specialties?.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-6">
-                    {professional.specialties.slice(0, 2).map((item) => (
-                        <span key={item} className="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs">
-                            {item}
-                        </span>
-                    ))}
-                    {professional.specialties.length > 2 && (
-                        <span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-lg text-xs">
-                            +{professional.specialties.length - 2}
-                        </span>
-                    )}
-                </div>
-            )}
 
             <Link href={`/marketplace/${professional.id}`} className="w-full bg-[#648D98] hover:bg-[#53767F] text-white py-2.5 rounded-lg font-medium text-sm transition-colors text-center flex items-center justify-center gap-2">
                 Ver perfil
