@@ -1,4 +1,3 @@
-"use client";
 import { Poppins, Inter, Lora } from "next/font/google";
 import Image from "next/image";
 

@@ -42,7 +42,7 @@ const PLAN_GROUPS = {
                 cardClass: "ring-1 ring-blue-100/50 bg-gradient-to-br from-white via-blue-50/30 to-white border border-blue-100/40",
                 checkClass: "text-teal-600",
                 ctaClass: "bg-slate-800 hover:bg-slate-900 shadow-[0_0_20px_rgba(15,23,42,0.25)] ring-slate-700/30",
-                offsetClass: "mt-12",
+                offsetClass: "md:mt-12",
             },
             {
                 id: "profesional",
@@ -142,7 +142,7 @@ const PLAN_GROUPS = {
                 cardClass: "ring-1 ring-indigo-100/50 bg-gradient-to-br from-white via-indigo-50/20 to-white border border-indigo-100/40",
                 checkClass: "text-indigo-600",
                 ctaClass: "bg-indigo-500 hover:bg-indigo-600 shadow-[0_0_25px_rgba(99,102,241,0.55)] ring-indigo-400/40",
-                offsetClass: "mt-12",
+                offsetClass: "md:mt-12",
             },
         ],
     },
@@ -259,8 +259,8 @@ const Card = ({ children, className, delay = 0 }) => {
     return (
         <div
             ref={ref}
-            className={`bg-white/95 rounded-2xl shadow-md p-6 transition-all duration-700 ease-out hover:shadow-2xl hover:scale-105 opacity-0 translate-y-8 flex flex-col h-full ${className}`}
-            style={{ willChange: "transform, box-shadow, opacity" }}
+            className={`bg-white/95 rounded-2xl shadow-md transition-all duration-700 ease-out hover:shadow-xl opacity-0 translate-y-8 flex flex-col h-full ${className}`}
+            style={{ willChange: "transform" }}
         >
             {children}
         </div>
@@ -277,7 +277,7 @@ export default function Pricing1() {
 
     return (
         <div className="py-20 lg:py-40">
-            <div className="container mx-auto">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex text-center justify-center items-center gap-4 flex-col">
                     <div className="flex gap-2 flex-col">
                         <h2 className="text-3xl md:text-5xl lg:text-5xl tracking-tighter max-w-2xl text-center font-regular leading-tight mb-6 mt-8">
@@ -317,11 +317,11 @@ export default function Pricing1() {
                         {currentGroup.helperText}
                     </p>
 
-                    <div className={`grid pt-20 text-left w-full mt-2 gap-8 ${currentGroup.plans.length === 2 ? "grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto" : "grid-cols-1 lg:grid-cols-3"}`}>
+                    <div className={`grid pt-10 sm:pt-16 text-left w-full mt-2 gap-4 md:gap-6 lg:gap-8 ${currentGroup.plans.length === 2 ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto" : "grid-cols-1 md:grid-cols-3"}`}>
                         {currentGroup.plans.map((plan, index) => (
                             <div key={`${activeGroup}-${plan.id}`} className={`relative h-full ${plan.offsetClass || ""}`}>
                                 <div className={`absolute -inset-8 rounded-3xl blur-2xl ${plan.glowClass}`} aria-hidden="true"></div>
-                                <Card delay={index * 80} className={`relative rounded-3xl backdrop-blur-sm p-6 shadow-xl w-full ${plan.cardClass}`}>
+                                <Card delay={index * 80} className={`relative rounded-3xl backdrop-blur-sm p-4 sm:p-5 lg:p-6 shadow-xl w-full ${plan.cardClass}`}>
                                     <CardHeader>
                                         <CardTitle>
                                             <span className="flex flex-row gap-4 items-center font-normal">
@@ -364,7 +364,7 @@ export default function Pricing1() {
                                                     href={plan.ctaHref}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className={`inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold text-white ring-1 transition-all focus-visible:outline-none focus-visible:ring-2 ${plan.ctaClass}`}
+                                                    className={`inline-flex items-center justify-center gap-2 w-full rounded-xl px-6 py-3.5 text-base font-semibold text-white ring-1 transition-all focus-visible:outline-none focus-visible:ring-2 ${plan.ctaClass}`}
                                                     aria-label={`${plan.ctaLabel} por WhatsApp`}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">

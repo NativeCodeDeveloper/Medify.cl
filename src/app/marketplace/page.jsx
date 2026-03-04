@@ -364,6 +364,7 @@ function ProfessionalCard({ professional }) {
                         src={professional.image}
                         alt={professional.name}
                         fill
+                        sizes="96px"
                         className="object-cover"
                     />
                 </div>

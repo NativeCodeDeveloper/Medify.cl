@@ -47,7 +47,7 @@ export default function NavbarMedify() {
           >
             {/* Reemplaza /logo-medify.svg por tu logo */}
             <img
-              src="/lmedify.png"
+              src="/logomedifypng.png"
               alt="Medify"
               className="h-10 w-auto"
             />
