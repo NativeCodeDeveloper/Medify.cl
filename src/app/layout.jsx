@@ -48,7 +48,7 @@ export const metadata = {
     description: 'Medify: sistemas médicos especializados, plataformas de telemedicina y gestión de pacientes. Cumplimiento HIPAA, seguridad de datos médicos y tecnología de vanguardia para profesionales de la salud.',
     images: [
       {
-        url: '/medifylogo.png', // Reemplaza si tienes una imagen OG
+        url: '/logofavicom.png', // Reemplaza si tienes una imagen OG
         width: 1200,
         height: 630,
         alt: 'Medify – Tecnología médica premium',
@@ -82,8 +82,8 @@ export const metadata = {
     },
   },
   icons: {
-    icon: '/medifylogo.png', // Favicon principal (logo en la pestaña)
-    shortcut: '/medifylogo.png',
+    icon: '/logofavicom.png', // Favicon principal (logo en la pestaña)
+    shortcut: '/logofavicom.png',
     apple: '/apple-touch-icon.png',
   },
   other: {

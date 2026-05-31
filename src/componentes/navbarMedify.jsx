@@ -48,13 +48,11 @@ export default function NavbarMedify() {
         {/* Logo */}
         <Link href="/" aria-label="Medify" className="flex items-center flex-shrink-0">
           <Image
-            src="/logomedifypng.png"
+            src="/logonavar.png"
             alt="Medify"
             width={80}
             height={22}
-            className={`h-[28px] w-auto object-contain transition-all duration-300 ${
-              scrolled ? "brightness-0" : "brightness-0 invert"
-            }`}
+            className="h-[28px] w-auto object-contain"
             priority
           />
         </Link>

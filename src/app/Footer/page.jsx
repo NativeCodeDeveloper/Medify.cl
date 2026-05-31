@@ -84,11 +84,11 @@ export default function Footer() {
             {/* Logo + copyright */}
             <div className="flex items-center gap-3">
               <Image
-                src="/logomedifypng.png"
+                src="/logonuevomed.png"
                 alt="Medify"
                 width={60}
                 height={16}
-                className="h-4 w-auto object-contain brightness-0 opacity-40"
+                className="h-4 w-auto object-contain"
               />
               <p className="text-[#6e6e73]" style={{ fontSize: "12px" }}>
                 Copyright © {new Date().getFullYear()} Medify.cl. Todos los derechos reservados.
