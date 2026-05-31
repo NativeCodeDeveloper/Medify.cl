@@ -5,9 +5,9 @@ import Footer from "@/app/Footer/page";
 
 export default function SiteWrapper({ children }) {
   const pathname = usePathname();
-  const isDashboard = pathname?.startsWith("/dashboard");
+  const isExcluded = pathname?.startsWith("/dashboard") || pathname === "/login";
 
-  if (isDashboard) {
+  if (isExcluded) {
     return <>{children}</>;
   }
 

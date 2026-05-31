@@ -47,20 +47,20 @@ const PATIENT_FEATURES = [
 
 const PRO_BENEFITS = [
   {
-    title: "Visibilidad nacional",
-    desc: "Tu perfil aparece cuando pacientes buscan tu especialidad en cualquier región del país.",
+    title: "Tus pacientes ya te están buscando",
+    desc: "Miles de personas en Chile buscan profesionales de salud verificados. En Red Medify, te encuentran a ti.",
   },
   {
-    title: "Agenda clínica integrada",
-    desc: "Gestiona citas, fichas clínicas y recordatorios automáticos desde una sola plataforma.",
+    title: "Formas parte de algo real",
+    desc: "No entras a un directorio vacío. Eres parte de una red de profesionales verificados que ya está funcionando.",
   },
   {
-    title: "Pagos en línea",
-    desc: "Acepta pagos directamente en tu perfil. Sin efectivo, sin complicaciones.",
+    title: "Herramientas para gestionar tu práctica",
+    desc: "Desde tu perfil en Red Medify tienes acceso a todo lo que necesitas para organizar tu consulta digital.",
   },
   {
-    title: "Más pacientes, menos trabajo",
-    desc: "Recibe reservas directas. Medify se encarga del resto para que tú te enfoques en atender.",
+    title: "Tú pones el conocimiento, nosotros la infraestructura",
+    desc: "Agenda, pacientes, pagos y visibilidad. Todo en un solo lugar para que te enfoques en atender.",
   },
 ];
 
@@ -425,26 +425,26 @@ export default function Home() {
               <div>
                 <p
                   className="font-semibold uppercase mb-5"
-                  style={{ fontSize: "12px", letterSpacing: "0.08em", color: "#6e6e73" }}
+                  style={{ fontSize: "12px", letterSpacing: "0.08em", color: "#00C853" }}
                 >
-                  Para profesionales de la salud
+                  Red Medify
                 </p>
                 <h2
                   className="font-semibold text-white leading-[1.1] mb-5"
                   style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", letterSpacing: "-0.025em" }}
                 >
-                  Haz crecer tu práctica. Sin límites.
+                  Forma parte de Red Medify.
                 </h2>
                 <p className="text-[19px] font-light leading-[1.6] mb-10" style={{ color: "#86868b" }}>
-                  Únete al marketplace de salud que conecta profesionales verificados con pacientes en todo Chile.
-                  Tu perfil, tu agenda, tus condiciones.
+                  Una red de profesionales verificados donde los pacientes ya te están buscando.
+                  Tú pones el conocimiento. Nosotros ponemos la infraestructura.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
-                    href="/precios"
+                    href="/unirse"
                     className="inline-flex items-center justify-center rounded-full bg-white hover:bg-[#f5f5f7] px-[22px] py-[12px] text-[17px] font-normal text-[#1d1d1f] transition-colors duration-150"
                   >
-                    Ver planes
+                    Unirme a Red Medify
                   </Link>
                   <Link
                     href="/comoFunciona"
@@ -514,21 +514,28 @@ export default function Home() {
       <FadeInSection delay={0.05}>
         <section className="w-full bg-white px-6 py-[100px]">
           <div className="max-w-[700px] mx-auto text-center">
+            <p
+              className="font-semibold uppercase mb-5"
+              style={{ fontSize: "12px", letterSpacing: "0.08em", color: "#00C853" }}
+            >
+              Para profesionales de la salud
+            </p>
             <h2
               className="font-semibold text-[#1d1d1f] leading-[1.1] mb-5"
               style={{ fontSize: "clamp(2rem,4.5vw,3.2rem)", letterSpacing: "-0.025em" }}
             >
-              ¿Eres profesional de la salud?
+              Únete a la red donde tus pacientes ya te esperan.
             </h2>
             <p className="text-[19px] font-light text-[#6e6e73] leading-[1.6] mb-10">
-              Crea tu perfil, elige tu plan y empieza a recibir pacientes desde cualquier parte de Chile.
+              Red Medify ya está funcionando. Profesionales verificados, pacientes buscando especialistas en todo Chile.
+              Hay un lugar para ti.
             </p>
             <div className="flex items-center justify-center flex-wrap gap-4">
               <Link
-                href="/precios"
+                href="/unirse"
                 className="inline-flex items-center justify-center rounded-full bg-[#00C853] hover:bg-[#00b347] px-[22px] py-[12px] text-[17px] font-normal text-white transition-colors duration-150"
               >
-                Comenzar gratis
+                Unirme a Red Medify
               </Link>
               <a
                 href="https://wa.me/56991749964?text=Hola,%20quiero%20información%20sobre%20Medify"
