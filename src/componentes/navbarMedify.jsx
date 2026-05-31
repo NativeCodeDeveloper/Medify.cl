@@ -1,211 +1,164 @@
-
-
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import Image from "next/image";
 
-// Navbar estilo Medify (similar a la referencia):
-// - Fondo blanco con borde inferior
-// - Logo a la izquierda
-// - Links centrados (desktop)
-// - Botón CTA a la derecha con ícono
-// - Menú colapsable en móvil
+const LINKS = [
+  { label: "Buscar especialista", href: "/marketplace" },
+  { label: "Para profesionales", href: "/precios" },
+  { label: "Cómo funciona", href: "/comoFunciona" },
+  { label: "Nosotros", href: "/sobreNosotros" },
+  { label: "Contacto", href: "/contacto" },
+];
 
 export default function NavbarMedify() {
   const [open, setOpen] = useState(false);
-  const whatsappCtaUrl = "https://wa.me/56991749964?text=Hola,%20quiero%20información%20sobre%20Medify";
+  const [scrolled, setScrolled] = useState(false);
 
-  // Cierra el menú al pasar a desktop
   useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth >= 1024) setOpen(false);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 44);
+    const onResize = () => { if (window.innerWidth >= 1024) setOpen(false); };
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
-  const links = [
-    { label: "Quiénes Somos", href: "/sobreNosotros" },
-    { label: "Marketplace", href: "/marketplace" },
-    { label: "Planes", href: "/precios" },
-    { label: "Cómo funciona", href: "/comoFunciona" },
-    { label: "Contacto", href: "/contacto" },
-  ];
-
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/75 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 border-b border-slate-200/50">
-      <nav className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="h-16 flex items-center justify-between gap-3">
-          {/* Logo */}
+    <header
+      className="sticky top-0 z-50 w-full transition-all duration-300"
+      style={{
+        height: "44px",
+        background: scrolled
+          ? "rgba(251,251,253,0.8)"
+          : "rgba(22,22,23,0.8)",
+        backdropFilter: "blur(20px) saturate(180%)",
+        WebkitBackdropFilter: "blur(20px) saturate(180%)",
+        borderBottom: scrolled ? "1px solid rgba(0,0,0,0.12)" : "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <nav
+        className="mx-auto h-full flex items-center justify-between"
+        style={{ maxWidth: "980px", padding: "0 22px" }}
+      >
+
+        {/* Logo */}
+        <Link href="/" aria-label="Medify" className="flex items-center flex-shrink-0">
+          <Image
+            src="/logomedifypng.png"
+            alt="Medify"
+            width={80}
+            height={22}
+            className={`h-[28px] w-auto object-contain transition-all duration-300 ${
+              scrolled ? "brightness-0" : "brightness-0 invert"
+            }`}
+            priority
+          />
+        </Link>
+
+        {/* Links desktop — Apple usa 14px, no bold */}
+        <ul className="hidden lg:flex items-center gap-6">
+          {LINKS.map((l) => (
+            <li key={l.href}>
+              <Link
+                href={l.href}
+                className="transition-colors duration-150"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 400,
+                  color: scrolled ? "#1d1d1f" : "rgba(255,255,255,0.85)",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* CTA desktop */}
+        <div className="hidden lg:flex items-center">
           <Link
-            href="/"
-            className="flex items-center gap-2 min-w-[140px]"
-            aria-label="Ir al inicio"
+            href="/precios"
+            className="inline-flex items-center justify-center rounded-full transition-colors duration-150"
+            style={{
+              fontSize: "13px",
+              fontWeight: 400,
+              padding: "5px 14px",
+              background: scrolled ? "#00C853" : "rgba(255,255,255,0.15)",
+              color: "#ffffff",
+              border: scrolled ? "none" : "1px solid rgba(255,255,255,0.2)",
+            }}
           >
-            {/* Reemplaza /logo-medify.svg por tu logo */}
-            <img
-              src="/logomedifypng.png"
-              alt="Medify"
-              className="h-10 w-auto"
-            />
+            Unirse
           </Link>
+        </div>
 
-          {/* Links (desktop) */}
-          <div className="hidden lg:flex flex-1 items-center justify-center">
-            <ul className="flex items-center gap-8">
-              {links.map((l) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className="text-base font-bold text-cyan-700 hover:text-slate-900 transition-all duration-200 ease-out transform hover:-translate-y-0.5 hover:scale-[1.04]"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Hamburger mobile */}
+        <button
+          type="button"
+          className="lg:hidden inline-flex items-center justify-center h-8 w-8 rounded"
+          style={{ color: scrolled ? "#1d1d1f" : "rgba(255,255,255,0.85)" }}
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          )}
+        </button>
+      </nav>
 
-          {/* CTA (desktop) */}
-          <div className="hidden lg:flex items-center justify-end min-w-[220px]">
+      {/* Mobile menu */}
+      <div
+        className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-300 ${
+          open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+        style={{
+          background: "rgba(251,251,253,0.95)",
+          backdropFilter: "blur(20px)",
+          borderTop: "1px solid rgba(0,0,0,0.08)",
+        }}
+      >
+        <div className="max-w-[980px] mx-auto px-6 py-4">
+          <ul className="flex flex-col divide-y divide-[#d2d2d7]">
+            {LINKS.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-between py-3.5 text-[#1d1d1f]"
+                  style={{ fontSize: "17px", fontWeight: 400 }}
+                >
+                  <span>{l.label}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="#6e6e73" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className="pt-4">
             <Link
-              href={whatsappCtaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 rounded-full border border-teal-300/70 bg-white px-4 py-2 text-[14px] font-semibold text-slate-700 shadow-sm hover:shadow-md transition-all duration-200 hover:border-teal-400 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
-              aria-label="Hablar con un asesor por WhatsApp"
+              href="/precios"
+              onClick={() => setOpen(false)}
+              className="block w-full text-center rounded-full py-3 text-white transition-colors"
+              style={{ fontSize: "17px", fontWeight: 400, background: "#00C853" }}
             >
-              
-              <span>Solicitar información</span>
-              <span className="grid place-items-center h-7 w-7 rounded-full bg-slate-100 text-slate-500 border border-slate-200 group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                <ArrowRight className="h-3.5 w-3.5" />
-              </span>
+              Unirse a Medify
             </Link>
           </div>
-
-          {/* Botón menú (móvil) */}
-          <button
-            type="button"
-            className="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-            aria-label={open ? "Cerrar menú" : "Abrir menú"}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M18 6L6 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M6 6L18 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            ) : (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M4 7H20"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M4 12H20"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M4 17H20"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            )}
-          </button>
         </div>
-
-        {/* Menú móvil */}
-        <div
-          className={`lg:hidden overflow-hidden transition-[max-height,opacity] duration-300 ${open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-        >
-          <div className="pb-4">
-            <ul className="flex flex-col gap-1 pt-2">
-              {links.map((l) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-between rounded-xl px-3 py-2 text-[15px] font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900"
-                  >
-                    <span>{l.label}</span>
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                      className="text-slate-400"
-                    >
-                      <path
-                        d="M9 6L15 12L9 18"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <div className="pt-3">
-              <Link
-                href={whatsappCtaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-                className="group w-full inline-flex items-center justify-center gap-2 rounded-full border border-teal-300/70 bg-white px-4 py-2.5 text-[14px] font-semibold text-slate-700 shadow-sm hover:shadow-md transition-all duration-200 hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40"
-                aria-label="Hablar con un asesor por WhatsApp"
-              >
-                <span className="grid place-items-center h-8 w-8 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
-                  <MessageCircle className="h-4 w-4" />
-                </span>
-                <span>Hablar con un asesor</span>
-                <span className="grid place-items-center h-7 w-7 rounded-full bg-slate-100 text-slate-500 border border-slate-200 group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      </div>
     </header>
   );
 }

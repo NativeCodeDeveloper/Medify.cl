@@ -1,157 +1,127 @@
 "use client";
-import React from 'react';
-import { Poppins, Inter } from "next/font/google"; // Assuming these are used
-import Image from "next/image";
+import { Inter } from "next/font/google";
+import Link from "next/link";
 
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600"], display: "swap" });
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const STEPS = [
+  {
+    num: "01",
+    title: "Crea tu perfil profesional.",
+    desc: "Regístrate, completa tu ficha y aparece en el marketplace. Los pacientes te encontrarán por especialidad, zona y disponibilidad. Sin costo inicial.",
+    cta: null,
+  },
+  {
+    num: "02",
+    title: "Suscríbete y sé visible.",
+    desc: "Elige tu plan y activa tu suscripción. Obtienes posición destacada en los resultados de búsqueda, recordatorios automáticos, pagos online e historial clínico completo.",
+    cta: { label: "Ver planes", href: "/precios" },
+    featured: true,
+  },
+  {
+    num: "03",
+    title: "Gestiona y crece.",
+    desc: "Recibe reservas directas desde tu perfil. Atiende más pacientes en menos tiempo. Medify se encarga del resto.",
+    cta: null,
+  },
+];
 
 export default function ComoFunciona() {
-    return (
-        <section id="precios" className="w-full bg-[#F8FAFC] py-24 relative overflow-hidden">
-            {/* Background decorative elements could go here */}
+  return (
+    <section
+      id="como-funciona"
+      className={`${inter.className} w-full bg-white px-6 py-[100px]`}
+    >
+      <div className="max-w-[980px] mx-auto">
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                {/* Header */}
-                <div className="text-center mb-16">
-                    <h2 className={`${poppins.className} text-3xl md:text-5xl font-semibold text-[#1e293b] mb-4`}>
-                        <strong className='bg-gradient-to-r from-[#5FA5F9] to-[#4B8FE3] bg-clip-text text-transparent'>Cómo funciona Medify</strong>
-                    </h2>
-                    <p className={`${inter.className} text-lg text-slate-500`}>
-                        Una manera simple, ordenada y segura de conectar con tus pacientes.
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-
-                    {/* Card 1 */}
-                    <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 flex flex-col items-center text-center h-full relative group hover:shadow-md transition-shadow">
-                        {/* Number Circle */}
-                        <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-2xl font-bold text-blue-600 mb-6 absolute -top-8 bg-white border-4 border-white shadow-sm ring-4 ring-blue-50/50">
-                            1
-                        </div>
-
-                        <div className="mt-8 mb-6">
-                            <h3 className={`${poppins.className} text-2xl font-semibold text-slate-800 mb-4`}>
-                                Encuentra o crea<br />tu perfil profesional
-                            </h3>
-                            <p className={`${inter.className} text-slate-500 text-sm leading-relaxed px-4`}>
-                                Regístrate en Medify y crea tu perfil profesional para aparecer en nuestro marketplace de salud.
-                            </p>
-                        </div>
-
-                        <button className="bg-[#648D98] hover:bg-[#53767F] text-white px-8 py-3 rounded-full font-medium mb-8 w-full max-w-[240px] transition-colors">
-                            Crear perfil
-                        </button>
-
-                        <div className="space-y-3 w-full text-left pl-4 mb-8">
-                            <FeatureItem text="Agenda online y fichas clinicas" />
-                            <FeatureItem text="Módulo de gestión para profesionales" />
-                            <FeatureItem text="Soporte online y básico" />
-                            <FeatureItem text="LIMITADO - Recordatorios automáticos" />
-                        </div>
-
-                        <div className="mt-auto w-full flex flex-col items-center space-y-3">
-                            <div className="bg-blue-50 text-blue-600 px-6 py-2 rounded-lg text-sm font-medium w-full">
-                                Sin costo inicial
-                            </div>
-                            <button className="bg-[#648D98] hover:bg-[#53767F] text-white px-8 py-3 rounded-full font-medium w-full shadow-lg shadow-teal-900/10">
-                                Crear perfil
-                            </button>
-                            <span className="text-slate-400 text-sm">Sin costo inicial</span>
-                        </div>
-                    </div>
-
-                    {/* Card 2 - Blue Header */}
-                    <div className="bg-white rounded-[2.5rem] shadow-lg border border-blue-100 flex flex-col items-center text-center h-full relative overflow-hidden transform lg:-translate-y-4">
-                        {/* Blue Header Background */}
-                        <div className="absolute top-0 w-full h-48 bg-gradient-to-b from-[#5FA5F9] to-[#4B8FE3]"></div>
-
-                        {/* Number Circle */}
-                        <div className="w-16 h-16 rounded-full bg-[#4B8FE3] flex items-center justify-center text-2xl font-bold text-white mb-6 absolute top-8 border-4 border-white shadow-md z-10">
-                            2
-                        </div>
-
-                        <div className="mt-28 mb-6 relative z-10 w-full px-6">
-                            <h3 className={`${poppins.className} text-2xl font-semibold text-white mb-1 drop-shadow-md`}>
-                                Organiza tu agenda
-                            </h3>
-                            <h3 className={`${poppins.className} text-2xl font-semibold text-white mb-6 drop-shadow-md`}>
-                                y consultas
-                            </h3>
-
-                            <div className="h-2"></div> {/* Spacer to push content down from blue header area if needed, though text is on blue */}
-                        </div>
-
-                        {/* Content Body */}
-                        <div className="w-full px-8 pb-8 flex flex-col items-center flex-grow pt-4">
-                            <p className={`${inter.className} text-slate-500 text-sm leading-relaxed mb-6`}>
-                                Gestiona tus citas online, ficha a tus pacientes y reduce las tareas administrativas.
-                            </p>
-
-                            <button className="bg-[#5FA5F9] hover:bg-[#4B8FE3] text-white px-8 py-3 rounded-full font-medium mb-8 w-full max-w-[240px] shadow-blue-200 shadow-lg">
-                                Organizar agenda
-                            </button>
-
-                            <div className="space-y-3 w-full text-left pl-4 mb-8">
-                                <FeatureItem text={<>Todo lo del plan <strong>Básico</strong></>} iconColor="text-blue-500" />
-                                <FeatureItem text="Recordatorios automáticos" iconColor="text-blue-500" />
-                                <FeatureItem text="Pagos online e informes completos" iconColor="text-blue-500" />
-                                <FeatureItem text="+ Recordatorios por WhatsApp" iconColor="text-blue-500" />
-                            </div>
-
-                            <div className="mt-auto w-full flex flex-col items-center space-y-3">
-                                <div className="bg-blue-50 text-blue-600 px-6 py-2 rounded-lg text-sm font-medium w-full">
-                                    2 meses gratis pagando anualmente
-                                </div>
-                                <button className="bg-[#5FA5F9] hover:bg-[#4B8FE3] text-white px-8 py-3 rounded-full font-medium w-full shadow-lg shadow-blue-900/10">
-                                    Empieza ahora
-                                </button>
-                                <span className="text-slate-400 text-sm">Obtén descuentos pagando anualmente</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Card 3 - Image */}
-                    <div className="rounded-[2.5rem] h-full relative overflow-hidden group min-h-[600px] lg:min-h-0">
-                        <Image
-                            src="/personalsalud.png" // Using existing image as placeholder
-                            alt="Professional Doctor"
-                            fill
-                            className="object-cover"
-                        />
-
-                        {/* Bottom Card Overlay */}
-                        <div className="absolute bottom-6 left-6 right-6 bg-[#F1F5F9]/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50">
-                            <div className="flex flex-col items-center text-center">
-                                <div className="w-12 h-12 rounded-full bg-[#7FB8B3] flex items-center justify-center mb-4 shadow-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="white" className="w-6 h-6">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                    </svg>
-                                </div>
-                                <h3 className={`${poppins.className} text-xl font-semibold text-[#1e293b] mb-3`}>
-                                    Por fin, más tiempo para tus pacientes.
-                                </h3>
-                                <p className={`${inter.className} text-slate-500 text-sm leading-relaxed`}>
-                                    Simplifica tu consulta, elimina el desorden y dedicate a atender, mientras nosotros nos ocupamos del resto.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-    );
-}
-
-function FeatureItem({ text, iconColor = "text-[#648D98]" }) {
-    return (
-        <div className="flex items-start gap-3">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={`w-5 h-5 flex-shrink-0 ${iconColor}`}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
-            <span className={`text-sm text-slate-600 ${inter.className}`}>{text}</span>
+        {/* Header */}
+        <div className="mb-16">
+          <p
+            className="font-semibold text-[#6e6e73] uppercase mb-4"
+            style={{ fontSize: "12px", letterSpacing: "0.08em" }}
+          >
+            Cómo funciona
+          </p>
+          <h2
+            className="font-semibold text-[#1d1d1f] leading-[1.1] mb-5 max-w-[560px]"
+            style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", letterSpacing: "-0.025em" }}
+          >
+            De cero a lleno de pacientes. En tres pasos.
+          </h2>
+          <p className="text-[19px] font-light text-[#6e6e73] leading-[1.6] max-w-[480px]">
+            Crea tu perfil, elige tu plan y empieza a recibir pacientes desde toda Chile.
+          </p>
         </div>
-    )
+
+        {/* Steps — separados por línea 1px */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-[#d2d2d7] rounded-2xl overflow-hidden">
+          {STEPS.map((step) => (
+            <div
+              key={step.num}
+              className="px-8 py-10 flex flex-col"
+              style={{ background: step.featured ? "#f5f5f7" : "#ffffff" }}
+            >
+              <span
+                className="font-semibold mb-8 block"
+                style={{ fontSize: "12px", color: "#00C853", letterSpacing: "0.08em" }}
+              >
+                {step.num}
+              </span>
+              <h3
+                className="font-semibold text-[#1d1d1f] leading-[1.2] mb-4"
+                style={{ fontSize: "21px", letterSpacing: "-0.015em" }}
+              >
+                {step.title}
+              </h3>
+              <p
+                className="font-light text-[#6e6e73] leading-[1.65] flex-1"
+                style={{ fontSize: "15px" }}
+              >
+                {step.desc}
+              </p>
+              {step.cta && (
+                <div className="mt-8">
+                  <Link
+                    href={step.cta.href}
+                    className="inline-flex items-center justify-center rounded-full bg-[#00C853] hover:bg-[#00b347] px-[18px] py-[10px] text-[15px] font-normal text-white transition-colors duration-150"
+                  >
+                    {step.cta.label}
+                  </Link>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom callout */}
+        <div className="mt-4 rounded-2xl bg-[#f5f5f7] px-8 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <p
+              className="font-semibold text-[#1d1d1f] mb-2"
+              style={{ fontSize: "21px", letterSpacing: "-0.015em" }}
+            >
+              Por fin, más tiempo para tus pacientes.
+            </p>
+            <p
+              className="font-light text-[#6e6e73] leading-[1.6] max-w-[480px]"
+              style={{ fontSize: "15px" }}
+            >
+              Simplifica tu consulta, elimina el desorden administrativo y dedícate a lo que realmente importa.
+            </p>
+          </div>
+          <Link
+            href="/precios"
+            className="flex-shrink-0 inline-flex items-center justify-center rounded-full bg-[#1d1d1f] hover:bg-[#000000] px-[22px] py-[12px] text-[17px] font-normal text-white transition-colors duration-150"
+          >
+            Comenzar ahora
+          </Link>
+        </div>
+
+      </div>
+    </section>
+  );
 }
