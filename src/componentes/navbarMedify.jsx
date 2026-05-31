@@ -80,7 +80,7 @@ export default function NavbarMedify() {
         {/* CTA desktop */}
         <div className="hidden lg:flex items-center">
           <Link
-            href="/precios"
+            href="/unirse"
             className="inline-flex items-center justify-center rounded-full transition-colors duration-150"
             style={{
               fontSize: "13px",
@@ -147,7 +147,7 @@ export default function NavbarMedify() {
           </ul>
           <div className="pt-4">
             <Link
-              href="/precios"
+              href="/unirse"
               onClick={() => setOpen(false)}
               className="block w-full text-center rounded-full py-3 text-white transition-colors"
               style={{ fontSize: "17px", fontWeight: 400, background: "#00C853" }}

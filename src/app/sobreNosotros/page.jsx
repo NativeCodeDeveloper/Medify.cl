@@ -89,7 +89,7 @@ export default function SobreNosotros() {
             <div className="flex justify-center">
               <div className="relative w-full max-w-sm h-72 bg-[#f5f5f7] rounded-3xl overflow-hidden">
                 <Image
-                  src="/medifysafari1.jpg"
+                  src="/logofavicom.png"
                   alt="Medify en acción"
                   fill
                   className="object-cover"
