@@ -82,38 +82,38 @@ const SPECIALTIES = [
 const PROFESSIONALS_CAROUSEL = [
   {
     id: "dennis-beltran",
-    name: "Dennis Beltrán",
-    role: "Psicóloga",
-    img: "/dennisbeltran.png",
-    location: "Chillán",
+    nombre: "Dennis Beltrán",
+    especialidad_principal: "Psicóloga",
+    imagen_url: "/dennisbeltran.png",
+    ubicacion: "Chillán",
   },
   {
     id: "marcelo-vilches",
-    name: "Marcelo Vilches",
-    role: "Tecnólogo Médico",
-    img: "/marcelovilches.png",
-    location: "Chillán",
+    nombre: "Marcelo Vilches",
+    especialidad_principal: "Tecnólogo Médico",
+    imagen_url: "/marcelovilches.png",
+    ubicacion: "Chillán",
   },
   {
     id: "cristian-becerra",
-    name: "Cristian Becerra",
-    role: "Medicina Complementaria",
-    img: "/cristianbecerra.png",
-    location: "Chillán",
+    nombre: "Cristian Becerra",
+    especialidad_principal: "Medicina Complementaria",
+    imagen_url: "/cristianbecerra.png",
+    ubicacion: "Chillán",
   },
   {
     id: "dennis-beltran",
-    name: "Dennis Beltrán",
-    role: "Psicóloga",
-    img: "/dennisbeltran.png",
-    location: "Chillán",
+    nombre: "Dennis Beltrán",
+    especialidad_principal: "Psicóloga",
+    imagen_url: "/dennisbeltran.png",
+    ubicacion: "Chillán",
   },
   {
     id: "marcelo-vilches",
-    name: "Marcelo Vilches",
-    role: "Tecnólogo Médico",
-    img: "/marcelovilches.png",
-    location: "Chillán",
+    nombre: "Marcelo Vilches",
+    especialidad_principal: "Tecnólogo Médico",
+    imagen_url: "/marcelovilches.png",
+    ubicacion: "Chillán",
   },
 ];
 
@@ -225,8 +225,8 @@ function ProfessionalsCarousel() {
               <div className="w-full h-full rounded-full overflow-hidden bg-[#f5f5f7]"
                 style={{ border: "2px solid #ffffff" }}>
                 <Image
-                  src={pro.img}
-                  alt={pro.name}
+                  src={pro.imagen_url}
+                  alt={pro.nombre}
                   width={68}
                   height={68}
                   className="w-full h-full object-cover object-top"
@@ -240,7 +240,7 @@ function ProfessionalsCarousel() {
               className="text-center leading-tight truncate w-full font-medium text-[#1d1d1f]"
               style={{ fontSize: "11px" }}
             >
-              {pro.name.split(" ")[0]}
+              {pro.nombre.split(" ")[0]}
             </p>
           </Link>
         ))}

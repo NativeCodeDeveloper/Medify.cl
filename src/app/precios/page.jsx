@@ -8,8 +8,8 @@ const INDIVIDUAL = [
     id: "esencial",
     name: "Esencial",
     label: "Para comenzar",
-    price: "$3.990",
-    period: "un pago único",
+    price: "$2.990",
+    period: "CLP/mes",
     featured: false,
     features: [
       "Perfil profesional en el Marketplace",
@@ -161,8 +161,8 @@ function PlanCard({ plan }) {
 
         <a
           href={plan.href}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={plan.href.startsWith("/") ? undefined : "_blank"}
+          rel={plan.href.startsWith("/") ? undefined : "noopener noreferrer"}
           className="inline-flex items-center justify-center gap-2 rounded-full text-white transition-colors duration-150"
           style={{
             fontSize: "15px",

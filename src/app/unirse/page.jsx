@@ -83,8 +83,8 @@ const PLANES_INDIVIDUAL = [
     id: "esencial",
     name: "Esencial",
     label: "Para comenzar",
-    price: "$3.990",
-    period: "un pago único",
+    price: "$2.990",
+    period: "CLP/mes",
     desc: "Aparece en el marketplace. Los pacientes te encuentran y te contactan directamente.",
     features: [
       "Perfil profesional en el Marketplace",
@@ -252,13 +252,17 @@ function StepBar({ current }) {
 export default function UnirsePage() {
   const [step, setStep] = useState(0);
   const [planId, setPlanId] = useState("");
-  const [tipoPlan, setTipoPlan] = useState("individual"); // "individual" | "corporativo"
+  const [tipoPlan, setTipoPlan] = useState("individual");
+  const [showToast, setShowToast] = useState(false);
   const [form, setForm] = useState({
+    foto: null, fotoPreview: null,
     nombre: "", especialidad: "", especialidadOtra: "",
     region: "", comuna: "", modalidad: "",
     experiencia: "", precio: "", disponibilidad: "",
     descripcion: "", bio: "", enfoques: "",
     email: "", whatsapp: "", sitioWeb: "",
+    rut: "", password: "", confirmPassword: "",
+    instagram: "", facebook: "", linkedin: "", twitter: "",
   });
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
@@ -267,15 +271,72 @@ export default function UnirsePage() {
   const planesActivos = tipoPlan === "individual" ? PLANES_INDIVIDUAL : PLANES_CORPORATIVO;
   const plan = planesActivos.find(p => p.id === planId);
 
+  /* ── RUT chileno: auto-formato y validación ── */
+  const formatRUT = (val) => {
+    const clean = val.replace(/[^0-9kK]/g, "").toUpperCase();
+    if (!clean) return "";
+    if (clean.length === 1) return clean;
+    const body = clean.slice(0, -1);
+    const dv = clean.slice(-1);
+    let formatted = "";
+    for (let i = body.length - 1, c = 0; i >= 0; i--, c++) {
+      if (c > 0 && c % 3 === 0) formatted = "." + formatted;
+      formatted = body[i] + formatted;
+    }
+    return `${formatted}-${dv}`;
+  };
+
+  const validateRUT = (rut) => {
+    const clean = rut.replace(/[^0-9kK]/g, "").toUpperCase();
+    if (clean.length < 8 || clean.length > 9) return false;
+    const body = clean.slice(0, -1);
+    const dv = clean.slice(-1);
+    let sum = 0, multiplier = 2;
+    for (let i = body.length - 1; i >= 0; i--) {
+      sum += parseInt(body[i]) * multiplier;
+      multiplier = multiplier === 7 ? 2 : multiplier + 1;
+    }
+    const rem = 11 - (sum % 11);
+    const expected = rem === 11 ? "0" : rem === 10 ? "K" : String(rem);
+    return expected === dv;
+  };
+
+  const rutValido = form.rut.length > 3 ? validateRUT(form.rut) : null;
+  const passwordMatch = form.password && form.confirmPassword && form.password === form.confirmPassword;
+  const passwordMismatch = form.confirmPassword && form.password !== form.confirmPassword;
+
+  /* Valida que la URL sea del dominio agendaclinicas.cl */
+  const isValidAgendaUrl = (url) => {
+    if (!url) return false;
+    try {
+      const u = new URL(url.startsWith("http") ? url : `https://${url}`);
+      return u.hostname === "agendaclinicas.cl" || u.hostname.endsWith(".agendaclinicas.cl");
+    } catch {
+      return false;
+    }
+  };
+
+  const agendaValida = isValidAgendaUrl(form.sitioWeb);
+  const agendaIngresada = form.sitioWeb.trim().length > 0;
+
   const canNext = () => {
     if (step === 0) return !!planId;
     if (step === 1) return form.nombre && form.especialidad && form.region && form.comuna && form.modalidad;
     if (step === 2) return true;
-    if (step === 3) return !!form.email;
+    if (step === 3) return !!form.email && rutValido && passwordMatch;
     return true;
   };
 
-  const next = () => canNext() && setStep(s => Math.min(s + 1, 4));
+  const next = () => {
+    if (!canNext()) return;
+    /* Al ir de paso 3 → 4, si no tiene URL válida de agendaclinicas.cl muestra toast */
+    if (step === 3 && !agendaValida) {
+      setShowToast(true);
+      return;
+    }
+    setStep(s => Math.min(s + 1, 4));
+  };
+
   const back = () => setStep(s => Math.max(s - 1, 0));
 
   const buildWsp = () => {
@@ -385,6 +446,63 @@ export default function UnirsePage() {
   const renderForm = () => {
     if (step === 1) return (
       <div className="space-y-5">
+
+        {/* Foto de perfil */}
+        <div>
+          <Label>Foto de perfil</Label>
+          <div className="flex items-center gap-5">
+            {/* Preview / placeholder */}
+            <div className="relative flex-shrink-0">
+              <div className="w-20 h-20 rounded-full overflow-hidden bg-[#f5f5f7] flex items-center justify-center"
+                style={{ border: "2px solid #d2d2d7" }}>
+                {form.fotoPreview ? (
+                  <img src={form.fotoPreview} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <svg className="w-8 h-8 text-[#86868b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                )}
+              </div>
+              {/* Overlay editar */}
+              {form.fotoPreview && (
+                <button type="button"
+                  onClick={() => set("fotoPreview", null) || set("foto", null)}
+                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
+                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {/* Botón de carga */}
+            <div>
+              <label className="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-[#d2d2d7] px-4 py-2.5 hover:border-[#1d1d1f] transition-all"
+                style={{ fontSize: "13px", color: "#1d1d1f" }}>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                {form.fotoPreview ? "Cambiar foto" : "Subir foto"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    set("foto", file);
+                    set("fotoPreview", URL.createObjectURL(file));
+                  }}
+                />
+              </label>
+              <p className="mt-1.5 font-light text-[#6e6e73]" style={{ fontSize: "11px" }}>
+                JPG, PNG o WEBP · Máx 5 MB
+                {/* TODO: upload a Cloudflare Images via POST /api/upload/image */}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Nombre */}
         <div>
           <Label required>Nombre completo</Label>
@@ -517,13 +635,132 @@ export default function UnirsePage() {
         </div>
         <div>
           <Label>Link de tu agenda clínica</Label>
-          <Input type="url" placeholder="Ej: https://tu-nombre.medifyclinic.cl" value={form.sitioWeb} onChange={e => set("sitioWeb", e.target.value)} />
-          <p className="mt-2 font-light text-[#6e6e73]" style={{ fontSize: "12px" }}>
-            ¿No tienes agenda todavía?{" "}
-            <Link href="/precios" className="text-[#00C853] hover:underline underline-offset-4">
-              Incluida en planes pagados
-            </Link>
+          <input
+            type="url"
+            placeholder="Ej: https://tu-nombre.agendaclinicas.cl"
+            value={form.sitioWeb}
+            onChange={e => set("sitioWeb", e.target.value)}
+            className="w-full rounded-xl px-4 py-3 text-[#1d1d1f] outline-none transition-all"
+            style={{
+              fontSize: "15px",
+              border: agendaIngresada
+                ? agendaValida
+                  ? "2px solid #00C853"
+                  : "2px solid #ef4444"
+                : "1px solid #d2d2d7",
+              background: agendaIngresada && agendaValida ? "rgba(0,200,83,0.04)" : "#ffffff",
+            }}
+          />
+
+          {/* Feedback dinámico */}
+          {agendaIngresada && !agendaValida && (
+            <p className="mt-2 flex items-center gap-1.5 text-red-500" style={{ fontSize: "12px" }}>
+              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+              Solo se aceptan links con dominio <strong>agendaclinicas.cl</strong>
+            </p>
+          )}
+          {agendaValida && (
+            <p className="mt-2 flex items-center gap-1.5 text-[#00C853]" style={{ fontSize: "12px" }}>
+              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              Link de Agenda Clínica válido
+            </p>
+          )}
+          {!agendaIngresada && (
+            <p className="mt-2 font-light text-[#6e6e73]" style={{ fontSize: "12px" }}>
+              Debe ser un link de <strong>agendaclinicas.cl</strong>. Si aún no tienes, puedes continuar sin él.
+            </p>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-[#e5e5ea] pt-5">
+          <p className="font-semibold text-[#1d1d1f] mb-4" style={{ fontSize: "13px", letterSpacing: "-0.01em" }}>
+            Datos de acceso a tu perfil
           </p>
+          <p className="font-light text-[#6e6e73] mb-5" style={{ fontSize: "12px" }}>
+            Con estas credenciales podrás ingresar a tu panel y editar tu perfil cuando quieras.
+          </p>
+
+          {/* RUT */}
+          <div className="mb-4">
+            <Label required>RUT</Label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Ej: 12.345.678-9"
+                value={form.rut}
+                onChange={e => set("rut", formatRUT(e.target.value))}
+                maxLength={12}
+                className="w-full rounded-xl px-4 py-3 text-[#1d1d1f] outline-none transition-all"
+                style={{
+                  fontSize: "15px",
+                  border: rutValido === null ? "1px solid #d2d2d7"
+                    : rutValido ? "2px solid #00C853"
+                    : "2px solid #ef4444",
+                }}
+              />
+              {rutValido === true && (
+                <svg className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00C853]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              )}
+            </div>
+            {rutValido === false && (
+              <p className="mt-1.5 text-red-500" style={{ fontSize: "12px" }}>RUT inválido. Verifica el formato.</p>
+            )}
+          </div>
+
+          {/* Contraseña */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label required>Contraseña</Label>
+              <Input type="password" placeholder="Mínimo 8 caracteres" value={form.password}
+                onChange={e => set("password", e.target.value)} />
+            </div>
+            <div>
+              <Label required>Confirmar contraseña</Label>
+              <input
+                type="password"
+                placeholder="Repite tu contraseña"
+                value={form.confirmPassword}
+                onChange={e => set("confirmPassword", e.target.value)}
+                className="w-full rounded-xl px-4 py-3 text-[#1d1d1f] outline-none transition-all"
+                style={{
+                  fontSize: "15px",
+                  border: !form.confirmPassword ? "1px solid #d2d2d7"
+                    : passwordMatch ? "2px solid #00C853"
+                    : "2px solid #ef4444",
+                }}
+              />
+              {passwordMismatch && (
+                <p className="mt-1.5 text-red-500" style={{ fontSize: "12px" }}>Las contraseñas no coinciden.</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Redes sociales */}
+        <div className="border-t border-[#e5e5ea] pt-5">
+          <p className="font-semibold text-[#1d1d1f] mb-4" style={{ fontSize: "13px", letterSpacing: "-0.01em" }}>
+            Redes sociales <span className="font-light text-[#6e6e73]" style={{ fontSize: "11px" }}>(opcional)</span>
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              { key: "instagram", label: "Instagram", placeholder: "@tu_usuario" },
+              { key: "facebook", label: "Facebook", placeholder: "facebook.com/tu-página" },
+              { key: "linkedin", label: "LinkedIn", placeholder: "linkedin.com/in/tu-perfil" },
+              { key: "twitter", label: "X (Twitter)", placeholder: "@tu_usuario" },
+            ].map(({ key, label, placeholder }) => (
+              <div key={key}>
+                <Label>{label}</Label>
+                <Input placeholder={placeholder} value={form[key]} onChange={e => set(key, e.target.value)} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -642,6 +879,7 @@ export default function UnirsePage() {
   ];
 
   return (
+    
     <div className="min-h-screen bg-white">
 
       {/* Header */}
@@ -730,6 +968,37 @@ export default function UnirsePage() {
           </button>
         )}
       </div>
+
+      {/* ── Toast: ¿Aún no tienes Agenda Clínica? ── */}
+      {showToast && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center px-4 pb-6 sm:pb-0"
+          style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}>
+          <div className="w-full max-w-sm rounded-3xl p-7 shadow-2xl" style={{ background: "#ffffff" }}>
+            <p className="font-semibold text-[#1d1d1f] mb-2" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
+              ¿Aún no tienes Agenda Clínica?
+            </p>
+            <p className="font-light text-[#6e6e73] leading-relaxed mb-6" style={{ fontSize: "14px" }}>
+              Con Agenda Clínica tus pacientes pueden reservar y pagar directamente desde tu perfil en Red Medify. Puedes obtenerla ahora o configurarla después.
+            </p>
+            <div className="space-y-3">
+              <a href="https://agendaclinicas.cl" target="_blank" rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full rounded-full text-white transition-colors duration-150"
+                style={{ fontSize: "15px", fontWeight: 400, padding: "13px", background: "#00C853" }}>
+                Ver Agenda Clínica
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+              </a>
+              <button
+                onClick={() => { setShowToast(false); setStep(s => Math.min(s + 1, 4)); }}
+                className="w-full rounded-full border border-[#d2d2d7] text-[#6e6e73] hover:border-[#1d1d1f] hover:text-[#1d1d1f] transition-all duration-150"
+                style={{ fontSize: "15px", fontWeight: 400, padding: "12px" }}>
+                Ver después
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

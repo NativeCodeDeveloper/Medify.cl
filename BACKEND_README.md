@@ -7,108 +7,155 @@ que alimentará el marketplace, el dashboard de administración y el formulario 
 
 ## Tablas
 
-### 1. `professionals` — Perfiles del marketplace
+### 1. `profesionales` — Perfiles del marketplace
+
+> Todos los campos en español para alinearse con el frontend y facilitar la integración.
 
 ```sql
-CREATE TABLE professionals (
-  id                VARCHAR(100)  PRIMARY KEY,          -- slug: "dennis-beltran"
-  name              VARCHAR(150)  NOT NULL,
-  role              VARCHAR(100)  NOT NULL,             -- especialidad principal
-  region            VARCHAR(100),
-  comuna            VARCHAR(100),
-  location          VARCHAR(150),                       -- texto libre (Ej: "Chillán")
-  modalidad         ENUM('Online','Presencial','Ambas') DEFAULT 'Online',
-  description       TEXT,                               -- bio corto (marketplace)
-  full_bio          TEXT,                               -- bio completo (perfil)
-  image_url         VARCHAR(500),
-  email             VARCHAR(150),
-  phone             VARCHAR(30),
-  whatsapp_number   VARCHAR(30),
-  agenda_url        VARCHAR(500),                       -- link agenda clínica (botón "Agendar hora")
-  personal_website  VARCHAR(500),
-  availability      VARCHAR(200),                       -- Ej: "Lun-Vie 9-18h"
-  years_experience  INT,
-  price_per_session INT,                                -- en CLP
-  rating            DECIMAL(3,1)  DEFAULT 0.0,
-  review_count      INT           DEFAULT 0,
-  is_available      BOOLEAN       DEFAULT TRUE,
-  is_active         BOOLEAN       DEFAULT TRUE,         -- visible en marketplace
-  plan_id           INT,                                -- FK → plans.id
-  created_at        TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
-  updated_at        TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE profesionales (
+  id                       VARCHAR(100)  PRIMARY KEY,       -- slug URL: "dennis-beltran"
+  nombre                   VARCHAR(150)  NOT NULL,
+  especialidad_principal   VARCHAR(100)  NOT NULL,
+
+  -- Estadísticas (calculadas en el backend)
+  calificacion             DECIMAL(3,1)  DEFAULT 0.0,       -- promedio de reseñas (1.0-5.0)
+  total_resenas            INT           DEFAULT 0,
+
+  -- Descripción
+  descripcion              TEXT,                             -- bio corto (marketplace)
+  biografia                TEXT,                             -- bio completo (perfil)
+
+  -- Imagen
+  imagen_url               VARCHAR(500),                     -- URL de Cloudflare Images
+
+  -- Ubicación
+  ubicacion                VARCHAR(150),                     -- texto libre (Ej: "Chillán")
+  region                   VARCHAR(100),
+  comuna                   VARCHAR(100),
+  direccion                VARCHAR(300),                     -- dirección exacta para el mapa
+  url_mapa                 VARCHAR(500),                     -- Google Maps embed URL
+
+  -- Contacto
+  correo                   VARCHAR(150),
+  telefono                 VARCHAR(30),
+  numero_whatsapp          VARCHAR(30),                      -- sin + ni espacios (para wa.me)
+  sitio_web                VARCHAR(500),                     -- link agenda clínica (botón "Agendar hora")
+
+  -- Práctica
+  disponibilidad           VARCHAR(200),                     -- Ej: "Lun-Vie 9-18h"
+  modalidad_atencion       ENUM('Online','Presencial','Ambas') DEFAULT 'Online',
+  anos_experiencia         INT,
+  precio_sesion            INT,                              -- en CLP
+
+  -- Estado
+  disponible               BOOLEAN       DEFAULT TRUE,       -- acepta nuevos pacientes
+  activo                   BOOLEAN       DEFAULT TRUE,       -- visible en el marketplace
+
+  -- Redes sociales (nombres de marca, en inglés)
+  instagram                VARCHAR(200),
+  facebook                 VARCHAR(200),
+  linkedin                 VARCHAR(200),
+  twitter                  VARCHAR(200),
+
+  -- Auth (Clerk)
+  clerk_user_id            VARCHAR(200)  UNIQUE,            -- ID del usuario en Clerk
+  rut                      VARCHAR(15)   UNIQUE,            -- RUT chileno (identificador único)
+
+  -- Relación con plan
+  plan_id                  INT,                              -- FK → planes.id
+
+  -- Timestamps
+  creado_en                TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en           TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
-### 2. `professional_specialties` — Tags de especialidad por profesional
+### 2. `especialidades_profesional` — Tags de especialidad por profesional
 
 ```sql
-CREATE TABLE professional_specialties (
-  id              INT          AUTO_INCREMENT PRIMARY KEY,
-  professional_id VARCHAR(100) NOT NULL,               -- FK → professionals.id
-  name            VARCHAR(100) NOT NULL,               -- Ej: "Terapia cognitivo-conductual"
-  FOREIGN KEY (professional_id) REFERENCES professionals(id) ON DELETE CASCADE
+CREATE TABLE especialidades_profesional (
+  id                INT          AUTO_INCREMENT PRIMARY KEY,
+  profesional_id    VARCHAR(100) NOT NULL,             -- FK → profesionales.id
+  nombre            VARCHAR(100) NOT NULL,             -- Ej: "Terapia cognitivo-conductual"
+  FOREIGN KEY (profesional_id) REFERENCES profesionales(id) ON DELETE CASCADE
 );
 ```
 
-### 3. `plans` — Planes y precios
+### 3. `planes` — Planes y precios
 
 ```sql
-CREATE TABLE plans (
+CREATE TABLE planes (
   id                    INT          AUTO_INCREMENT PRIMARY KEY,
-  name                  VARCHAR(100) NOT NULL,          -- "Esencial", "Profesional", etc.
-  type                  ENUM('individual','corporativo') DEFAULT 'individual',
-  price_clp             INT          NOT NULL DEFAULT 0,
-  billing_period        VARCHAR(50),                    -- "/mes + IVA", "Gratis", "A cotizar"
-  description           TEXT,
+  nombre                VARCHAR(100) NOT NULL,          -- "Esencial", "Profesional", etc.
+  tipo                  ENUM('individual','corporativo') DEFAULT 'individual',
+  precio_clp            INT          NOT NULL DEFAULT 0,
+  periodo_facturacion   VARCHAR(50),                    -- "/mes + IVA", "Gratis", "A cotizar"
+  descripcion           TEXT,
   flujo                 ENUM('pago','wsp','email')       DEFAULT 'wsp',
   mercadopago_plan_id   VARCHAR(200),                   -- ID del preapproval_plan en MP
   mercadopago_url       VARCHAR(500),                   -- URL completa de checkout MP
-  is_active             BOOLEAN      DEFAULT TRUE,
-  created_at            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-  updated_at            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  activo                BOOLEAN      DEFAULT TRUE,
+  creado_en             TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en        TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
-### 4. `plan_features` — Features de cada plan
+### 4. `caracteristicas_plan` — Features de cada plan
 
 ```sql
-CREATE TABLE plan_features (
-  id          INT          AUTO_INCREMENT PRIMARY KEY,
-  plan_id     INT          NOT NULL,                   -- FK → plans.id
-  description VARCHAR(300) NOT NULL,
-  sort_order  INT          DEFAULT 0,
-  FOREIGN KEY (plan_id) REFERENCES plans(id) ON DELETE CASCADE
+CREATE TABLE caracteristicas_plan (
+  id            INT          AUTO_INCREMENT PRIMARY KEY,
+  plan_id       INT          NOT NULL,                  -- FK → planes.id
+  descripcion   VARCHAR(300) NOT NULL,
+  orden         INT          DEFAULT 0,
+  FOREIGN KEY (plan_id) REFERENCES planes(id) ON DELETE CASCADE
 );
 ```
 
-### 5. `subscriptions` — Suscripciones activas de profesionales
+### 5. `suscripciones` — Suscripciones activas de profesionales
 
 ```sql
-CREATE TABLE subscriptions (
-  id                      VARCHAR(100)  PRIMARY KEY,   -- UUID
-  professional_id         VARCHAR(100)  NOT NULL,      -- FK → professionals.id
-  plan_id                 INT           NOT NULL,      -- FK → plans.id
-  status                  ENUM('pending','active','inactive','cancelled') DEFAULT 'pending',
-  mercadopago_payment_id  VARCHAR(200),                -- ID del pago en MP
-  mercadopago_payer_id    VARCHAR(200),
-  start_date              DATE,
-  end_date                DATE,
-  created_at              TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
-  updated_at              TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (professional_id) REFERENCES professionals(id),
-  FOREIGN KEY (plan_id)         REFERENCES plans(id)
+CREATE TABLE suscripciones (
+  id                        VARCHAR(100)  PRIMARY KEY,   -- UUID
+  profesional_id            VARCHAR(100)  NOT NULL,      -- FK → profesionales.id
+  plan_id                   INT           NOT NULL,      -- FK → planes.id
+  estado                    ENUM('pendiente','activa','inactiva','cancelada') DEFAULT 'pendiente',
+  mercadopago_pago_id       VARCHAR(200),                -- ID del pago en MP
+  mercadopago_pagador_id    VARCHAR(200),
+  fecha_inicio              DATE,
+  fecha_fin                 DATE,
+  creado_en                 TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en            TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (profesional_id) REFERENCES profesionales(id),
+  FOREIGN KEY (plan_id)        REFERENCES planes(id)
 );
 ```
 
-### 6. `join_requests` — Solicitudes del formulario `/unirse`
+### 6. `resenas` — Reseñas de pacientes
+
+```sql
+CREATE TABLE resenas (
+  id               INT          AUTO_INCREMENT PRIMARY KEY,
+  profesional_id   VARCHAR(100) NOT NULL,               -- FK → profesionales.id
+  autor            VARCHAR(100) NOT NULL,               -- nombre del paciente
+  calificacion     INT          NOT NULL,               -- 1 a 5
+  comentario       TEXT,
+  fecha            DATE         DEFAULT (CURRENT_DATE),
+  creado_en        TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (profesional_id) REFERENCES profesionales(id) ON DELETE CASCADE
+);
+-- Trigger para actualizar calificacion y total_resenas en profesionales al insertar reseña
+```
+
+### 7. `solicitudes_ingreso` — Solicitudes del formulario `/unirse`
 
 Todos los campos que llena el profesional en el formulario multi-step.
 
 ```sql
-CREATE TABLE join_requests (
+CREATE TABLE solicitudes_ingreso (
   id                VARCHAR(100)  PRIMARY KEY,         -- UUID
   -- Paso 1: Plan
-  plan_id           INT,                               -- FK → plans.id
+  plan_id           INT,                               -- FK → planes.id
   -- Paso 2: Datos básicos
   nombre            VARCHAR(150)  NOT NULL,
   especialidad      VARCHAR(100),
@@ -127,26 +174,34 @@ CREATE TABLE join_requests (
   email             VARCHAR(150)  NOT NULL,
   whatsapp          VARCHAR(30),
   sitio_web         VARCHAR(500),                      -- agenda clínica
-  -- Estado
-  status            ENUM('pending','approved','rejected','paid') DEFAULT 'pending',
-  notes             TEXT,                              -- notas del equipo
-  created_at        TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
-  updated_at        TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (plan_id) REFERENCES plans(id)
+  -- Credenciales (Clerk)
+  rut               VARCHAR(15)  NOT NULL,
+  password_hash     VARCHAR(500),                      -- Clerk maneja el hash, no almacenar en texto plano
+  -- Redes sociales
+  instagram         VARCHAR(200),
+  facebook          VARCHAR(200),
+  linkedin          VARCHAR(200),
+  twitter           VARCHAR(200),
+  -- Estado de la solicitud
+  estado            ENUM('pendiente','aprobada','rechazada','pagada') DEFAULT 'pendiente',
+  notas             TEXT,                              -- notas del equipo
+  creado_en         TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (plan_id) REFERENCES planes(id)
 );
 ```
 
-### 7. `admin_users` — Usuarios del dashboard (Clerk luego)
+### 8. `usuarios_admin` — Usuarios del dashboard admin (Clerk)
 
 ```sql
-CREATE TABLE admin_users (
-  id            VARCHAR(100) PRIMARY KEY,              -- clerk_user_id
-  email         VARCHAR(150) NOT NULL UNIQUE,
-  name          VARCHAR(150),
-  role          ENUM('superadmin','admin','viewer') DEFAULT 'admin',
-  is_active     BOOLEAN      DEFAULT TRUE,
-  last_login    TIMESTAMP,
-  created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE usuarios_admin (
+  id              VARCHAR(100) PRIMARY KEY,             -- clerk_user_id
+  correo          VARCHAR(150) NOT NULL UNIQUE,
+  nombre          VARCHAR(150),
+  rol             ENUM('superadmin','admin','visor') DEFAULT 'admin',
+  activo          BOOLEAN      DEFAULT TRUE,
+  ultimo_acceso   TIMESTAMP,
+  creado_en       TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
@@ -155,11 +210,12 @@ CREATE TABLE admin_users (
 ## Relaciones
 
 ```
-professionals  ──< professional_specialties
-professionals  ──> plans            (via plan_id)
-professionals  ──< subscriptions
-subscriptions  ──> plans
-join_requests  ──> plans
+profesionales  ──< especialidades_profesional
+profesionales  ──> planes              (via plan_id)
+profesionales  ──< suscripciones
+profesionales  ──< resenas
+suscripciones  ──> planes
+solicitudes_ingreso ──> planes
 ```
 
 ---
@@ -231,6 +287,54 @@ POST   /api/payments/webhook           → webhook de Mercado Pago
 
 ---
 
+## Autenticación del profesional (RUT + Clerk)
+
+El profesional se registra con RUT + contraseña desde `/unirse`. El RUT actúa como identificador único en Chile.
+
+**Flujo de registro:**
+```
+1. Profesional completa /unirse con RUT + password
+2. Backend crea el usuario en Clerk con email como identificador
+3. El RUT se almacena en professionals.rut (único, validado con módulo 11)
+4. Clerk devuelve clerk_user_id → se guarda en professionals.clerk_user_id
+5. El profesional puede ingresar a /acceso con RUT + password
+```
+
+**Flujo de login (/acceso):**
+```
+1. Profesional ingresa RUT + password
+2. Backend busca el profesional por RUT → obtiene email
+3. Clerk valida email + password → devuelve token JWT
+4. Frontend guarda el token → accede a /mi-perfil
+5. Middleware verifica token en cada ruta /mi-perfil/**
+```
+
+**Validación de RUT (módulo 11):**
+```javascript
+// Lógica ya implementada en frontend (unirse/page.jsx y acceso/page.jsx)
+// El backend debe replicar esta validación antes de persistir
+function validateRUT(rut) {
+  const body = rut.slice(0, -1);
+  const dv = rut.slice(-1).toUpperCase();
+  let sum = 0, multiplier = 2;
+  for (let i = body.length - 1; i >= 0; i--) {
+    sum += parseInt(body[i]) * multiplier;
+    multiplier = multiplier === 7 ? 2 : multiplier + 1;
+  }
+  const rem = 11 - (sum % 11);
+  const expected = rem === 11 ? '0' : rem === 10 ? 'K' : String(rem);
+  return expected === dv;
+}
+```
+
+**Endpoints adicionales para el profesional:**
+```
+POST   /api/auth/register           → crea usuario Clerk + professional record
+POST   /api/auth/login              → valida RUT+password, devuelve token
+GET    /api/professionals/me        → datos del profesional autenticado
+PUT    /api/professionals/me        → actualiza su propio perfil (incluyendo redes sociales)
+```
+
 ## Integración con Clerk (auth del dashboard)
 
 Cuando se integre Clerk:
@@ -238,6 +342,72 @@ Cuando se integre Clerk:
 2. El `clerk_user_id` se guarda en `admin_users.id`
 3. Los endpoints `/api/admin/**` requieren header `Authorization: Bearer {clerk_token}`
 4. Spring Boot valida el token contra la API pública de Clerk
+
+---
+
+## Email de confirmación post-pago
+
+El backend envía automáticamente un correo al profesional cuando Mercado Pago confirma el pago (webhook). Para planes corporativos se envía manualmente.
+
+**Trigger:** `POST /api/payments/webhook` → pago confirmado → `sendConfirmationEmail(professional)`
+
+**Destinatario:** `professionals.email` (capturado en el formulario `/unirse`)
+
+**Asunto:** `Tu perfil en Red Medify está activo — Bienvenido/a, {nombre}`
+
+**Contenido del correo:**
+
+```
+Hola {nombre},
+
+Tu perfil en Red Medify ya está activo. A partir de ahora los pacientes 
+pueden encontrarte en el marketplace.
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+RESUMEN DE TU SUSCRIPCIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━
+Profesional:  {nombre}
+Especialidad: {especialidad}
+Plan:         {plan.nombre} — {plan.precio}{plan.periodo}
+Fecha:        {fecha_activacion}
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+Para editar tu perfil, cambiar tu foto, agregar redes sociales 
+o actualizar tus datos, ingresa a tu panel:
+
+→ Acceder a mi perfil: https://www.medifyclinic.cl/acceso
+
+Tus credenciales de acceso son:
+  • RUT: {rut}
+  • Contraseña: la que elegiste al registrarte
+
+Si tienes alguna consulta escríbenos a ventas@medify.cl
+o por WhatsApp: +56 9 9174 9964.
+
+Equipo Medify
+https://www.medifyclinic.cl
+```
+
+**Servicio de email recomendado:** Resend (resend.com) o SendGrid — integración simple con Spring Boot via REST API.
+
+**Dependencia Java (Resend):**
+```xml
+<!-- pom.xml -->
+<dependency>
+  <groupId>com.resend</groupId>
+  <artifactId>resend-java</artifactId>
+  <version>3.0.0</version>
+</dependency>
+```
+
+**Variables de entorno necesarias:**
+```
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxx
+EMAIL_FROM=noreply@medifyclinic.cl
+SITE_URL=https://www.medifyclinic.cl
+```
+
+**Para planes corporativos:** el equipo envía el correo manualmente una vez coordinada la activación.
 
 ---
 

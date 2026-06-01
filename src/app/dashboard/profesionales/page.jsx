@@ -14,11 +14,11 @@ const ESPECIALIDADES_LISTA = [
 const PLANES_LISTA = ["Esencial", "Profesional", "Avanzado", "Corporativo", "Enterprise"];
 
 const EMPTY = {
-  id: "", name: "", role: "", description: "", fullBio: "",
-  image: "/personalsalud.png", location: "", region: "", modalidad: "Online",
-  email: "", phone: "", whatsapp: "", personalWebsite: "", agendaUrl: "",
+  id: "", nombre: "", especialidad_principal: "", descripcion: "", biografia: "",
+  imagen_url: "/personalsalud.png", ubicacion: "", region: "", modalidad_atencion: "Online",
+  correo: "", telefono: "", numero_whatsapp: "", sitio_web: "", sitio_web_agenda: "",
   availability: "", yearsExperience: "", price: "", plan: "Esencial",
-  available: true, specialties: [],
+  disponible: true, especialidades: [],
 };
 
 /* ─── Modal ─────────────────────────────────────────────────────────── */
@@ -49,12 +49,12 @@ function Modal({ pro, onSave, onClose }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Nombre completo *</label>
-              <input value={form.name} onChange={e => set("name", e.target.value)}
+              <input value={form.nombre} onChange={e => set("nombre", e.target.value)}
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all text-sm" />
             </div>
             <div>
               <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Especialidad *</label>
-              <select value={form.role} onChange={e => set("role", e.target.value)}
+              <select value={form.especialidad_principal} onChange={e => set("especialidad_principal", e.target.value)}
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all text-sm bg-white">
                 {ESPECIALIDADES_LISTA.map(e => <option key={e}>{e}</option>)}
               </select>
@@ -72,7 +72,7 @@ function Modal({ pro, onSave, onClose }) {
             </div>
             <div>
               <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Modalidad</label>
-              <select value={form.modalidad || "Online"} onChange={e => set("modalidad", e.target.value)}
+              <select value={form.modalidad_atencion || "Online"} onChange={e => set("modalidad_atencion", e.target.value)}
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all text-sm bg-white">
                 {["Online", "Presencial", "Ambas"].map(m => <option key={m}>{m}</option>)}
               </select>
@@ -83,13 +83,13 @@ function Modal({ pro, onSave, onClose }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Ciudad / Ubicación</label>
-              <input value={form.location} onChange={e => set("location", e.target.value)}
+              <input value={form.ubicacion} onChange={e => set("ubicacion", e.target.value)}
                 placeholder="Ej: Chillán"
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all text-sm" />
             </div>
             <div>
               <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Valor sesión (CLP)</label>
-              <input type="number" value={form.price} onChange={e => set("price", e.target.value)}
+              <input type="number" value={form.precio_sesion} onChange={e => set("precio_sesion", e.target.value)}
                 placeholder="Ej: 25000"
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all text-sm" />
             </div>
@@ -104,7 +104,7 @@ function Modal({ pro, onSave, onClose }) {
               </svg>
               Link Agenda Clínica (botón "Agendar hora")
             </label>
-            <input value={form.agendaUrl || form.personalWebsite || ""} onChange={e => set("agendaUrl", e.target.value)}
+            <input value={form.sitio_web || form.sitio_web || ""} onChange={e => set("sitio_web", e.target.value)}
               placeholder="Ej: https://dennis-beltran.medifyclinic.cl"
               className="w-full rounded-xl px-4 py-2.5 text-[#1d1d1f] outline-none transition-all text-sm"
               style={{ border: "2px solid rgba(0,200,83,0.3)", background: "rgba(0,200,83,0.04)" }}
@@ -119,12 +119,12 @@ function Modal({ pro, onSave, onClose }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Email</label>
-              <input type="email" value={form.email} onChange={e => set("email", e.target.value)}
+              <input type="email" value={form.correo} onChange={e => set("correo", e.target.value)}
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all text-sm" />
             </div>
             <div>
               <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>WhatsApp</label>
-              <input type="tel" value={form.whatsapp || form.whatsappNumber || ""} onChange={e => set("whatsapp", e.target.value)}
+              <input type="tel" value={form.numero_whatsapp || ""} onChange={e => set("numero_whatsapp", e.target.value)}
                 placeholder="56912345678"
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all text-sm" />
             </div>
@@ -133,7 +133,7 @@ function Modal({ pro, onSave, onClose }) {
           {/* Descripción */}
           <div>
             <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Descripción corta</label>
-            <input value={form.description} onChange={e => set("description", e.target.value)}
+            <input value={form.descripcion} onChange={e => set("descripcion", e.target.value)}
               className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all text-sm" />
           </div>
 
@@ -143,12 +143,12 @@ function Modal({ pro, onSave, onClose }) {
               <p className="font-medium text-[#1d1d1f] text-sm">Perfil activo y visible</p>
               <p className="font-light text-[#6e6e73]" style={{ fontSize: "12px" }}>Aparece en el marketplace</p>
             </div>
-            <button type="button" onClick={() => set("available", !form.available)}
+            <button type="button" onClick={() => set("disponible", !form.disponible)}
               className="relative flex-shrink-0 transition-all duration-200"
               style={{ width: "44px", height: "26px", borderRadius: "13px", background: form.available ? "#00C853" : "#d2d2d7" }}>
               <span className="absolute top-[3px] transition-all duration-200"
                 style={{ width: "20px", height: "20px", borderRadius: "50%", background: "#fff",
-                  left: form.available ? "21px" : "3px", boxShadow: "0 1px 4px rgba(0,0,0,0.2)" }} />
+                  left: form.disponible ? "21px" : "3px", boxShadow: "0 1px 4px rgba(0,0,0,0.2)" }} />
             </button>
           </div>
         </div>
@@ -172,21 +172,21 @@ function Modal({ pro, onSave, onClose }) {
 
 /* ─── Page ───────────────────────────────────────────────────────────── */
 export default function ProfesionalesAdmin() {
-  const [pros, setPros] = useState(INITIAL.map(p => ({ ...p, plan: "Activo", agendaUrl: p.personalWebsite })));
+  const [pros, setPros] = useState(INITIAL.map(p => ({ ...p, plan: "Activo", sitio_web: p.sitio_web })));
   const [modal, setModal] = useState(null); // null | {} | {pro}
   const [search, setSearch] = useState("");
   const [confirm, setConfirm] = useState(null);
 
   const filtered = pros.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.role.toLowerCase().includes(search.toLowerCase())
+    p.nombre?.toLowerCase().includes(search.toLowerCase()) ||
+    p.especialidad_principal?.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleSave = (form) => {
     if (form.id) {
       setPros(ps => ps.map(p => p.id === form.id ? { ...form } : p));
     } else {
-      const newId = form.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+      const newId = form.nombre?.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
       setPros(ps => [...ps, { ...form, id: newId }]);
     }
     setModal(null);
@@ -198,7 +198,7 @@ export default function ProfesionalesAdmin() {
   };
 
   const handleToggle = (id) => {
-    setPros(ps => ps.map(p => p.id === id ? { ...p, available: !p.available } : p));
+    setPros(ps => ps.map(p => p.id === id ? { ...p, disponible: !p.disponible } : p));
   };
 
   return (
