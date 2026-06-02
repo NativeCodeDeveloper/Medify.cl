@@ -28,12 +28,17 @@ CREATE TABLE profesionales (
   -- Imagen
   imagen_url               VARCHAR(500),                     -- URL de Cloudflare Images
 
+  -- Tipo de cuenta
+  tipo                     ENUM('Profesional de salud','Clínica','Centro médico') DEFAULT 'Profesional de salud',
+
   -- Ubicación
   ubicacion                VARCHAR(150),                     -- texto libre (Ej: "Chillán")
   region                   VARCHAR(100),
   comuna                   VARCHAR(100),
   direccion                VARCHAR(300),                     -- dirección exacta para el mapa
-  url_mapa                 VARCHAR(500),                     -- Google Maps embed URL
+  lat                      DECIMAL(10,7),                    -- latitud para Leaflet/OpenStreetMap
+  lng                      DECIMAL(10,7),                    -- longitud para Leaflet/OpenStreetMap
+  url_mapa                 VARCHAR(500),                     -- Google Maps embed URL (legacy, usar lat/lng)
 
   -- Contacto
   correo                   VARCHAR(150),
@@ -70,7 +75,70 @@ CREATE TABLE profesionales (
 );
 ```
 
-### 2. `especialidades_profesional` — Tags de especialidad por profesional
+### 2. `centros` — Clínicas y Centros Médicos
+
+> Instituciones que se registran como "Clínica" o "Centro médico" en el formulario `/unirse` o son ingresadas manualmente desde `/dashboard/centros`.
+
+```sql
+CREATE TABLE centros (
+  id                   VARCHAR(100)  PRIMARY KEY,       -- slug URL: "centro-medico-providencia"
+  tipo                 ENUM('Clínica','Centro Médico','Centro de Rehabilitación','Centro Psicológico','Otro') NOT NULL,
+  categoria            VARCHAR(150),                     -- Ej: "Salud Integral", "Clínica Dental"
+
+  -- Datos institucionales
+  nombre               VARCHAR(200)  NOT NULL,
+  descripcion          TEXT,
+  imagen_url           VARCHAR(500),                     -- URL de Cloudflare Images (logo o foto)
+
+  -- Ubicación
+  ubicacion            VARCHAR(150),                     -- texto libre (Ej: "Providencia, Santiago")
+  region               VARCHAR(100),
+  comuna               VARCHAR(100),
+  direccion            VARCHAR(300),
+  lat                  DECIMAL(10,7),                    -- latitud para Leaflet
+  lng                  DECIMAL(10,7),                    -- longitud para Leaflet
+
+  -- Contacto
+  correo               VARCHAR(150),
+  telefono             VARCHAR(30),
+  numero_whatsapp      VARCHAR(30),
+  sitio_web            VARCHAR(500),                     -- link agenda clínica (botón "Agendar hora")
+
+  -- Práctica
+  modalidad_atencion   ENUM('Presencial','Online','Ambas') DEFAULT 'Presencial',
+  profesionales_count  INT           DEFAULT 0,          -- n° de profesionales en el centro
+
+  -- Estado
+  disponible           BOOLEAN       DEFAULT TRUE,       -- visible en el marketplace
+  activo               BOOLEAN       DEFAULT TRUE,
+
+  -- Relación con plan
+  plan_id              INT,                              -- FK → planes.id (Corporativo/Enterprise)
+
+  -- Auth (Clerk del administrador del centro)
+  clerk_user_id        VARCHAR(200)  UNIQUE,
+  rut                  VARCHAR(15),                      -- RUT de la institución o representante
+
+  -- Timestamps
+  creado_en            TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en       TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (plan_id) REFERENCES planes(id)
+);
+```
+
+### 3. `centros_especialidades` — Especialidades ofrecidas por un centro
+
+```sql
+CREATE TABLE centros_especialidades (
+  id          INT          AUTO_INCREMENT PRIMARY KEY,
+  centro_id   VARCHAR(100) NOT NULL,
+  nombre      VARCHAR(100) NOT NULL,
+  FOREIGN KEY (centro_id) REFERENCES centros(id) ON DELETE CASCADE
+);
+```
+
+### 4. `especialidades_profesional` — Tags de especialidad por profesional
 
 ```sql
 CREATE TABLE especialidades_profesional (
@@ -210,11 +278,13 @@ CREATE TABLE usuarios_admin (
 ## Relaciones
 
 ```
-profesionales  ──< especialidades_profesional
-profesionales  ──> planes              (via plan_id)
-profesionales  ──< suscripciones
-profesionales  ──< resenas
-suscripciones  ──> planes
+profesionales       ──< especialidades_profesional
+profesionales       ──> planes              (via plan_id)
+profesionales       ──< suscripciones
+profesionales       ──< resenas
+centros             ──< centros_especialidades
+centros             ──> planes              (via plan_id)
+suscripciones       ──> planes
 solicitudes_ingreso ──> planes
 ```
 
@@ -262,27 +332,43 @@ solicitudes_ingreso ──> planes
 
 ```
 # Profesionales (público)
-GET    /api/professionals              → lista activos para marketplace
-GET    /api/professionals/{id}         → perfil individual
+GET    /api/profesionales              → lista activos para marketplace (filtros: tipo, ciudad, modalidad, especialidad)
+GET    /api/profesionales/{id}         → perfil individual
+GET    /api/especialidades/conteo      → conteo de profesionales por especialidad (para cards del marketplace)
 
 # Profesionales (admin)
-GET    /api/admin/professionals        → todos (incluye inactivos)
-POST   /api/admin/professionals        → crear
-PUT    /api/admin/professionals/{id}   → editar (incluye agendaUrl)
-DELETE /api/admin/professionals/{id}   → eliminar
-PATCH  /api/admin/professionals/{id}/toggle → activar/desactivar
+GET    /api/admin/profesionales        → todos (incluye inactivos)
+POST   /api/admin/profesionales        → crear
+PUT    /api/admin/profesionales/{id}   → editar
+DELETE /api/admin/profesionales/{id}   → eliminar
+PATCH  /api/admin/profesionales/{id}/toggle → activar/desactivar
+
+# Centros y Clínicas (público)
+GET    /api/centros                    → lista activos para marketplace
+GET    /api/centros/{id}               → perfil del centro
+
+# Centros y Clínicas (admin)
+GET    /api/admin/centros              → todos
+POST   /api/admin/centros              → crear
+PUT    /api/admin/centros/{id}         → editar
+DELETE /api/admin/centros/{id}         → eliminar
+PATCH  /api/admin/centros/{id}/toggle  → activar/desactivar
 
 # Planes (admin)
-GET    /api/admin/plans                → listar
-PUT    /api/admin/plans/{id}           → editar precio, features, pagoUrl
+GET    /api/admin/planes               → listar
+PUT    /api/admin/planes/{id}          → editar precio, features, pagoUrl
 
-# Solicitudes
-POST   /api/join-requests              → crear desde /unirse
-GET    /api/admin/join-requests        → listar (admin)
-PATCH  /api/admin/join-requests/{id}/status → aprobar/rechazar
+# Solicitudes de ingreso
+POST   /api/solicitudes                → crear desde /unirse (profesionales y centros)
+GET    /api/admin/solicitudes          → listar (admin)
+PATCH  /api/admin/solicitudes/{id}/estado → aprobar/rechazar
+
+# Reseñas
+GET    /api/resenas/{profesional_id}   → listar reseñas de un profesional
+POST   /api/resenas/{profesional_id}   → crear reseña (paciente)
 
 # Pagos
-POST   /api/payments/webhook           → webhook de Mercado Pago
+POST   /api/pagos/webhook              → webhook de Mercado Pago
 ```
 
 ---

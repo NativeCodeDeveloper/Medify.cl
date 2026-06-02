@@ -256,6 +256,7 @@ export default function UnirsePage() {
   const [showToast, setShowToast] = useState(false);
   const [form, setForm] = useState({
     foto: null, fotoPreview: null,
+    tipo: "",
     nombre: "", especialidad: "", especialidadOtra: "",
     region: "", comuna: "", modalidad: "",
     experiencia: "", precio: "", disponibilidad: "",
@@ -321,7 +322,7 @@ export default function UnirsePage() {
 
   const canNext = () => {
     if (step === 0) return !!planId;
-    if (step === 1) return form.nombre && form.especialidad && form.region && form.comuna && form.modalidad;
+    if (step === 1) return form.tipo && form.nombre && form.especialidad && form.region && form.comuna && form.modalidad;
     if (step === 2) return true;
     if (step === 3) return !!form.email && rutValido && passwordMatch;
     return true;
@@ -500,6 +501,29 @@ export default function UnirsePage() {
                 {/* TODO: upload a Cloudflare Images via POST /api/upload/image */}
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Tipo de cuenta */}
+        <div>
+          <Label required>Tipo de cuenta</Label>
+          <div className="grid grid-cols-3 gap-3">
+            {["Profesional de salud", "Clínica", "Centro médico"].map((t) => (
+              <button
+                type="button"
+                key={t}
+                onClick={() => set("tipo", t)}
+                className="rounded-xl border-2 px-3 py-3 text-center transition-all"
+                style={{
+                  borderColor: form.tipo === t ? "#00C853" : "#d2d2d7",
+                  background: form.tipo === t ? "rgba(0,200,83,0.05)" : "#ffffff",
+                }}
+              >
+                <span className="block text-[13px] font-semibold" style={{ color: form.tipo === t ? "#00C853" : "#1d1d1f" }}>
+                  {t}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 

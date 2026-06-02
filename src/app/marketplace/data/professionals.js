@@ -18,6 +18,7 @@ export const PROFESSIONALS = [
     // ── Identificación ──────────────────────────────────────────────
     id: "dennis-beltran",                    // Slug único para la URL del perfil
     nombre: "Dennis Beltrán",
+    tipo: "Profesional de salud",             // "Profesional de salud" | "Clínica" | "Centro médico"
     especialidad_principal: "Psicóloga",
 
     // ── Estadísticas (calculadas en el backend) ─────────────────────
@@ -36,6 +37,8 @@ export const PROFESSIONALS = [
     region: "Ñuble",
     comuna: "Chillán",
     direccion: "Av. Libertad 765, Chillán", // Dirección exacta para el mapa
+    lat: -36.6065,                           // Coordenadas para Leaflet
+    lng: -72.1031,
     url_mapa: "https://maps.google.com/maps?q=Av.+Libertad+765,+Chillán,+Chile&output=embed",
 
     // ── Contacto ────────────────────────────────────────────────────
@@ -84,7 +87,9 @@ export const PROFESSIONALS = [
     ubicacion: "Chillán",
     region: "Ñuble",
     comuna: "Chillán",
-    direccion: "",
+    direccion: "Chillán, Ñuble",
+    lat: -36.6100,
+    lng: -72.0980,
     url_mapa: "",
     correo: "marcelo.vilches@medify.cl",
     telefono: "+56 9 8765 4321",
@@ -116,7 +121,9 @@ export const PROFESSIONALS = [
     ubicacion: "Chillán",
     region: "Ñuble",
     comuna: "Chillán",
-    direccion: "",
+    direccion: "Chillán, Ñuble",
+    lat: -36.6050,
+    lng: -72.1060,
     url_mapa: "",
     correo: "cristian.becerra@medify.cl",
     telefono: "+56 9 8765 4321",
@@ -148,7 +155,9 @@ export const PROFESSIONALS = [
     ubicacion: "Santiago",
     region: "Metropolitana",
     comuna: "Providencia",
-    direccion: "",
+    direccion: "Providencia, Santiago",
+    lat: -33.4372,
+    lng: -70.6506,
     url_mapa: "",
     correo: "javiera.carreno@medify.cl",
     telefono: "+56 9 2233 4455",
@@ -180,7 +189,9 @@ export const PROFESSIONALS = [
     ubicacion: "Valparaíso",
     region: "Valparaíso",
     comuna: "Valparaíso",
-    direccion: "",
+    direccion: "Valparaíso, Región de Valparaíso",
+    lat: -33.0458,
+    lng: -71.6197,
     url_mapa: "",
     correo: "daniel.munoz@medify.cl",
     telefono: "+56 9 3344 5566",
@@ -212,7 +223,9 @@ export const PROFESSIONALS = [
     ubicacion: "Santiago",
     region: "Metropolitana",
     comuna: "Las Condes",
-    direccion: "",
+    direccion: "Las Condes, Santiago",
+    lat: -33.4092,
+    lng: -70.5783,
     url_mapa: "",
     correo: "pedro.suazo@medify.cl",
     telefono: "+56 9 4455 6677",
@@ -244,7 +257,9 @@ export const PROFESSIONALS = [
     ubicacion: "La Serena",
     region: "Coquimbo",
     comuna: "La Serena",
-    direccion: "",
+    direccion: "La Serena, Región de Coquimbo",
+    lat: -29.9027,
+    lng: -71.2519,
     url_mapa: "",
     correo: "carolina.flores@medify.cl",
     telefono: "+56 9 5566 7788",

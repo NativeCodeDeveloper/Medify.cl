@@ -5,6 +5,7 @@ import { useState } from "react";
 const DEMO_PRO = {
   nombre: "Dennis Beltrán",
   especialidad_principal: "Psicóloga",
+  tipo: "Profesional de salud",
   plan: "Profesional",
   planActivo: true,
   sitio_web: "https://dennis-beltran.agendaclinicas.cl",
@@ -230,17 +231,28 @@ export default function MiPerfilPage() {
             Datos básicos
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Tipo de cuenta">
+              <select
+                value={perfil.tipo || ""}
+                onChange={e => set("tipo", e.target.value)}
+                className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all bg-white"
+                style={{ fontSize: "14px" }}
+              >
+                <option value="">Seleccionar tipo</option>
+                {["Profesional de salud", "Clínica", "Centro médico"].map(t => <option key={t}>{t}</option>)}
+              </select>
+            </Field>
             <Field label="Nombre completo">
               <Input value={perfil.nombre} onChange={e => set("nombre", e.target.value)} />
             </Field>
             <Field label="Especialidad">
-              <Input value={perfil.especialidad} onChange={e => set("especialidad", e.target.value)} />
+              <Input value={perfil.especialidad_principal} onChange={e => set("especialidad_principal", e.target.value)} />
             </Field>
             <Field label="Ciudad / Ubicación">
-              <Input value={perfil.location} onChange={e => set("location", e.target.value)} />
+              <Input value={perfil.ubicacion || ""} onChange={e => set("ubicacion", e.target.value)} />
             </Field>
             <Field label="Modalidad">
-              <select value={perfil.modalidad} onChange={e => set("modalidad_atencion", e.target.value)}
+              <select value={perfil.modalidad_atencion} onChange={e => set("modalidad_atencion", e.target.value)}
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all bg-white"
                 style={{ fontSize: "14px" }}>
                 {["Online", "Presencial", "Ambas"].map(m => <option key={m}>{m}</option>)}
