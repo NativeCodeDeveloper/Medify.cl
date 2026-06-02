@@ -77,6 +77,20 @@ const REGIONES_COMUNAS = {
 
 const MODALIDADES = ["Online", "Presencial", "Ambas"];
 
+const TIPOS_CUENTA = ["Profesional de salud", "Clínica", "Centro médico"];
+
+const CATEGORIAS_CENTRO = {
+  "Clínica": [
+    "Salud Integral", "Clínica Dental", "Ortodoncia y Estética Dental",
+    "Clínica Ginecológica", "Clínica Pediátrica", "Clínica Traumatológica",
+    "Clínica Oncológica", "Clínica de Maternidad", "Clínica Cardiovascular", "Otra",
+  ],
+  "Centro médico": [
+    "Medicina General", "Especialidades Múltiples", "Medicina del Deporte",
+    "Medicina Preventiva", "Salud Mental", "Medicina Estética", "Otra",
+  ],
+};
+
 /* ── Planes individuales (mismos que /precios) ── */
 const PLANES_INDIVIDUAL = [
   {
@@ -143,14 +157,35 @@ const PLANES_INDIVIDUAL = [
 /* ── Planes corporaciones (mismos que /precios) ── */
 const PLANES_CORPORATIVO = [
   {
+    id: "vitrina-clinica",
+    name: "Vitrina Clínica",
+    label: "Solo visibilidad",
+    price: "$5.990",
+    period: "CLP/mes + IVA",
+    desc: "Aparece en el marketplace sin necesidad de contratar agenda. Ideal si ya tienes tu propio sistema.",
+    features: [
+      "Perfil del centro en el Marketplace",
+      "Botón \"Agendar hora\" a tu propio sistema",
+      "Hasta 3 especialidades visibles",
+      "Información de contacto y ubicación en el mapa",
+      "Publicación en redes sociales de Medify",
+    ],
+    flujo: "pago",
+    activacion: "Tu perfil se activa automáticamente al confirmar el pago.",
+    pagoUrl: "https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=PLAN_VITRINA_CLINICA",
+    featured: false,
+  },
+  {
     id: "corporativo",
     name: "Corporativo",
     label: "Para clínicas",
     price: "$79.900",
     period: "CLP/mes + IVA",
-    desc: "Para clínicas y centros con hasta 5 profesionales. Gestión centralizada y reportería.",
+    desc: "Para clínicas y centros con hasta 5 profesionales. Gestión centralizada, agenda y reportería.",
     features: [
-      "hasta 5 profesionales en una sola cuenta",
+      "Todo lo del plan Vitrina Clínica",
+      "Hasta 5 profesionales en una sola cuenta",
+      "Agenda clínica integrada",
       "Flujos de trabajo por área clínica",
       "Panel administrativo y contable",
       "Reporte reservas, servicios y pago (Excel export)",
@@ -256,7 +291,7 @@ export default function UnirsePage() {
   const [showToast, setShowToast] = useState(false);
   const [form, setForm] = useState({
     foto: null, fotoPreview: null,
-    tipo: "",
+    tipo: "", categoria: "", profesionales_count: "",
     nombre: "", especialidad: "", especialidadOtra: "",
     region: "", comuna: "", modalidad: "",
     experiencia: "", precio: "", disponibilidad: "",
@@ -266,7 +301,20 @@ export default function UnirsePage() {
     instagram: "", facebook: "", linkedin: "", twitter: "",
   });
 
+  const esClinica = form.tipo === "Clínica" || form.tipo === "Centro médico";
+
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+
+  const setTipo = (t) => {
+    setForm(p => ({ ...p, tipo: t, categoria: "", especialidad: "" }));
+    if (t === "Clínica" || t === "Centro médico") {
+      setTipoPlan("corporativo");
+      setPlanId("");
+    } else {
+      setTipoPlan("individual");
+      setPlanId("");
+    }
+  };
 
   const especialidadFinal = form.especialidad === "Otra" ? form.especialidadOtra : form.especialidad;
   const planesActivos = tipoPlan === "individual" ? PLANES_INDIVIDUAL : PLANES_CORPORATIVO;
@@ -322,7 +370,10 @@ export default function UnirsePage() {
 
   const canNext = () => {
     if (step === 0) return !!planId;
-    if (step === 1) return form.tipo && form.nombre && form.especialidad && form.region && form.comuna && form.modalidad;
+    if (step === 1) {
+      if (esClinica) return form.tipo && form.nombre && form.categoria && form.region && form.comuna;
+      return form.tipo && form.nombre && form.especialidad && form.region && form.comuna && form.modalidad;
+    }
     if (step === 2) return true;
     if (step === 3) return !!form.email && rutValido && passwordMatch;
     return true;
@@ -508,74 +559,91 @@ export default function UnirsePage() {
         <div>
           <Label required>Tipo de cuenta</Label>
           <div className="grid grid-cols-3 gap-3">
-            {["Profesional de salud", "Clínica", "Centro médico"].map((t) => (
-              <button
-                type="button"
-                key={t}
-                onClick={() => set("tipo", t)}
+            {TIPOS_CUENTA.map((t) => (
+              <button type="button" key={t} onClick={() => setTipo(t)}
                 className="rounded-xl border-2 px-3 py-3 text-center transition-all"
                 style={{
                   borderColor: form.tipo === t ? "#00C853" : "#d2d2d7",
                   background: form.tipo === t ? "rgba(0,200,83,0.05)" : "#ffffff",
-                }}
-              >
+                }}>
                 <span className="block text-[13px] font-semibold" style={{ color: form.tipo === t ? "#00C853" : "#1d1d1f" }}>
                   {t}
                 </span>
               </button>
             ))}
           </div>
+          {esClinica && (
+            <p className="mt-2 text-[12px] text-[#6e6e73]">
+              Los centros y clínicas van al plan <strong className="text-[#1d1d1f]">Corporativo o Enterprise</strong> — puedes verlo en el paso anterior.
+            </p>
+          )}
         </div>
 
         {/* Nombre */}
         <div>
-          <Label required>Nombre completo</Label>
-          <Input placeholder="Ej: María González" value={form.nombre}
-            onChange={e => set("nombre", e.target.value)} />
+          <Label required>{esClinica ? "Nombre del centro o clínica" : "Nombre completo"}</Label>
+          <Input
+            placeholder={esClinica ? "Ej: Centro Médico Providencia" : "Ej: María González"}
+            value={form.nombre}
+            onChange={e => set("nombre", e.target.value)}
+          />
         </div>
 
-        {/* Especialidad agrupada */}
-        <div>
-          <Label required>Especialidad principal</Label>
-          <Select value={form.especialidad}
-            onChange={e => { set("especialidad", e.target.value); set("especialidadOtra", ""); }}>
-            <option value="">Selecciona tu especialidad</option>
-            {ESPECIALIDADES_GRUPOS.map(g => (
-              <optgroup key={g.grupo} label={g.grupo}>
-                {g.items.map(i => <option key={i} value={i}>{i}</option>)}
-              </optgroup>
-            ))}
-            <option value="Otra">Otra (especificar abajo)</option>
-          </Select>
-        </div>
+        {/* PROFESIONAL: especialidad */}
+        {!esClinica && (
+          <>
+            <div>
+              <Label required>Especialidad principal</Label>
+              <Select value={form.especialidad}
+                onChange={e => { set("especialidad", e.target.value); set("especialidadOtra", ""); }}>
+                <option value="">Selecciona tu especialidad</option>
+                {ESPECIALIDADES_GRUPOS.map(g => (
+                  <optgroup key={g.grupo} label={g.grupo}>
+                    {g.items.map(i => <option key={i} value={i}>{i}</option>)}
+                  </optgroup>
+                ))}
+                <option value="Otra">Otra (especificar abajo)</option>
+              </Select>
+            </div>
+            {form.especialidad === "Otra" && (
+              <div>
+                <Label required>¿Cuál es tu especialidad?</Label>
+                <Input placeholder="Escribe tu especialidad..." value={form.especialidadOtra}
+                  onChange={e => set("especialidadOtra", e.target.value)} />
+              </div>
+            )}
+          </>
+        )}
 
-        {/* Campo libre si eligió "Otra" */}
-        {form.especialidad === "Otra" && (
+        {/* CLÍNICA: categoría contextual */}
+        {esClinica && CATEGORIAS_CENTRO[form.tipo] && (
           <div>
-            <Label required>¿Cuál es tu especialidad?</Label>
-            <Input placeholder="Escribe tu especialidad..." value={form.especialidadOtra}
-              onChange={e => set("especialidadOtra", e.target.value)} />
+            <Label required>Categoría del centro</Label>
+            <Select value={form.categoria} onChange={e => set("categoria", e.target.value)}>
+              <option value="">Selecciona la categoría</option>
+              {CATEGORIAS_CENTRO[form.tipo].map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </Select>
           </div>
         )}
 
         {/* Región */}
         <div>
           <Label required>Región</Label>
-          <Select value={form.region}
-            onChange={e => { set("region", e.target.value); set("comuna", ""); }}>
-            <option value="">Selecciona tu región</option>
+          <Select value={form.region} onChange={e => { set("region", e.target.value); set("comuna", ""); }}>
+            <option value="">Selecciona la región</option>
             {Object.keys(REGIONES_COMUNAS).map(r => (
               <option key={r} value={r}>{r}</option>
             ))}
           </Select>
         </div>
 
-        {/* Comuna — aparece solo si hay región */}
         {form.region && (
           <div>
             <Label required>Comuna</Label>
             <Select value={form.comuna} onChange={e => set("comuna", e.target.value)}>
-              <option value="">Selecciona tu comuna</option>
+              <option value="">Selecciona la comuna</option>
               {REGIONES_COMUNAS[form.region].map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
@@ -584,11 +652,9 @@ export default function UnirsePage() {
           </div>
         )}
 
-        {/* Nota mapa */}
         {form.comuna && (
-          <p className="text-[#6e6e73] flex items-center gap-1.5" style={{ fontSize: "12px" }}>
-            <svg className="w-3.5 h-3.5 text-[#00C853] flex-shrink-0" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" strokeWidth={2}>
+          <p className="flex items-center gap-1.5 text-[#6e6e73]" style={{ fontSize: "12px" }}>
+            <svg className="w-3.5 h-3.5 flex-shrink-0 text-[#00C853]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
@@ -598,7 +664,7 @@ export default function UnirsePage() {
 
         {/* Modalidad */}
         <div>
-          <Label required>Modalidad de atención</Label>
+          <Label required={!esClinica}>Modalidad de atención</Label>
           <div className="flex gap-3">
             {MODALIDADES.map(m => (
               <button key={m} type="button" onClick={() => set("modalidad", m)}
@@ -616,33 +682,64 @@ export default function UnirsePage() {
       </div>
     );
 
-    if (step === 2) return (
+    if (step === 2) return esClinica ? (
+      /* ── Step 2 CLÍNICA / CENTRO ── */
+      <div className="space-y-5">
+        <div>
+          <Label>N° de profesionales en el centro</Label>
+          <Input type="number" min="1" placeholder="Ej: 8" value={form.profesionales_count}
+            onChange={e => set("profesionales_count", e.target.value)} />
+        </div>
+        <div>
+          <Label>Descripción breve (se ve en el marketplace)</Label>
+          <Input placeholder="Una línea que resume lo que ofrece el centro..." value={form.descripcion}
+            onChange={e => set("descripcion", e.target.value)} />
+        </div>
+        <div>
+          <Label>Presentación institucional (en el perfil del centro)</Label>
+          <Textarea placeholder="Historia del centro, misión, servicios destacados, equipo. Habla directamente a tus futuros pacientes..." value={form.bio}
+            onChange={e => set("bio", e.target.value)} />
+        </div>
+        <div>
+          <Label>Especialidades ofrecidas (separadas por coma)</Label>
+          <Input placeholder="Ej: Medicina General, Psicología, Nutrición, Kinesiología" value={form.enfoques}
+            onChange={e => set("enfoques", e.target.value)} />
+        </div>
+      </div>
+    ) : (
+      /* ── Step 2 PROFESIONAL ── */
       <div className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label>Años de experiencia</Label>
-            <Input type="number" placeholder="Ej: 5" min="0" value={form.experiencia} onChange={e => set("experiencia", e.target.value)} />
+            <Input type="number" placeholder="Ej: 5" min="0" value={form.experiencia}
+              onChange={e => set("experiencia", e.target.value)} />
           </div>
           <div>
             <Label>Valor sesión (CLP)</Label>
-            <Input type="number" placeholder="Ej: 25000" min="0" value={form.precio} onChange={e => set("precio", e.target.value)} />
+            <Input type="number" placeholder="Ej: 25000" min="0" value={form.precio}
+              onChange={e => set("precio", e.target.value)} />
           </div>
         </div>
         <div>
           <Label>Disponibilidad</Label>
-          <Input placeholder="Ej: Lunes a Viernes 9:00 - 18:00" value={form.disponibilidad} onChange={e => set("disponibilidad", e.target.value)} />
+          <Input placeholder="Ej: Lunes a Viernes 9:00 - 18:00" value={form.disponibilidad}
+            onChange={e => set("disponibilidad", e.target.value)} />
         </div>
         <div>
           <Label>Descripción breve (se ve en el marketplace)</Label>
-          <Input placeholder="Una línea que resume tu práctica..." value={form.descripcion} onChange={e => set("descripcion", e.target.value)} />
+          <Input placeholder="Una línea que resume tu práctica..." value={form.descripcion}
+            onChange={e => set("descripcion", e.target.value)} />
         </div>
         <div>
           <Label>Bio completo (en tu perfil)</Label>
-          <Textarea placeholder="Tu formación, enfoque y experiencia. Habla directamente a tus futuros pacientes..." value={form.bio} onChange={e => set("bio", e.target.value)} />
+          <Textarea placeholder="Tu formación, enfoque y experiencia. Habla directamente a tus futuros pacientes..." value={form.bio}
+            onChange={e => set("bio", e.target.value)} />
         </div>
         <div>
           <Label>Enfoques o áreas (separados por coma)</Label>
-          <Input placeholder="Ej: Ansiedad, Terapia cognitivo-conductual, Adultos" value={form.enfoques} onChange={e => set("enfoques", e.target.value)} />
+          <Input placeholder="Ej: Ansiedad, Terapia cognitivo-conductual, Adultos" value={form.enfoques}
+            onChange={e => set("enfoques", e.target.value)} />
         </div>
       </div>
     );
@@ -794,7 +891,18 @@ export default function UnirsePage() {
 
   /* ── Paso 4: Confirmación ── */
   const renderConfirm = () => {
-    const rows = [
+    const rows = esClinica ? [
+      ["Plan", `${plan?.name} — ${plan?.price}${plan?.period}`],
+      ["Tipo", form.tipo],
+      ["Centro", form.nombre],
+      ["Categoría", form.categoria || "—"],
+      ["Región", form.region],
+      ["Comuna", form.comuna],
+      ["Modalidad", form.modalidad || "—"],
+      ["Profesionales", form.profesionales_count || "—"],
+      ["Email", form.email],
+      ["WhatsApp", form.whatsapp || "—"],
+    ] : [
       ["Plan", `${plan?.name} — ${plan?.price}${plan?.period}`],
       ["Nombre", form.nombre],
       ["Especialidad", especialidadFinal],
@@ -893,11 +1001,17 @@ export default function UnirsePage() {
     );
   };
 
-  const stepTitle = ["Elige tu plan", "Datos básicos", "Tu práctica", "Contacto", "Confirmar solicitud"];
+  const stepTitle = [
+    "Elige tu plan",
+    "Datos básicos",
+    esClinica ? "Tu centro" : "Tu práctica",
+    "Contacto",
+    "Confirmar solicitud",
+  ];
   const stepDesc = [
     "Selecciona el plan con el que quieres aparecer en Medify.",
-    "La información que verán los pacientes en tu perfil.",
-    "Cuéntales a tus pacientes quién eres y cómo trabajas.",
+    esClinica ? "La información que verán los pacientes sobre tu centro." : "La información que verán los pacientes en tu perfil.",
+    esClinica ? "Cuéntales a los pacientes qué ofrece tu centro y quiénes son." : "Cuéntales a tus pacientes quién eres y cómo trabajas.",
     "Cómo te contactamos y cómo te contactan los pacientes.",
     "Revisa tu información antes de enviar.",
   ];
@@ -911,7 +1025,7 @@ export default function UnirsePage() {
         <div className="max-w-[680px] mx-auto text-center">
           <p className="font-semibold text-[#6e6e73] uppercase mb-4"
             style={{ fontSize: "12px", letterSpacing: "0.08em" }}>
-            Para profesionales de la salud
+            Para profesionales, clínicas y centros médicos
           </p>
           <h1 className="font-semibold text-white leading-[1.06] mb-5"
             style={{ fontSize: "clamp(1.8rem,4.5vw,3rem)", letterSpacing: "-0.03em" }}>

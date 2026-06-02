@@ -63,6 +63,23 @@ const INDIVIDUAL = [
 
 const BUSINESS = [
   {
+    id: "vitrina-clinica",
+    name: "Vitrina Clínica",
+    label: "Solo visibilidad",
+    price: "$5.990",
+    period: "CLP/mes + IVA",
+    featured: false,
+    features: [
+      "Perfil del centro en el Marketplace",
+      "Botón \"Agendar hora\" a tu propio sistema",
+      "Hasta 3 especialidades visibles",
+      "Información de contacto y ubicación en el mapa",
+      "Publicación en redes sociales de Medify",
+    ],
+    cta: "Unirse ahora",
+    href: "/unirse",
+  },
+  {
     id: "corporativo",
     name: "Corporativo",
     label: "Para clínicas",
@@ -70,7 +87,9 @@ const BUSINESS = [
     period: "CLP/mes + IVA",
     featured: true,
     features: [
-      "hasta 5 profesionales en una sola cuenta",
+      "Todo lo del plan Vitrina Clínica",
+      "Hasta 5 profesionales en una sola cuenta",
+      "Agenda clínica integrada con Agenda Clínica",
       "Flujos de trabajo por área clínica",
       "Panel administrativo y contable",
       "Reporte reservas, servicios y pago (Excel export)",

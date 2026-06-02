@@ -149,12 +149,23 @@ CREATE TABLE especialidades_profesional (
 );
 ```
 
-### 3. `planes` — Planes y precios
+### 5. `planes` — Planes y precios
+
+> Planes disponibles por segmento. Los cambios de precio se administran desde `/dashboard/planes` y deben sincronizarse con Mercado Pago.
+
+| id | nombre | tipo | precio_clp | flujo | para quién |
+|---|---|---|---|---|---|
+| esencial | Esencial | individual | 2.990 | pago_mp | Profesionales inicio |
+| profesional | Profesional | individual | 19.990 | pago_mp | Profesionales con agenda |
+| avanzado | Avanzado | individual | 26.990 | pago_mp | Profesionales máximo control |
+| vitrina-clinica | Vitrina Clínica | corporativo | 5.990 | pago_mp | Clínicas solo visibilidad |
+| corporativo | Corporativo | corporativo | 79.900 | email | Clínicas con gestión completa |
+| enterprise | Enterprise | corporativo | 0 | email | Instituciones grandes (a cotizar) |
 
 ```sql
 CREATE TABLE planes (
   id                    INT          AUTO_INCREMENT PRIMARY KEY,
-  nombre                VARCHAR(100) NOT NULL,          -- "Esencial", "Profesional", etc.
+  nombre                VARCHAR(100) NOT NULL,          -- "Esencial", "Vitrina Clínica", etc.
   tipo                  ENUM('individual','corporativo') DEFAULT 'individual',
   precio_clp            INT          NOT NULL DEFAULT 0,
   periodo_facturacion   VARCHAR(50),                    -- "/mes + IVA", "Gratis", "A cotizar"

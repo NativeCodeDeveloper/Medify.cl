@@ -125,6 +125,13 @@ function Modal({ centro, onSave, onClose }) {
   const [form, setForm] = useState({ ...EMPTY, ...centro });
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
+  const handleFoto = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    set("fotoPreview", URL.createObjectURL(file));
+    // TODO: POST /api/upload/image → Cloudflare Images → guardar URL en centro.imagen_url
+  };
+
   const toggleEsp = (e) => {
     setForm(p => ({
       ...p,
@@ -182,6 +189,34 @@ function Modal({ centro, onSave, onClose }) {
                 </SelectField>
               </div>
             )}
+          </div>
+
+          {/* Logo / Foto del centro */}
+          <div>
+            <L>Logo o foto del centro</L>
+            <div className="flex items-center gap-5">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#d2d2d7] bg-[#f5f5f7]">
+                {form.fotoPreview || form.imagen_url ? (
+                  <img src={form.fotoPreview || form.imagen_url} alt="Logo" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-[#86868b]">
+                    <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-[#d2d2d7] px-4 py-2 text-sm text-[#1d1d1f] hover:border-[#1d1d1f] transition-all">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                  </svg>
+                  {form.fotoPreview || form.imagen_url ? "Cambiar imagen" : "Subir logo o foto"}
+                  <input type="file" accept="image/*" className="hidden" onChange={handleFoto} />
+                </label>
+                <p className="mt-1 text-[11px] text-[#86868b]">JPG, PNG o WEBP · Máx 5 MB</p>
+              </div>
+            </div>
           </div>
 
           {/* Nombre y plan */}

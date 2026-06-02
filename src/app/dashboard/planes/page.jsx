@@ -27,10 +27,18 @@ const INITIAL_PLANES = [
     pagoUrl: "https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=PLAN_AVANZADO",
   },
   {
+    id: "vitrina-clinica", tipo: "corporativo", nombre: "Vitrina Clínica",
+    precio: 5990, periodo: "/mes + IVA",
+    descripcion: "Solo visibilidad en el marketplace. Sin agenda. Ideal para centros con sistema propio.",
+    features: ["Perfil en el Marketplace", "Botón Agendar hora a sistema propio", "Hasta 3 especialidades", "Ubicación en el mapa", "Publicación en redes Medify"],
+    flujo: "pago", activo: true,
+    pagoUrl: "https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=PLAN_VITRINA_CLINICA",
+  },
+  {
     id: "corporativo", tipo: "corporativo", nombre: "Corporativo",
-    precio: 129900, periodo: "/mes + IVA",
-    descripcion: "Para clínicas con 3+ profesionales. Gestión centralizada y reportería.",
-    features: ["+3 profesionales", "Panel administrativo", "Reportería ejecutiva", "Integraciones de facturación"],
+    precio: 79900, periodo: "/mes + IVA",
+    descripcion: "Para clínicas con hasta 5 profesionales. Agenda integrada, gestión y reportería.",
+    features: ["Todo Vitrina Clínica", "Hasta 5 profesionales", "Agenda clínica integrada", "Panel administrativo", "Reportería ejecutiva", "Integraciones de facturación"],
     flujo: "email", activo: true,
     pagoUrl: "",
   },
@@ -86,8 +94,8 @@ function PlanModal({ plan, onSave, onClose }) {
               <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Tipo</label>
               <select value={form.tipo} onChange={e => set("tipo", e.target.value)}
                 className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 text-sm bg-white">
-                <option value="individual">Individual</option>
-                <option value="corporativo">Corporativo</option>
+                <option value="individual">Individual (profesionales)</option>
+                <option value="corporativo">Corporativo / Clínicas</option>
               </select>
             </div>
           </div>
@@ -215,7 +223,7 @@ export default function PlanesAdmin() {
       {/* Toggle */}
       <div className="flex items-center mb-6">
         <div className="inline-flex items-center rounded-xl bg-white border border-[#d2d2d7] p-1">
-          {[["individual", "Profesionales"], ["corporativo", "Corporaciones y clínicas"]].map(([key, label]) => (
+          {[["individual", "Profesionales"], ["corporativo", "Clínicas y Centros"]].map(([key, label]) => (
             <button key={key} onClick={() => setTab(key)}
               className="rounded-lg px-4 py-2 transition-all duration-150"
               style={{
