@@ -1,0 +1,153 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  CÓMO FUNCIONA buscar.medify.cl — Guía para el equipo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RESUMEN EN UNA LÍNEA
+─────────────────────
+Es el mismo proyecto Next.js, el mismo servidor, el mismo código.
+Dos URLs distintas apuntan al mismo lugar. Un archivo de 30 líneas
+decide qué mostrar según desde dónde entra el usuario.
+
+
+¿POR QUÉ NO HACEMOS UN PROYECTO SEPARADO?
+──────────────────────────────────────────
+Si fueran dos proyectos distintos:
+  ✗ Dos repositorios que mantener
+  ✗ Cuando se agrega un profesional en Medify, hay que replicarlo
+  ✗ Componentes duplicados → bugs en dos lugares
+  ✗ Dos deployments, dos facturas de hosting
+  ✗ En 2 semanas están desincronizados
+
+Con el subdominio:
+  ✓ Un solo repo, un solo deploy
+  ✓ Los datos son automáticamente los mismos (misma base de datos)
+  ✓ Actualizar un componente lo actualiza en ambas URLs
+  ✓ Costo adicional: $0
+
+
+ARQUITECTURA VISUAL
+───────────────────
+
+  Usuario escribe:              Lo que recibe:
+  ┌─────────────────────┐       ┌──────────────────────────┐
+  │ buscar.medify.cl    │──────▶│ Marketplace de Medify    │
+  └─────────────────────┘       └──────────────────────────┘
+                                         ▲
+                                         │  mismo servidor
+                                         │
+  ┌─────────────────────┐       ┌──────────────────────────┐
+  │ medify.cl           │──────▶│ Home de Medify           │
+  └─────────────────────┘       └──────────────────────────┘
+
+  Servidor: Vercel (único proyecto Next.js)
+
+
+PASO A PASO — CÓMO SE CONFIGURA
+─────────────────────────────────
+
+1. DNS (en el panel de NIC Chile o donde está el dominio)
+   ──────────────────────────────────────────────────────
+   Agregar este registro:
+
+     Tipo:  CNAME
+     Nombre: buscar
+     Valor:  cname.vercel-dns.com
+
+   Esto hace que buscar.medify.cl apunte al mismo servidor que medify.cl.
+   Tarda entre 5 minutos y 24 horas en propagarse (normalmente 5-10 min).
+
+
+2. Vercel (panel de administración del hosting)
+   ──────────────────────────────────────────────
+   En el proyecto de Medify en Vercel:
+     → Settings → Domains → Add Domain
+     → Escribir: buscar.medify.cl
+     → Vercel lo verifica y da SSL automáticamente (HTTPS gratis)
+
+
+3. middleware.js (ya creado en el proyecto)
+   ─────────────────────────────────────────
+   Este archivo intercepta TODAS las requests que llegan al servidor
+   ANTES de que Next.js las procese.
+
+   Lógica:
+     ┌─ ¿Viene de buscar.medify.cl?
+     │    SÍ:
+     │      ┌─ ¿Pide la raíz "/"?
+     │      │    SÍ → mostrar /marketplace (el usuario ve buscar.medify.cl)
+     │      │    NO → dejar pasar (perfiles, filtros, etc. funcionan igual)
+     │      └─ ¿Pide /dashboard, /unirse, /mi-perfil?
+     │           SÍ → redirigir a medify.cl (esas rutas no tienen sentido aquí)
+     │
+     └─ ¿Viene de medify.cl?
+          → Todo funciona exactamente igual de siempre
+
+
+¿QUÉ VE EL USUARIO EN CADA CASO?
+──────────────────────────────────
+
+  URL que escribe el usuario           Página que aparece
+  ─────────────────────────────────    ──────────────────────────────
+  buscar.medify.cl                  →  Marketplace (busca profesionales)
+  buscar.medify.cl/marketplace/id   →  Perfil del profesional
+  medify.cl                         →  Home de Medify
+  medify.cl/marketplace             →  Marketplace (misma página)
+  medify.cl/precios                 →  Precios
+  medify.cl/unirse                  →  Formulario de registro
+
+  Nota: buscar.medify.cl/unirse redirige a medify.cl/unirse automáticamente.
+
+
+SEO — PARA QUE GOOGLE NO VEA CONTENIDO DUPLICADO
+──────────────────────────────────────────────────
+Cuando Google rastrea ambas URLs ve el mismo contenido → penalización.
+
+Solución: agregar en el <head> del marketplace una etiqueta canonical:
+
+  <link rel="canonical" href="https://medify.cl/marketplace" />
+
+Esto le dice a Google: "el contenido original está en medify.cl,
+ignora buscar.medify.cl para el índice".
+
+Resultado: medify.cl gana el posicionamiento, buscar.medify.cl
+sirve tráfico sin competir con el dominio principal.
+
+
+PREGUNTAS FRECUENTES DEL EQUIPO
+─────────────────────────────────
+
+P: ¿Si agrego un profesional en el dashboard, aparece en buscar.medify.cl?
+R: Sí, automáticamente. Es la misma base de datos, el mismo código.
+
+P: ¿Puedo cambiar el diseño solo en buscar.medify.cl?
+R: Sí. En el middleware detectas el host y pasas un prop al layout.
+   Por ejemplo: mostrar un navbar más simple o diferente.
+
+P: ¿Qué pasa si el dominio buscar.medify.cl no está configurado?
+R: El middleware simplemente no actúa. medify.cl funciona normal.
+
+P: ¿Necesito redesployar algo para activarlo?
+R: Solo una vez, cuando se sube el middleware.js al repo y se deploya.
+   Después de eso, el cambio de DNS activa buscar.medify.cl solo.
+
+P: ¿Funciona en desarrollo local?
+R: En localhost el middleware no actúa (no hay subdominio).
+   Para probar localmente puedes editar /etc/hosts y agregar:
+   127.0.0.1  buscar.localhost
+   Pero no es necesario para el desarrollo normal.
+
+
+RESUMEN PARA EXPLICAR A CUALQUIERA
+────────────────────────────────────
+"Es como tener dos puertas de entrada al mismo edificio.
+ buscar.medify.cl es la puerta del marketplace.
+ medify.cl es la puerta principal.
+ Adentro, todo es lo mismo."
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Archivos relevantes en el proyecto:
+  → middleware.js                  (lógica del subdominio)
+  → src/app/marketplace/page.jsx   (página que se sirve)
+  → src/app/layout.jsx             (agregar canonical tag aquí)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
