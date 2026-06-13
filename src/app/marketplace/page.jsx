@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Building2, ChevronRight, MapPin, BadgeCheck,
-  CalendarDays, ExternalLink,
+  CalendarDays, ExternalLink, Search, ChevronDown,
 } from "lucide-react";
 import { PROFESSIONALS } from "./data/professionals";
 
@@ -47,9 +47,15 @@ const STATS = [
   { valor: "+120.000", label: "Reservas realizadas" },
 ];
 
-const CITY_OPTIONS     = ["Todas las ciudades", ...new Set(PROFESSIONALS.map((p) => p.ubicacion))];
-const MODALITY_OPTIONS = ["Todas", "Online", "Presencial", "Ambas"];
-const SPECIALTY_OPTIONS = ["Todas", ...new Set(PROFESSIONALS.map((p) => p.especialidad_principal))];
+const CITY_OPTIONS = ["Todas las ciudades", ...new Set(
+  PROFESSIONALS.map((p) => p.ciudad || p.comuna || p.ubicacion).filter(Boolean)
+)];
+const MODALITY_OPTIONS = ["Todas las modalidades", ...new Set(
+  PROFESSIONALS.map((p) => p.modalidad_atencion).filter(Boolean)
+)];
+const SPECIALTY_OPTIONS = ["Todos los campos de estudio", ...new Set(
+  PROFESSIONALS.map((p) => p.especialidad_principal).filter(Boolean)
+)];
 
 /* ─── Hero con imagen y gradiente verde ──────────────────────────────── */
 function Hero() {
@@ -92,54 +98,53 @@ function Hero() {
 
 /* ─── Barra de búsqueda flotante ─────────────────────────────────────── */
 function SearchBar({ search, setSearch, city, setCity, modality, setModality, specialty, setSpecialty, onBuscar }) {
+  const selectClassName = "mt-1 h-8 w-full appearance-none bg-transparent pr-8 text-[14px] font-medium text-[#1d1d1f] outline-none cursor-pointer";
+
   return (
     <div className="relative z-20 mx-auto -mt-5 max-w-[1100px] px-5 sm:px-8">
       <form
         onSubmit={(e) => { e.preventDefault(); onBuscar(); }}
-        className="overflow-hidden rounded-2xl border border-[#d2d2d7] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.13)] lg:grid lg:grid-cols-[1fr_1fr_1fr_1fr_auto]"
+        className="overflow-hidden rounded-2xl border border-[#d2d2d7] bg-white shadow-[0_12px_45px_rgba(0,0,0,0.14)]"
       >
-        <label className="flex min-h-[64px] items-center gap-3 border-b border-[#d2d2d7] px-5 lg:border-b-0 lg:border-r">
-          <span className="min-w-0 flex-1">
-            <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#86868b]">Especialista</span>
+        <div className="grid border-b border-[#e1e1e5] md:grid-cols-3">
+          <label className="relative min-h-[76px] border-b border-[#e1e1e5] px-5 py-3 md:border-b-0 md:border-r">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-[#86868b]">Campo de estudio</span>
+            <select value={specialty} onChange={(e) => setSpecialty(e.target.value)} className={selectClassName}>
+              {SPECIALTY_OPTIONS.map((option) => <option key={option}>{option}</option>)}
+            </select>
+            <ChevronDown size={15} className="pointer-events-none absolute bottom-[25px] right-5 text-[#86868b]" />
+          </label>
+
+          <label className="relative min-h-[76px] border-b border-[#e1e1e5] px-5 py-3 md:border-b-0 md:border-r">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-[#86868b]">Ciudad</span>
+            <select value={city} onChange={(e) => setCity(e.target.value)} className={selectClassName}>
+              {CITY_OPTIONS.map((option) => <option key={option}>{option}</option>)}
+            </select>
+            <ChevronDown size={15} className="pointer-events-none absolute bottom-[25px] right-5 text-[#86868b]" />
+          </label>
+
+          <label className="relative min-h-[76px] px-5 py-3">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-[#86868b]">Modalidad</span>
+            <select value={modality} onChange={(e) => setModality(e.target.value)} className={selectClassName}>
+              {MODALITY_OPTIONS.map((option) => <option key={option}>{option}</option>)}
+            </select>
+            <ChevronDown size={15} className="pointer-events-none absolute bottom-[25px] right-5 text-[#86868b]" />
+          </label>
+        </div>
+
+        <div className="flex flex-col gap-3 p-3 sm:flex-row">
+          <label className="flex min-h-12 flex-1 items-center gap-3 rounded-xl bg-[#f5f5f7] px-4 ring-1 ring-transparent transition focus-within:bg-white focus-within:ring-[#00C853]">
+            <Search size={18} className="shrink-0 text-[#6e6e73]" />
             <input
-              type="text"
+              type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Nombre o especialidad..."
-              className="mt-0.5 h-7 w-full bg-transparent text-[14px] text-[#1d1d1f] placeholder-[#86868b] outline-none"
+              placeholder="Buscar profesional o centro por nombre"
+              aria-label="Buscar profesional o centro por nombre"
+              className="h-12 w-full bg-transparent text-[14px] text-[#1d1d1f] placeholder:text-[#86868b] outline-none"
             />
-          </span>
-        </label>
-
-        <label className="flex min-h-[64px] items-center gap-3 border-b border-[#d2d2d7] px-5 lg:border-b-0 lg:border-r">
-          <span className="min-w-0 flex-1">
-            <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#86868b]">Ciudad</span>
-            <select value={city} onChange={(e) => setCity(e.target.value)} className="mt-0.5 h-7 w-full appearance-none bg-transparent text-[14px] text-[#1d1d1f] outline-none cursor-pointer">
-              {CITY_OPTIONS.map((c) => <option key={c}>{c}</option>)}
-            </select>
-          </span>
-        </label>
-
-        <label className="flex min-h-[64px] items-center gap-3 border-b border-[#d2d2d7] px-5 lg:border-b-0 lg:border-r">
-          <span className="min-w-0 flex-1">
-            <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#86868b]">Modalidad</span>
-            <select value={modality} onChange={(e) => setModality(e.target.value)} className="mt-0.5 h-7 w-full appearance-none bg-transparent text-[14px] text-[#1d1d1f] outline-none cursor-pointer">
-              {MODALITY_OPTIONS.map((m) => <option key={m}>{m}</option>)}
-            </select>
-          </span>
-        </label>
-
-        <label className="flex min-h-[64px] items-center gap-3 border-b border-[#d2d2d7] px-5 lg:border-b-0 lg:border-r">
-          <span className="min-w-0 flex-1">
-            <span className="block text-[10px] font-semibold uppercase tracking-wider text-[#86868b]">Especialidad</span>
-            <select value={specialty} onChange={(e) => setSpecialty(e.target.value)} className="mt-0.5 h-7 w-full appearance-none bg-transparent text-[14px] text-[#1d1d1f] outline-none cursor-pointer">
-              {SPECIALTY_OPTIONS.map((s) => <option key={s}>{s}</option>)}
-            </select>
-          </span>
-        </label>
-
-        <div className="flex items-center p-3">
-          <button type="submit" className="h-11 w-full rounded-xl px-8 text-[13px] font-semibold text-white transition hover:opacity-90" style={{ background: "#00C853", minWidth: "100px" }}>
+          </label>
+          <button type="submit" className="h-12 rounded-xl bg-[#00C853] px-8 text-[13px] font-semibold text-white transition hover:bg-[#00b84c] focus:outline-none focus:ring-2 focus:ring-[#00C853] focus:ring-offset-2">
             Buscar
           </button>
         </div>
@@ -479,16 +484,16 @@ function ProCta() {
 export default function Marketplace() {
   const [search, setSearch]     = useState("");
   const [city, setCity]         = useState("Todas las ciudades");
-  const [modality, setModality] = useState("Todas");
-  const [specialty, setSpecialty] = useState("Todas");
+  const [modality, setModality] = useState("Todas las modalidades");
+  const [specialty, setSpecialty] = useState("Todos los campos de estudio");
 
   const filtered = PROFESSIONALS.filter((p) => {
     const q = search.toLowerCase();
     return (
-      (!q || p.nombre.toLowerCase().includes(q) || p.especialidad_principal.toLowerCase().includes(q)) &&
-      (city === "Todas las ciudades" || p.ubicacion === city) &&
-      (modality === "Todas" || p.modalidad_atencion === modality || p.modalidad_atencion === "Ambas") &&
-      (specialty === "Todas" || p.especialidad_principal === specialty)
+      (!q || p.nombre.toLowerCase().includes(q) || p.tipo?.toLowerCase().includes(q)) &&
+      (city === "Todas las ciudades" || (p.ciudad || p.comuna || p.ubicacion) === city) &&
+      (modality === "Todas las modalidades" || p.modalidad_atencion === modality || p.modalidad_atencion === "Ambas") &&
+      (specialty === "Todos los campos de estudio" || p.especialidad_principal === specialty)
     );
   });
 
