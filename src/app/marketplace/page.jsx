@@ -190,9 +190,9 @@ function ProfessionalCard({ p }) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#00a846]">{p.especialidad_principal}</p>
-            <h3 className="mt-1 flex items-center gap-1.5 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#1d1d1f]">
+            <h3 className="mt-1 flex items-center gap-2 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#1d1d1f]">
               {p.nombre}
-              {esProfesional && <BadgeCheck size={17} className="shrink-0 fill-[#00C853] text-white" />}
+              {esProfesional && <BadgeCheck size={24} className="shrink-0 fill-[#00C853] text-white" />}
             </h3>
           </div>
         </div>
@@ -205,17 +205,6 @@ function ProfessionalCard({ p }) {
               <p className="mt-0.5 text-[11px] leading-4 text-[#6e6e73]">{p.direccion || p.ubicacion}</p>
             </div>
           </div>
-        </div>
-
-        <div className="mt-3 flex flex-wrap gap-2">
-          <span className="rounded-full border border-[#e4e4e7] px-2.5 py-1 text-[10px] font-semibold text-[#6e6e73]">
-            {p.tipo || (esProfesional ? "Profesional independiente" : "Consulta médica")}
-          </span>
-          {p.modalidad_atencion && (
-            <span className="rounded-full border border-[#e4e4e7] px-2.5 py-1 text-[10px] font-semibold text-[#6e6e73]">
-              {p.modalidad_atencion}
-            </span>
-          )}
         </div>
 
         <div className="mt-auto pt-5">
@@ -457,21 +446,16 @@ function ProCta() {
               ))}
             </div>
 
-            {/* Botones */}
-            <div className="flex shrink-0 items-center gap-3">
-              <Link
-                href="/unirse"
+            <div className="flex shrink-0 items-center">
+              <a
+                href="https://www.agendaclinicas.cl/#precios"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-xl px-6 py-2.5 text-[13px] font-semibold text-white transition hover:opacity-90"
                 style={{ background: "#00C853" }}
               >
-                Registrarme
-              </Link>
-              <Link
-                href="/precios"
-                className="text-[12px] font-semibold text-white/45 underline underline-offset-2 transition hover:text-white/70"
-              >
                 Ver planes
-              </Link>
+              </a>
             </div>
           </div>
         </div>
