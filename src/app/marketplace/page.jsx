@@ -3,24 +3,12 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Brain, Dumbbell, Leaf, Stethoscope, Baby, Smile,
-  HeartPulse, Building2, ChevronRight, MapPin, BadgeCheck,
+  Building2, ChevronRight, MapPin, BadgeCheck,
   CalendarDays, ExternalLink,
 } from "lucide-react";
 import { PROFESSIONALS } from "./data/professionals";
 
 /* ─── Datos ──────────────────────────────────────────────────────────── */
-const SPECIALTIES = [
-  { nombre: "Psicología",       Icon: Brain,       color: "#3b82f6", bg: "#eff6ff", count: "124" },
-  { nombre: "Kinesiología",     Icon: Dumbbell,    color: "#6366f1", bg: "#eef2ff", count: "98"  },
-  { nombre: "Nutrición",        Icon: Leaf,        color: "#00C853", bg: "#f0fdf4", count: "76"  },
-  { nombre: "Medicina General", Icon: Stethoscope, color: "#0ea5e9", bg: "#f0f9ff", count: "62"  },
-  { nombre: "Pediatría",        Icon: Baby,        color: "#f97316", bg: "#fff7ed", count: "48"  },
-  { nombre: "Odontología",      Icon: Smile,       color: "#06b6d4", bg: "#ecfeff", count: "57"  },
-  { nombre: "Psiquiatría",      Icon: HeartPulse,  color: "#8b5cf6", bg: "#f5f3ff", count: "31"  },
-  { nombre: "Enfermería",       Icon: HeartPulse,  color: "#ec4899", bg: "#fdf2f8", count: "44"  },
-];
-
 const BENEFITS = [
   { title: "Profesionales verificados",   text: "Cada perfil pasa por un proceso de validación de credenciales." },
   { title: "Reserva online segura",       text: "Tu información y pagos están protegidos en todo momento." },
@@ -170,35 +158,6 @@ function Benefits() {
             <h3 className="text-[13px] font-semibold text-[#1d1d1f]">{b.title}</h3>
             <p className="mt-1 text-[12px] leading-5 text-[#6e6e73]">{b.text}</p>
           </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ─── Especialidades con íconos alineados ────────────────────────────── */
-function Specialties({ onSpecialtyClick }) {
-  return (
-    <section className="mx-auto max-w-[1100px] px-5 py-10 sm:px-8">
-      <h2 className="mb-5 font-semibold text-[#1d1d1f]" style={{ fontSize: "18px", letterSpacing: "-0.02em" }}>
-        Especialidades más buscadas
-      </h2>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-        {SPECIALTIES.map(({ nombre, Icon, color, bg, count }) => (
-          <button
-            key={nombre}
-            onClick={() => onSpecialtyClick(nombre)}
-            className="group flex flex-col items-center rounded-xl border border-[#d2d2d7] bg-white px-3 py-5 text-center transition hover:shadow-sm"
-          >
-            <span
-              className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl"
-              style={{ background: bg }}
-            >
-              <Icon size={20} style={{ color }} strokeWidth={1.8} />
-            </span>
-            <span className="block text-[12px] font-semibold leading-tight text-[#1d1d1f]">{nombre}</span>
-            <span className="mt-1 block text-[11px] text-[#86868b]">{count} prof.</span>
-          </button>
         ))}
       </div>
     </section>
@@ -533,11 +492,6 @@ export default function Marketplace() {
     );
   });
 
-  function handleSpecialtyClick(nombre) {
-    setSpecialty(nombre);
-    setTimeout(() => document.getElementById("profesionales")?.scrollIntoView({ behavior: "smooth" }), 50);
-  }
-
   return (
     <div className="min-h-screen bg-white">
       <Hero />
@@ -549,7 +503,6 @@ export default function Marketplace() {
         onBuscar={() => document.getElementById("profesionales")?.scrollIntoView({ behavior: "smooth" })}
       />
       <Benefits />
-      <Specialties onSpecialtyClick={handleSpecialtyClick} />
       <div id="profesionales">
         <ProfessionalsSection professionals={filtered} />
       </div>
