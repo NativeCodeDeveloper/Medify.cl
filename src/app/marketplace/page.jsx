@@ -1,15 +1,13 @@
 "use client";
 import { useState } from "react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import {
   Brain, Dumbbell, Leaf, Stethoscope, Baby, Smile,
-  HeartPulse, Building2, ChevronRight,
+  HeartPulse, Building2, ChevronRight, MapPin, BadgeCheck,
+  CalendarDays, ExternalLink, UserRound, Hospital,
 } from "lucide-react";
 import { PROFESSIONALS } from "./data/professionals";
-
-const MapLeaflet = dynamic(() => import("./MapLeaflet"), { ssr: false });
 
 /* ─── Datos ──────────────────────────────────────────────────────────── */
 const SPECIALTIES = [
@@ -207,53 +205,75 @@ function Specialties({ onSpecialtyClick }) {
   );
 }
 
-/* ─── Tarjeta de profesional (compacta, cuadrada) ────────────────────── */
+/* ─── Tarjeta de marketplace ────────────────────────────────────────── */
 function ProfessionalCard({ p }) {
+  const esProfesional = p.es_profesional !== false;
+  const agendaUrl = p.url_contacto || p.sitio_web;
+
   return (
-    <article className="overflow-hidden rounded-2xl border border-[#d2d2d7] bg-white transition hover:shadow-md">
-      <div className="relative h-44 bg-[#f5f5f7]">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-[#dedee3] bg-white shadow-[0_10px_35px_rgba(29,29,31,0.06)] transition duration-300 hover:-translate-y-1 hover:border-[#b8e8ca] hover:shadow-[0_20px_50px_rgba(29,29,31,0.12)]">
+      <div className="relative h-56 overflow-hidden bg-[#eef1ef]">
         <Image
           src={p.imagen_url}
           alt={p.nombre}
           fill
-          sizes="(max-width:768px) 50vw, 25vw"
-          className="object-cover object-top"
+          sizes="(max-width:768px) 100vw, (max-width:1100px) 50vw, 33vw"
+          className="object-cover object-top transition duration-500 group-hover:scale-[1.025]"
         />
-        {p.disponible && (
-          <span
-            className="absolute left-3 top-3 rounded-full px-2.5 py-1 text-white"
-            style={{ fontSize: "10px", fontWeight: 600, background: "#00C853" }}
-          >
-            Disponible
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent" />
+        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/60 bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#1d1d1f] shadow-sm backdrop-blur">
+            {esProfesional ? <UserRound size={12} /> : <Hospital size={12} />}
+            {esProfesional ? "Profesional" : "Consulta"}
           </span>
-        )}
-      </div>
-      <div className="p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-[#86868b]">{p.especialidad_principal}</p>
-        <h3
-          className="mt-0.5 font-semibold text-[#1d1d1f] leading-tight"
-          style={{ fontSize: "14px", letterSpacing: "-0.01em" }}
-        >
-          {p.nombre}
-        </h3>
-        <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-[#6e6e73]">
-          <span className="text-yellow-400 text-[12px]">★</span>
-          <span className="font-semibold text-[#1d1d1f]">{p.calificacion}</span>
-          <span>({p.total_resenas})</span>
-          <span className="text-[#d2d2d7]">·</span>
-          <span>{p.ubicacion}</span>
+          {p.disponible && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00C853] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-white" /> Disponible
+            </span>
+          )}
         </div>
-        <p className="mt-1 text-[11px] text-[#86868b]">{p.anos_experiencia} años · {p.modalidad_atencion}</p>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-[13px] font-semibold text-[#1d1d1f]">
-            Desde ${p.precio_sesion.toLocaleString("es-CL")}
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#00a846]">{p.especialidad_principal}</p>
+            <h3 className="mt-1 flex items-center gap-1.5 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#1d1d1f]">
+              {p.nombre}
+              {esProfesional && <BadgeCheck size={17} className="shrink-0 fill-[#00C853] text-white" />}
+            </h3>
+          </div>
+        </div>
+
+        <div className="mt-4 rounded-2xl bg-[#f6f7f6] p-3.5">
+          <div className="flex items-start gap-2.5">
+            <MapPin size={16} className="mt-0.5 shrink-0 text-[#00a846]" />
+            <div>
+              <p className="text-[12px] font-semibold text-[#1d1d1f]">{p.ciudad || p.ubicacion}</p>
+              <p className="mt-0.5 text-[11px] leading-4 text-[#6e6e73]">{p.direccion || p.ubicacion}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="rounded-full border border-[#e4e4e7] px-2.5 py-1 text-[10px] font-semibold text-[#6e6e73]">
+            {p.tipo || (esProfesional ? "Profesional independiente" : "Consulta médica")}
           </span>
-          <Link
-            href={`/marketplace/${p.id}`}
-            className="flex items-center gap-1 rounded-full border border-[#d2d2d7] px-3 py-1.5 text-[11px] font-semibold text-[#1d1d1f] transition hover:border-[#00C853] hover:text-[#00C853]"
+          {p.modalidad_atencion && (
+            <span className="rounded-full border border-[#e4e4e7] px-2.5 py-1 text-[10px] font-semibold text-[#6e6e73]">
+              {p.modalidad_atencion}
+            </span>
+          )}
+        </div>
+
+        <div className="mt-auto pt-5">
+          <a
+            href={agendaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#111d17] px-4 py-3 text-[12px] font-semibold text-white transition hover:bg-[#00a846] focus:outline-none focus:ring-2 focus:ring-[#00C853] focus:ring-offset-2"
           >
-            Ver perfil <ChevronRight size={12} />
-          </Link>
+            <CalendarDays size={15} /> Ver AgendaClínica <ExternalLink size={13} />
+          </a>
         </div>
       </div>
     </article>
@@ -274,7 +294,7 @@ function ProfessionalsSection({ professionals }) {
           </span>
         </div>
         {professionals.length > 0 ? (
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {professionals.map((p) => <ProfessionalCard key={p.id} p={p} />)}
           </div>
         ) : (
@@ -349,21 +369,12 @@ function ClinicsSection() {
   );
 }
 
-/* ─── Mapa Leaflet ───────────────────────────────────────────────────── */
+/* ─── Ubicaciones de profesionales y consultas ──────────────────────── */
 function NearbyMap() {
-  const [locating, setLocating] = useState(false);
-  const [userCoords, setUserCoords] = useState(null);
-  const topPros = PROFESSIONALS.slice(0, 3);
-
-  function handleGeolocate() {
-    if (!navigator.geolocation) return;
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => { setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setLocating(false); },
-      () => setLocating(false),
-      { timeout: 8000 }
-    );
-  }
+  const availableLocations = PROFESSIONALS.filter((p) => p.url_mapa || (p.lat && p.lng));
+  const [selectedId, setSelectedId] = useState(availableLocations[0]?.id);
+  const selected = availableLocations.find((p) => p.id === selectedId) || availableLocations[0];
+  const mapUrl = selected?.url_mapa || `https://maps.google.com/maps?q=${selected?.lat},${selected?.lng}&z=15&output=embed`;
 
   return (
     <section className="border-t border-[#d2d2d7] bg-[#f5f5f7]">
@@ -373,30 +384,21 @@ function NearbyMap() {
           {/* Panel izquierdo */}
           <div className="border-b border-[#d2d2d7] p-7 lg:border-b-0 lg:border-r">
             <h2 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "18px", letterSpacing: "-0.02em" }}>
-              Profesionales cerca de ti
+              Ubicaciones disponibles
             </h2>
             <p className="mt-2 text-[12px] leading-5 text-[#6e6e73]">
-              Encuentra especialistas disponibles en tu área y agenda al instante.
+              Selecciona un profesional o consulta para revisar su ubicación antes de agendar.
             </p>
-
-            <button
-              onClick={handleGeolocate}
-              disabled={locating}
-              className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-[13px] font-semibold transition"
-              style={{
-                borderColor: userCoords ? "#00C853" : "#d2d2d7",
-                color: userCoords ? "#00C853" : "#1d1d1f",
-                background: userCoords ? "rgba(0,200,83,0.06)" : "transparent",
-              }}
-            >
-              <span className="h-2 w-2 rounded-full" style={{ background: userCoords ? "#00C853" : "#d2d2d7" }} />
-              {locating ? "Detectando..." : userCoords ? "Ubicación activa" : "Usar mi ubicación"}
-            </button>
 
             {/* Lista de profesionales */}
             <div className="mt-6 space-y-2">
-              {topPros.map((p) => (
-                <div key={p.id} className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition hover:bg-[#f5f5f7]">
+              {availableLocations.slice(0, 4).map((p) => (
+                <button
+                  type="button"
+                  key={p.id}
+                  onClick={() => setSelectedId(p.id)}
+                  className={`flex w-full items-center gap-3 rounded-xl p-2.5 text-left transition ${selected?.id === p.id ? "bg-[#eefaf2] ring-1 ring-[#b8e8ca]" : "hover:bg-[#f5f5f7]"}`}
+                >
                   <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full" style={{ border: "2.5px solid #00C853" }}>
                     <Image src={p.imagen_url} alt={p.nombre} fill sizes="40px" className="object-cover object-top" />
                   </div>
@@ -404,20 +406,25 @@ function NearbyMap() {
                     <p className="truncate text-[12px] font-semibold text-[#1d1d1f]">{p.nombre}</p>
                     <p className="text-[11px] text-[#86868b]">{p.especialidad_principal} · {p.ubicacion}</p>
                   </div>
-                  <Link
-                    href={`/marketplace/${p.id}`}
-                    className="shrink-0 rounded-full border border-[#d2d2d7] px-3 py-1 text-[11px] font-semibold text-[#1d1d1f] transition hover:border-[#00C853] hover:text-[#00C853]"
-                  >
-                    Ver
-                  </Link>
-                </div>
+                  <ChevronRight size={15} className={selected?.id === p.id ? "text-[#00a846]" : "text-[#a1a1a6]"} />
+                </button>
               ))}
             </div>
           </div>
 
           {/* Mapa */}
-          <div className="min-h-[360px] lg:min-h-0">
-            <MapLeaflet userCoords={userCoords} />
+          <div className="relative min-h-[390px] bg-[#e8ece9] lg:min-h-0">
+            {selected && (
+              <iframe
+                key={selected.id}
+                src={mapUrl}
+                title={`Ubicación de ${selected.nombre}`}
+                className="absolute inset-0 h-full w-full border-0"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            )}
           </div>
         </div>
       </div>
