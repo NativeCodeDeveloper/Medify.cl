@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   Brain, Dumbbell, Leaf, Stethoscope, Baby, Smile,
   HeartPulse, Building2, ChevronRight, MapPin, BadgeCheck,
-  CalendarDays, ExternalLink, UserRound, Hospital,
+  CalendarDays, ExternalLink,
 } from "lucide-react";
 import { PROFESSIONALS } from "./data/professionals";
 
@@ -221,17 +221,6 @@ function ProfessionalCard({ p }) {
           className="object-cover object-top transition duration-500 group-hover:scale-[1.025]"
         />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent" />
-        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/60 bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#1d1d1f] shadow-sm backdrop-blur">
-            {esProfesional ? <UserRound size={12} /> : <Hospital size={12} />}
-            {esProfesional ? "Profesional" : "Consulta"}
-          </span>
-          {p.disponible && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00C853] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-white shadow-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-white" /> Disponible
-            </span>
-          )}
-        </div>
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-start justify-between gap-3">
