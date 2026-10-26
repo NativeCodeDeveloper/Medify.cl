@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { apiFetch, cerrarSesion, getToken } from "@/lib/api";
 
 const NAV = [
   {
@@ -39,7 +41,6 @@ const NAV = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
       </svg>
     ),
-    badge: "Próximamente",
   },
   {
     label: "Configuración",
@@ -64,6 +65,32 @@ const NAV = [
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [admin, setAdmin] = useState(null);
+
+  /* Guard: el token tiene que ser de un admin activo (la API lo revisa contra la tabla administradores) */
+  useEffect(() => {
+    if (!getToken("admin")) {
+      router.replace("/login");
+      return;
+    }
+    apiFetch("/auth/admin/yo", { auth: "admin" })
+      .then(setAdmin)
+      .catch(() => router.replace("/login"));
+  }, [router]);
+
+  const salir = () => {
+    cerrarSesion("admin");
+    router.replace("/login");
+  };
+
+  if (!admin) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f5f5f7] text-[#6e6e73]" style={{ fontSize: "13px" }}>
+        Verificando sesión…
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-[#f5f5f7]">
@@ -127,7 +154,15 @@ export default function DashboardLayout({ children }) {
         </nav>
 
         {/* Footer del sidebar */}
-        <div className="px-5 py-4 border-t border-white/8">
+        <div className="px-5 py-4 border-t border-white/8 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <span className="truncate text-white/50" style={{ fontSize: "12px" }} title={admin.email}>
+              {admin.nombre}
+            </span>
+            <button onClick={salir} className="text-white/35 hover:text-white/70 transition-colors" style={{ fontSize: "12px" }}>
+              Salir
+            </button>
+          </div>
           <Link
             href="/"
             className="flex items-center gap-2 text-white/35 hover:text-white/60 transition-colors"

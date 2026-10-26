@@ -13,7 +13,7 @@ const FOOTER_LINKS = [
     heading: "Medify",
     items: [
       { label: "Cómo funciona", href: "/comoFunciona" },
-      { label: "Marketplace", href: "/marketplace" },
+      { label: "Marketplace", href: "/" },
       { label: "Sobre nosotros", href: "/sobreNosotros" },
     ],
   },
@@ -28,10 +28,10 @@ const FOOTER_LINKS = [
   {
     heading: "Especialidades",
     items: [
-      { label: "Psicología", href: "/marketplace" },
-      { label: "Kinesiología", href: "/marketplace" },
-      { label: "Nutrición", href: "/marketplace" },
-      { label: "Medicina General", href: "/marketplace" },
+      { label: "Psicología", href: "/" },
+      { label: "Kinesiología", href: "/" },
+      { label: "Nutrición", href: "/" },
+      { label: "Medicina General", href: "/" },
     ],
   },
   {

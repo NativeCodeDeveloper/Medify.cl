@@ -2,9 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { PROFESSIONALS } from "../data/professionals";
+import { apiFetch, mensajeDeError } from "@/lib/api";
 
 const MapSingle = dynamic(() => import("../MapSingle"), { ssr: false });
 
@@ -112,28 +113,82 @@ function StarSelector({ value, onChange }) {
   );
 }
 
+const fechaResena = (iso) =>
+  new Date(iso).toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" });
+
+/* La API devuelve created_at; el carrusel muestra "fecha" */
+const aResenaVista = (r) => ({ ...r, fecha: fechaResena(r.created_at) });
+
 export default function ProfessionalProfile() {
   const params = useParams();
-  const professional = PROFESSIONALS.find((p) => p.id === params.id);
+  const estatico = PROFESSIONALS.find((p) => p.id === params.id);
 
-  const [reviews, setReviews] = useState(professional?.resenas || []);
+  /* Perfil: primero los cargados a mano (data/professionals.js); si no está, se busca entre los registrados */
+  const [registrado, setRegistrado] = useState(null);
+  const [cargandoPerfil, setCargandoPerfil] = useState(!estatico);
+  const professional = estatico || registrado;
+
+  const [reviews, setReviews] = useState([]);
+  const [resumen, setResumen] = useState({ promedio: 0, total: 0 });
   const [newReview, setNewReview] = useState({ calificacion: 0, autor: "", comentario: "" });
   const [reviewSent, setReviewSent] = useState(false);
+  const [enviandoResena, setEnviandoResena] = useState(false);
+  const [errorResena, setErrorResena] = useState("");
 
-  const handleReviewSubmit = () => {
+  useEffect(() => {
+    if (estatico) return;
+    apiFetch(`/public/perfiles/${params.id}`)
+      .then(setRegistrado)
+      .catch(() => setRegistrado(null))
+      .finally(() => setCargandoPerfil(false));
+  }, [estatico, params.id]);
+
+  useEffect(() => {
+    apiFetch(`/public/perfiles/${params.id}/resenas`)
+      .then(({ promedio, total, resenas }) => {
+        setResumen({ promedio, total });
+        setReviews(resenas.map(aResenaVista));
+      })
+      .catch(err => console.warn("[Perfil] No se pudieron cargar las reseñas:", err.message));
+  }, [params.id]);
+
+  const handleReviewSubmit = async () => {
     if (!newReview.calificacion || !newReview.autor.trim() || !newReview.comentario.trim()) return;
-    // TODO: POST /api/reviews/{professional.id}
-    setReviews(prev => [{ id: Date.now(), ...newReview, date: new Date().toISOString().slice(0, 10) }, ...prev]);
-    setNewReview({ calificacion: 0, autor: "", comentario: "" });
-    setReviewSent(true);
-    setTimeout(() => setReviewSent(false), 3000);
+    setEnviandoResena(true);
+    setErrorResena("");
+    try {
+      const creada = await apiFetch(`/public/perfiles/${params.id}/resenas`, { method: "POST", body: newReview });
+      setReviews(prev => [aResenaVista(creada), ...prev]);
+      setResumen(prev => {
+        const total = prev.total + 1;
+        return { total, promedio: Math.round(((prev.promedio * prev.total + creada.calificacion) / total) * 10) / 10 };
+      });
+      setNewReview({ calificacion: 0, autor: "", comentario: "" });
+      setReviewSent(true);
+      setTimeout(() => setReviewSent(false), 3000);
+    } catch (err) {
+      setErrorResena(mensajeDeError(err));
+    } finally {
+      setEnviandoResena(false);
+    }
   };
 
-  const whatsappHref = professional?.numero_whatsapp
-    ? `https://wa.me/${professional.numero_whatsapp}?text=${encodeURIComponent(
-        `Hola ${professional.nombre}, vi tu perfil en Medify y me gustaría agendar una hora.`
-      )}`
-    : `https://wa.me/56991749964`;
+  /* Agendar: si tiene link de agenda (Agenda Clínica) va directo ahí; si no, al WhatsApp que registró */
+  const agendaUrl = professional?.sitio_web || professional?.url_contacto || null;
+  const mensajeWsp = encodeURIComponent(`Hola ${professional?.nombre}, vi tu perfil en Medify y me gustaría agendar una hora.`);
+  const whatsappPropio = professional?.numero_whatsapp
+    ? `https://wa.me/${professional.numero_whatsapp}?text=${mensajeWsp}`
+    : null;
+  const whatsappHref = whatsappPropio || `https://wa.me/56991749964`;
+  const ratingTexto = resumen.total ? `${resumen.promedio} · ${resumen.total} reseña${resumen.total !== 1 ? "s" : ""}` : "Sin reseñas aún";
+
+  if (cargandoPerfil) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white text-[#6e6e73]" style={{ fontSize: "14px" }}>
+        Cargando perfil…
+      </div>
+    );
+  }
 
   /* ── Not found ── */
   if (!professional) {
@@ -142,7 +197,7 @@ export default function ProfessionalProfile() {
         <p className="font-semibold text-[#1d1d1f] mb-3" style={{ fontSize: "21px" }}>
           Profesional no encontrado
         </p>
-        <Link href="/marketplace" className="text-[#00C853] hover:underline underline-offset-4"
+        <Link href="/" className="text-[#00C853] hover:underline underline-offset-4"
           style={{ fontSize: "15px" }}>
           Volver al Marketplace
         </Link>
@@ -159,7 +214,7 @@ export default function ProfessionalProfile() {
 
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 mb-8" style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>
-            <Link href="/marketplace" className="hover:text-white transition-colors">
+            <Link href="/" className="hover:text-white transition-colors">
               Marketplace
             </Link>
             <span>/</span>
@@ -208,9 +263,9 @@ export default function ProfessionalProfile() {
               </h1>
 
               <div className="flex items-center gap-3 mb-4">
-                <Stars rating={professional.calificacion} />
+                <Stars rating={resumen.promedio} />
                 <span style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)" }}>
-                  {professional.calificacion} · {professional.total_resenas} reseñas
+                  {ratingTexto}
                 </span>
               </div>
 
@@ -287,7 +342,7 @@ export default function ProfessionalProfile() {
                   },
                   {
                     label: "Reseñas",
-                    value: `${professional.calificacion} · ${professional.total_resenas} reseñas`,
+                    value: ratingTexto,
                     icon: (
                       <svg className="w-4 h-4" fill="#F59E0B" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -364,6 +419,7 @@ export default function ProfessionalProfile() {
               </h3>
 
               {/* Email */}
+              {professional.correo && (
               <div className="flex items-start gap-3 mb-4 pb-4" style={{ borderBottom: "1px solid #e5e5ea" }}>
                 <div className="w-9 h-9 rounded-xl bg-[#f5f5f7] flex items-center justify-center flex-shrink-0 text-[#6e6e73]">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -377,6 +433,7 @@ export default function ProfessionalProfile() {
                   </p>
                 </div>
               </div>
+              )}
 
               {/* Ubicación */}
               <div className="flex items-start gap-3 mb-6">
@@ -444,15 +501,16 @@ export default function ProfessionalProfile() {
               {/* CTAs */}
               <div className="space-y-3">
                 <a
-                  href={professional.sitio_web}
+                  href={agendaUrl || whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex w-full items-center justify-center rounded-full text-white transition-colors duration-150"
                   style={{ fontSize: "15px", fontWeight: 400, padding: "13px", background: "#00C853" }}
                 >
-                  Agendar hora
+                  {agendaUrl ? "Agendar hora" : "Agendar por WhatsApp"}
                 </a>
 
+                {agendaUrl && (
                 <a
                   href={whatsappHref}
                   target="_blank"
@@ -465,6 +523,7 @@ export default function ProfessionalProfile() {
                   </svg>
                   Escribir por WhatsApp
                 </a>
+                )}
               </div>
 
               <p className="text-center mt-4 font-light text-[#6e6e73]" style={{ fontSize: "11px" }}>
@@ -505,12 +564,14 @@ export default function ProfessionalProfile() {
               Reseñas de pacientes
             </h2>
             <div className="flex items-center gap-2">
-              <Stars rating={professional.calificacion} />
-              <span className="font-medium text-[#1d1d1f]" style={{ fontSize: "14px" }}>
-                {professional.calificacion}
-              </span>
+              <Stars rating={resumen.promedio} />
+              {resumen.total > 0 && (
+                <span className="font-medium text-[#1d1d1f]" style={{ fontSize: "14px" }}>
+                  {resumen.promedio}
+                </span>
+              )}
               <span className="font-light text-[#6e6e73]" style={{ fontSize: "13px" }}>
-                ({reviews.length} reseñas)
+                ({resumen.total} reseña{resumen.total !== 1 ? "s" : ""})
               </span>
             </div>
           </div>
@@ -579,11 +640,14 @@ export default function ProfessionalProfile() {
               <div className="flex items-center gap-4">
                 <button
                   onClick={handleReviewSubmit}
-                  disabled={!newReview.calificacion || !newReview.autor.trim() || !newReview.comentario.trim()}
+                  disabled={enviandoResena || !newReview.calificacion || !newReview.autor.trim() || !newReview.comentario.trim()}
                   className="inline-flex items-center justify-center rounded-full text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{ fontSize: "14px", fontWeight: 400, padding: "11px 24px", background: "#00C853" }}>
-                  Enviar reseña
+                  {enviandoResena ? "Enviando…" : "Enviar reseña"}
                 </button>
+                {errorResena && (
+                  <span role="alert" className="text-red-500" style={{ fontSize: "13px" }}>{errorResena}</span>
+                )}
                 {reviewSent && (
                   <span className="flex items-center gap-1.5 font-medium text-[#00C853]" style={{ fontSize: "13px" }}>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

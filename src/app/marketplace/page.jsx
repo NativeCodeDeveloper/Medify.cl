@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   Building2, ChevronRight, MapPin, BadgeCheck,
-  CalendarDays, ExternalLink, Search, ChevronDown,
+  UserRound, Search, ChevronDown,
 } from "lucide-react";
-import { PROFESSIONALS } from "./data/professionals";
+import { usePerfiles } from "./usePerfiles";
 
 /* ─── Datos ──────────────────────────────────────────────────────────── */
 const BENEFITS = [
@@ -47,15 +47,15 @@ const STATS = [
   { valor: "+120.000", label: "Reservas realizadas" },
 ];
 
-const CITY_OPTIONS = ["Todas las ciudades", ...new Set(
-  PROFESSIONALS.map((p) => p.ciudad || p.comuna || p.ubicacion).filter(Boolean)
-)];
-const MODALITY_OPTIONS = ["Todas las modalidades", ...new Set(
-  PROFESSIONALS.map((p) => p.modalidad_atencion).filter(Boolean)
-)];
-const SPECIALTY_OPTIONS = ["Todos los campos de estudio", ...new Set(
-  PROFESSIONALS.map((p) => p.especialidad_principal).filter(Boolean)
-)];
+/* Opciones de los filtros: salen de los perfiles cargados (estáticos + registrados) */
+function opcionesFiltros(perfiles) {
+  const unicos = (fn) => [...new Set(perfiles.map(fn).filter(Boolean))];
+  return {
+    ciudades: ["Todas las ciudades", ...unicos((p) => p.ciudad || p.comuna || p.ubicacion)],
+    modalidades: ["Todas las modalidades", ...unicos((p) => p.modalidad_atencion)],
+    especialidades: ["Todos los campos de estudio", ...unicos((p) => p.especialidad_principal)],
+  };
+}
 
 /* ─── Hero con imagen y gradiente verde ──────────────────────────────── */
 function Hero() {
@@ -97,7 +97,7 @@ function Hero() {
 }
 
 /* ─── Barra de búsqueda flotante ─────────────────────────────────────── */
-function SearchBar({ search, setSearch, city, setCity, modality, setModality, specialty, setSpecialty, onBuscar }) {
+function SearchBar({ search, setSearch, city, setCity, modality, setModality, specialty, setSpecialty, onBuscar, opciones }) {
   const selectClassName = "mt-1 h-8 w-full appearance-none bg-transparent pr-8 text-[14px] font-medium text-[#1d1d1f] outline-none cursor-pointer";
 
   return (
@@ -110,7 +110,7 @@ function SearchBar({ search, setSearch, city, setCity, modality, setModality, sp
           <label className="relative min-h-[76px] border-b border-[#e1e1e5] px-5 py-3 md:border-b-0 md:border-r">
             <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-[#86868b]">Campo de estudio</span>
             <select value={specialty} onChange={(e) => setSpecialty(e.target.value)} className={selectClassName}>
-              {SPECIALTY_OPTIONS.map((option) => <option key={option}>{option}</option>)}
+              {opciones.especialidades.map((option) => <option key={option}>{option}</option>)}
             </select>
             <ChevronDown size={15} className="pointer-events-none absolute bottom-[25px] right-5 text-[#86868b]" />
           </label>
@@ -118,7 +118,7 @@ function SearchBar({ search, setSearch, city, setCity, modality, setModality, sp
           <label className="relative min-h-[76px] border-b border-[#e1e1e5] px-5 py-3 md:border-b-0 md:border-r">
             <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-[#86868b]">Ciudad</span>
             <select value={city} onChange={(e) => setCity(e.target.value)} className={selectClassName}>
-              {CITY_OPTIONS.map((option) => <option key={option}>{option}</option>)}
+              {opciones.ciudades.map((option) => <option key={option}>{option}</option>)}
             </select>
             <ChevronDown size={15} className="pointer-events-none absolute bottom-[25px] right-5 text-[#86868b]" />
           </label>
@@ -126,7 +126,7 @@ function SearchBar({ search, setSearch, city, setCity, modality, setModality, sp
           <label className="relative min-h-[76px] px-5 py-3">
             <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-[#86868b]">Modalidad</span>
             <select value={modality} onChange={(e) => setModality(e.target.value)} className={selectClassName}>
-              {MODALITY_OPTIONS.map((option) => <option key={option}>{option}</option>)}
+              {opciones.modalidades.map((option) => <option key={option}>{option}</option>)}
             </select>
             <ChevronDown size={15} className="pointer-events-none absolute bottom-[25px] right-5 text-[#86868b]" />
           </label>
@@ -172,13 +172,12 @@ function Benefits() {
 /* ─── Tarjeta de marketplace ────────────────────────────────────────── */
 function ProfessionalCard({ p }) {
   const esProfesional = p.es_profesional !== false;
-  const agendaUrl = p.url_contacto || p.sitio_web;
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-[#dedee3] bg-white shadow-[0_10px_35px_rgba(29,29,31,0.06)] transition duration-300 hover:-translate-y-1 hover:border-[#b8e8ca] hover:shadow-[0_20px_50px_rgba(29,29,31,0.12)]">
       <div className="relative h-56 overflow-hidden bg-[#eef1ef]">
         <Image
-          src={p.imagen_url}
+          src={p.imagen_url || "/doctores1.png"}
           alt={p.nombre}
           fill
           sizes="(max-width:768px) 100vw, (max-width:1100px) 50vw, 33vw"
@@ -208,14 +207,13 @@ function ProfessionalCard({ p }) {
         </div>
 
         <div className="mt-auto pt-5">
-          <a
-            href={agendaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Lleva al perfil en Medify; desde ahí el paciente puede agendar o escribir por WhatsApp */}
+          <Link
+            href={`/marketplace/${p.id}`}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#111d17] px-4 py-3 text-[12px] font-semibold text-white transition hover:bg-[#00a846] focus:outline-none focus:ring-2 focus:ring-[#00C853] focus:ring-offset-2"
           >
-            <CalendarDays size={15} /> Ver AgendaClínica <ExternalLink size={13} />
-          </a>
+            <UserRound size={15} /> Ver perfil
+          </Link>
         </div>
       </div>
     </article>
@@ -312,8 +310,8 @@ function ClinicsSection() {
 }
 
 /* ─── Ubicaciones de profesionales y consultas ──────────────────────── */
-function NearbyMap() {
-  const availableLocations = PROFESSIONALS.filter((p) => p.url_mapa || (p.lat && p.lng));
+function NearbyMap({ perfiles }) {
+  const availableLocations = perfiles.filter((p) => p.url_mapa || (p.lat && p.lng));
   const [selectedId, setSelectedId] = useState(availableLocations[0]?.id);
   const selected = availableLocations.find((p) => p.id === selectedId) || availableLocations[0];
   const mapUrl = selected?.url_mapa || `https://maps.google.com/maps?q=${selected?.lat},${selected?.lng}&z=15&output=embed`;
@@ -447,15 +445,13 @@ function ProCta() {
             </div>
 
             <div className="flex shrink-0 items-center">
-              <a
-                href="https://www.agendaclinicas.cl/#precios"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/unirse"
                 className="rounded-xl px-6 py-2.5 text-[13px] font-semibold text-white transition hover:opacity-90"
                 style={{ background: "#00C853" }}
               >
-                Ver planes
-              </a>
+                Unirme
+              </Link>
             </div>
           </div>
         </div>
@@ -471,7 +467,10 @@ export default function Marketplace() {
   const [modality, setModality] = useState("Todas las modalidades");
   const [specialty, setSpecialty] = useState("Todos los campos de estudio");
 
-  const filtered = PROFESSIONALS.filter((p) => {
+  const perfiles = usePerfiles();
+  const opciones = useMemo(() => opcionesFiltros(perfiles), [perfiles]);
+
+  const filtered = perfiles.filter((p) => {
     const q = search.toLowerCase();
     return (
       (!q || p.nombre.toLowerCase().includes(q) || p.tipo?.toLowerCase().includes(q)) &&
@@ -490,13 +489,14 @@ export default function Marketplace() {
         modality={modality} setModality={setModality}
         specialty={specialty} setSpecialty={setSpecialty}
         onBuscar={() => document.getElementById("profesionales")?.scrollIntoView({ behavior: "smooth" })}
+        opciones={opciones}
       />
       <Benefits />
       <div id="profesionales">
         <ProfessionalsSection professionals={filtered} />
       </div>
       <ClinicsSection />
-      <NearbyMap />
+      <NearbyMap perfiles={perfiles} />
       <Stats />
       <ProCta />
     </div>

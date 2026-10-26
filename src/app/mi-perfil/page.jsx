@@ -1,28 +1,21 @@
 "use client";
 import { useState } from "react";
+import { apiFetch, mensajeDeError } from "@/lib/api";
+import { NOMBRE_PLAN, nombreCuenta, useCuenta } from "./CuentaContext";
 
-/* Demo — cuando el backend esté listo viene de la API */
-const DEMO_PRO = {
-  nombre: "Dennis Beltrán",
-  especialidad_principal: "Psicóloga",
-  tipo: "Profesional de salud",
-  plan: "Profesional",
-  planActivo: true,
-  sitio_web: "https://dennis-beltran.agendaclinicas.cl",
-  disponible: true,
-  correo: "dennisveltran@medify.cl",
-  numero_whatsapp: "56912345678",
-  ubicacion: "Chillán",
-  modalidad_atencion: "Online",
-  anos_experiencia: "6",
-  precio_sesion: "16000",
-  descripcion: "Psicóloga clínica especializada en terapia cognitivo-conductual.",
-  biografia: "Soy psicóloga clínica, egresada de la Universidad del Desarrollo (UDD) – Concepción...",
-  enfoques: "Ansiedad, Regulación emocional, Autoestima",
-  instagram: "https://instagram.com/dennisbeltran.psicologa",
-  facebook: "",
-  linkedin: "https://linkedin.com/in/dennis-beltran",
-  twitter: "",
+/* Campos editables vía PUT /auth/yo (el resto —RUT, correo, plan, especialidad— lo cambia el equipo Medify) */
+const EDITABLES = {
+  profesional: ["nombres", "apellidos", "region", "comuna", "modalidad", "anios_experiencia", "precio_sesion",
+    "disponibilidad", "descripcion", "biografia", "enfoques", "whatsapp", "telefono", "sitio_web",
+    "instagram", "facebook", "linkedin", "twitter"],
+  centro: ["nombre", "direccion", "region", "comuna", "modalidad", "profesionales_count", "descripcion",
+    "biografia", "whatsapp", "telefono", "sitio_web", "instagram", "facebook", "linkedin", "twitter"],
+};
+
+const ESTADOS = {
+  pendiente: { label: "En revisión", color: "#b7791f" },
+  aprobada: { label: "Publicado", color: "#00C853" },
+  rechazada: { label: "Desactivado", color: "#6e6e73" },
 };
 
 const REDES = [
@@ -57,25 +50,44 @@ function Textarea({ ...props }) {
   );
 }
 
+function Select({ children, ...props }) {
+  return (
+    <select className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all bg-white"
+      style={{ fontSize: "14px" }} {...props}>
+      {children}
+    </select>
+  );
+}
+
 export default function MiPerfilPage() {
-  const [perfil, setPerfil] = useState(DEMO_PRO);
+  const { cuenta, setCuenta } = useCuenta();
+  const esProfesional = cuenta.tipo_cuenta === "profesional";
+
+  /* Copia editable: los null de la BD pasan a "" para que los inputs queden controlados */
+  const [perfil, setPerfil] = useState(() =>
+    Object.fromEntries(EDITABLES[cuenta.tipo_cuenta].map(k => [k, cuenta[k] ?? ""])));
   const [saved, setSaved] = useState(false);
-  const [fotoPreview, setFotoPreview] = useState(null);
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState("");
   const set = (k, v) => setPerfil(p => ({ ...p, [k]: v }));
 
-  const handleFoto = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setFotoPreview(URL.createObjectURL(file));
-    // TODO: upload a Cloudflare Images via POST /api/upload/image
-    // → guardar URL en perfil.imagen
-  };
   const hasAgenda = !!perfil.sitio_web?.includes("agendaclinicas.cl");
+  const nombre = nombreCuenta({ ...cuenta, ...perfil });
+  const estado = ESTADOS[cuenta.estado] ?? ESTADOS.pendiente;
 
-  const handleSave = () => {
-    // TODO: PUT /api/professionals/me
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSave = async () => {
+    setGuardando(true);
+    setError("");
+    try {
+      const actualizada = await apiFetch("/auth/yo", { method: "PUT", body: perfil, auth: "cuenta" });
+      setCuenta(actualizada);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setError(mensajeDeError(err));
+    } finally {
+      setGuardando(false);
+    }
   };
 
   return (
@@ -84,44 +96,21 @@ export default function MiPerfilPage() {
       {/* ── Header ── */}
       <div className="mb-8 flex items-center justify-between gap-6">
         <div className="flex items-center gap-5">
-
-          {/* Foto de perfil editable */}
-          <div className="relative group flex-shrink-0">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-[#f5f5f7] flex items-center justify-center"
-              style={{ border: "2px solid #e5e5ea" }}>
-              {fotoPreview ? (
-                <img src={fotoPreview} alt="Foto perfil" className="w-full h-full object-cover" />
-              ) : (
-                <span className="font-bold text-[#6e6e73]" style={{ fontSize: "22px" }}>
-                  {perfil.nombre.charAt(0)}
-                </span>
-              )}
-            </div>
-            {/* Overlay hover para editar */}
-            <label className="absolute inset-0 rounded-full flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
-              style={{ background: "rgba(0,0,0,0.45)" }}>
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-              </svg>
-              <input type="file" accept="image/*" className="hidden" onChange={handleFoto} />
-            </label>
-            {/* Badge pequeño siempre visible */}
-            <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-white border border-[#e5e5ea] flex items-center justify-center">
-              <svg className="w-3 h-3 text-[#6e6e73]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
-              </svg>
-            </div>
+          <div className="w-16 h-16 rounded-full overflow-hidden bg-[#f5f5f7] flex items-center justify-center flex-shrink-0"
+            style={{ border: "2px solid #e5e5ea" }}>
+            <span className="font-bold text-[#6e6e73]" style={{ fontSize: "22px" }}>
+              {nombre.charAt(0)}
+            </span>
           </div>
-
           <div>
             <p className="font-semibold text-[#6e6e73] uppercase mb-1" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
               Red Medify
             </p>
             <h1 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "24px", letterSpacing: "-0.02em" }}>
-              Bienvenida, {perfil.nombre.split(" ")[0]}
+              Hola, {esProfesional ? perfil.nombres.split(" ")[0] : perfil.nombre}
             </h1>
             <p className="font-light text-[#6e6e73] mt-0.5" style={{ fontSize: "12px" }}>
-              Pasa el cursor sobre tu foto para cambiarla
+              RUT {cuenta.rut} · {cuenta.email}
             </p>
           </div>
         </div>
@@ -134,20 +123,33 @@ export default function MiPerfilPage() {
               Cambios guardados
             </span>
           )}
-          <button onClick={handleSave}
-            className="inline-flex items-center justify-center rounded-full text-white transition-all"
+          <button onClick={handleSave} disabled={guardando}
+            className="inline-flex items-center justify-center rounded-full text-white transition-all disabled:opacity-60"
             style={{ fontSize: "13px", fontWeight: 400, padding: "10px 22px", background: "#00C853" }}>
-            Guardar cambios
+            {guardando ? "Guardando…" : "Guardar cambios"}
           </button>
         </div>
       </div>
 
+      {error && (
+        <p role="alert" className="mb-6 rounded-xl bg-red-50 px-4 py-3 text-red-600" style={{ fontSize: "13px" }}>{error}</p>
+      )}
+
+      {cuenta.estado === "pendiente" && (
+        <div className="mb-6 rounded-2xl px-5 py-4" style={{ background: "#fffbeb", border: "1px solid #fde68a" }}>
+          <p className="font-semibold text-[#1d1d1f]" style={{ fontSize: "14px" }}>Tu perfil está en revisión</p>
+          <p className="font-light text-[#6e6e73]" style={{ fontSize: "13px" }}>
+            Nuestro equipo lo revisará y te avisaremos cuando aparezca en el marketplace. Mientras tanto puedes completar tus datos.
+          </p>
+        </div>
+      )}
+
       {/* ── Stats rápidos ── */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Estado del perfil", value: perfil.disponible ? "Activo" : "Inactivo", color: perfil.disponible ? "#00C853" : "#6e6e73", dot: true },
-          { label: "Plan activo", value: perfil.plan, color: "#1d1d1f" },
-          { label: "Modalidad", value: perfil.modalidad, color: "#1d1d1f" },
+          { label: "Estado del perfil", value: estado.label, color: estado.color, dot: true },
+          { label: "Plan", value: NOMBRE_PLAN[cuenta.plan_id] ?? cuenta.plan_id ?? "—", color: "#1d1d1f" },
+          { label: "Modalidad", value: perfil.modalidad || "—", color: "#1d1d1f" },
         ].map(s => (
           <div key={s.label} className="bg-white rounded-2xl border border-[#e5e5ea] px-5 py-4">
             <p className="font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>{s.label}</p>
@@ -232,38 +234,55 @@ export default function MiPerfilPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Tipo de cuenta">
-              <select
-                value={perfil.tipo || ""}
-                onChange={e => set("tipo", e.target.value)}
-                className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all bg-white"
-                style={{ fontSize: "14px" }}
-              >
-                <option value="">Seleccionar tipo</option>
-                {["Profesional de salud", "Clínica", "Centro médico"].map(t => <option key={t}>{t}</option>)}
-              </select>
+              <Input value={esProfesional ? "Profesional de salud" : cuenta.tipo || "Centro"} disabled />
             </Field>
-            <Field label="Nombre completo">
-              <Input value={perfil.nombre} onChange={e => set("nombre", e.target.value)} />
+            {esProfesional ? (
+              <>
+                <Field label="Especialidad">
+                  <Input value={cuenta.especialidad || ""} disabled />
+                </Field>
+                <Field label="Nombres">
+                  <Input value={perfil.nombres} onChange={e => set("nombres", e.target.value)} />
+                </Field>
+                <Field label="Apellidos">
+                  <Input value={perfil.apellidos} onChange={e => set("apellidos", e.target.value)} />
+                </Field>
+              </>
+            ) : (
+              <>
+                <Field label="Nombre del centro">
+                  <Input value={perfil.nombre} onChange={e => set("nombre", e.target.value)} />
+                </Field>
+                <Field label="N° de profesionales">
+                  <Input type="number" min="0" value={perfil.profesionales_count} onChange={e => set("profesionales_count", e.target.value)} />
+                </Field>
+              </>
+            )}
+            <Field label="Región">
+              <Input value={perfil.region} onChange={e => set("region", e.target.value)} />
             </Field>
-            <Field label="Especialidad">
-              <Input value={perfil.especialidad_principal} onChange={e => set("especialidad_principal", e.target.value)} />
-            </Field>
-            <Field label="Ciudad / Ubicación">
-              <Input value={perfil.ubicacion || ""} onChange={e => set("ubicacion", e.target.value)} />
+            <Field label="Comuna">
+              <Input value={perfil.comuna} onChange={e => set("comuna", e.target.value)} />
             </Field>
             <Field label="Modalidad">
-              <select value={perfil.modalidad_atencion} onChange={e => set("modalidad_atencion", e.target.value)}
-                className="w-full rounded-xl border border-[#d2d2d7] px-4 py-2.5 text-[#1d1d1f] outline-none focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/10 transition-all bg-white"
-                style={{ fontSize: "14px" }}>
+              <Select value={perfil.modalidad} onChange={e => set("modalidad", e.target.value)}>
+                <option value="">Seleccionar</option>
                 {["Online", "Presencial", "Ambas"].map(m => <option key={m}>{m}</option>)}
-              </select>
+              </Select>
             </Field>
-            <Field label="Años de experiencia">
-              <Input type="number" min="0" value={perfil.experiencia} onChange={e => set("anos_experiencia", e.target.value)} />
-            </Field>
-            <Field label="Valor sesión (CLP)">
-              <Input type="number" min="0" value={perfil.precio} onChange={e => set("precio_sesion", e.target.value)} />
-            </Field>
+            {esProfesional && (
+              <>
+                <Field label="Años de experiencia">
+                  <Input type="number" min="0" value={perfil.anios_experiencia} onChange={e => set("anios_experiencia", e.target.value)} />
+                </Field>
+                <Field label="Valor sesión (CLP)">
+                  <Input type="number" min="0" value={perfil.precio_sesion} onChange={e => set("precio_sesion", e.target.value)} />
+                </Field>
+                <Field label="Disponibilidad">
+                  <Input placeholder="Ej: Lun a Vie, 9:00 a 18:00" value={perfil.disponibilidad} onChange={e => set("disponibilidad", e.target.value)} />
+                </Field>
+              </>
+            )}
           </div>
         </div>
 
@@ -277,11 +296,13 @@ export default function MiPerfilPage() {
               <Input value={perfil.descripcion} onChange={e => set("descripcion", e.target.value)} />
             </Field>
             <Field label="Bio completo (perfil)">
-              <Textarea value={perfil.bio} onChange={e => set("biografia", e.target.value)} />
+              <Textarea value={perfil.biografia} onChange={e => set("biografia", e.target.value)} />
             </Field>
-            <Field label="Enfoques / Especialidades (separados por coma)">
-              <Input value={perfil.enfoques} onChange={e => set("enfoques", e.target.value)} />
-            </Field>
+            {esProfesional && (
+              <Field label="Enfoques / Especialidades (separados por coma)">
+                <Input value={perfil.enfoques} onChange={e => set("enfoques", e.target.value)} />
+              </Field>
+            )}
           </div>
         </div>
 
@@ -292,35 +313,25 @@ export default function MiPerfilPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Email">
-              <Input type="email" value={perfil.email} onChange={e => set("correo", e.target.value)} />
+              <Input type="email" value={cuenta.email} disabled />
             </Field>
             <Field label="WhatsApp">
-              <Input type="tel" value={perfil.whatsapp} onChange={e => set("numero_whatsapp", e.target.value)} />
+              <Input type="tel" placeholder="Ej: 56912345678" value={perfil.whatsapp} onChange={e => set("whatsapp", e.target.value)} />
             </Field>
-            <div className="sm:col-span-2">
-              <Field label="Dirección (aparece en el mapa)">
-                <Input placeholder="Ej: Av. Libertad 765, Chillán" value={perfil.direccion || ""}
-                  onChange={e => set("direccion", e.target.value)} />
-              </Field>
-            </div>
-            <div className="sm:col-span-2">
-              <Field label="Link Google Maps (embed)">
-                <Input type="url"
-                  placeholder="https://maps.google.com/maps?q=tu+dirección&output=embed"
-                  value={perfil.url_mapa || ""}
-                  onChange={e => set("url_mapa", e.target.value)} />
-                <p className="mt-1.5 font-light text-[#6e6e73]" style={{ fontSize: "11px" }}>
-                  En Google Maps → Compartir → Insertar mapa → copia la URL del src del iframe.
-                </p>
-              </Field>
-              {/* Preview del mapa si hay URL */}
-              {perfil.url_mapa && (
-                <div className="mt-3 rounded-xl overflow-hidden border border-[#d2d2d7]" style={{ height: "200px" }}>
-                  <iframe src={perfil.url_mapa} width="100%" height="100%"
-                    style={{ border: 0 }} loading="lazy" title="Preview mapa" />
-                </div>
-              )}
-            </div>
+            <Field label="Teléfono">
+              <Input type="tel" value={perfil.telefono} onChange={e => set("telefono", e.target.value)} />
+            </Field>
+            <Field label="Link de tu agenda (botón «Agendar hora»)">
+              <Input placeholder="tu-nombre.agendaclinicas.cl" value={perfil.sitio_web} onChange={e => set("sitio_web", e.target.value)} />
+            </Field>
+            {!esProfesional && (
+              <div className="sm:col-span-2">
+                <Field label="Dirección (aparece en el mapa)">
+                  <Input placeholder="Ej: Av. Libertad 765, Chillán" value={perfil.direccion}
+                    onChange={e => set("direccion", e.target.value)} />
+                </Field>
+              </div>
+            )}
           </div>
         </div>
 

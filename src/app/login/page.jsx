@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { apiFetch, guardarToken, mensajeDeError } from "@/lib/api";
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -25,14 +26,15 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    // TODO: reemplazar con Clerk / middleware real
-    if (email === "admin@medify.cl" && password === "medify2026") {
+    // Solo cuentas registradas en la tabla administradores (se crean con scripts/crear-admin.js en medify-api)
+    try {
+      const { token } = await apiFetch("/auth/admin/acceso", { method: "POST", body: { email, password } });
+      guardarToken(token, "admin");
       router.push("/dashboard");
-    } else {
-      setError("Credenciales incorrectas. Verifica e intenta de nuevo.");
+    } catch (err) {
+      setError(mensajeDeError(err));
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

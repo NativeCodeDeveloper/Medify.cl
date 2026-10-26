@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { apiFetch, guardarToken, mensajeDeError } from "@/lib/api";
 
 /* ─── Opciones ───────────────────────────────────────────────────── */
 /* ── Especialidades por categoría ── */
@@ -215,6 +216,11 @@ const PLANES_CORPORATIVO = [
 
 const PASOS = ["Tu plan", "Datos básicos", "Tu práctica", "Contacto", "Confirmar"];
 
+/* Pagos desactivados por ahora: el registro es gratis y se salta el paso "Tu plan".
+ * Para volver a mostrarlo (cuando se active Mercado Pago) basta con poner esto en true. */
+const PLANES_HABILITADOS = false;
+const PRIMER_PASO = PLANES_HABILITADOS ? 0 : 1;
+
 /* ─── UI helpers ─────────────────────────────────────────────────── */
 function Label({ children, required }) {
   return (
@@ -253,10 +259,12 @@ function Textarea({ ...props }) {
 }
 
 /* ─── Indicador de pasos ─────────────────────────────────────────── */
-function StepBar({ current }) {
+function StepBar({ current: pasoActual }) {
+  const pasos = PASOS.slice(PRIMER_PASO);
+  const current = pasoActual - PRIMER_PASO;
   return (
     <div className="flex items-center justify-center gap-1.5 mb-10">
-      {PASOS.map((label, i) => (
+      {pasos.map((label, i) => (
         <div key={label} className="flex items-center gap-1.5">
           <div className="flex flex-col items-center gap-1">
             <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all"
@@ -273,7 +281,7 @@ function StepBar({ current }) {
               {label}
             </span>
           </div>
-          {i < PASOS.length - 1 && (
+          {i < pasos.length - 1 && (
             <div className="w-6 h-px mb-4 transition-all"
               style={{ background: i < current ? "#00C853" : "#e5e5ea" }} />
           )}
@@ -285,14 +293,17 @@ function StepBar({ current }) {
 
 /* ─── Page ───────────────────────────────────────────────────────── */
 export default function UnirsePage() {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(PRIMER_PASO);
   const [planId, setPlanId] = useState("");
   const [tipoPlan, setTipoPlan] = useState("individual");
   const [showToast, setShowToast] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [errorEnvio, setErrorEnvio] = useState("");
+  const [registro, setRegistro] = useState(null); // respuesta de POST /auth/registro: { cuenta, siguientePaso }
   const [form, setForm] = useState({
     foto: null, fotoPreview: null,
     tipo: "", categoria: "", profesionales_count: "",
-    nombre: "", especialidad: "", especialidadOtra: "",
+    nombre: "", apellidos: "", direccion: "", especialidad: "", especialidadOtra: "",
     region: "", comuna: "", modalidad: "",
     experiencia: "", precio: "", disponibilidad: "",
     descripcion: "", bio: "", enfoques: "",
@@ -351,7 +362,7 @@ export default function UnirsePage() {
   };
 
   const rutValido = form.rut.length > 3 ? validateRUT(form.rut) : null;
-  const passwordMatch = form.password && form.confirmPassword && form.password === form.confirmPassword;
+  const passwordMatch = form.password.length >= 8 && form.password === form.confirmPassword;
   const passwordMismatch = form.confirmPassword && form.password !== form.confirmPassword;
 
   /* Valida que la URL sea del dominio agendaclinicas.cl */
@@ -371,11 +382,12 @@ export default function UnirsePage() {
   const canNext = () => {
     if (step === 0) return !!planId;
     if (step === 1) {
-      if (esClinica) return form.tipo && form.nombre && form.categoria && form.region && form.comuna;
-      return form.tipo && form.nombre && form.especialidad && form.region && form.comuna && form.modalidad;
+      if (esClinica) return form.tipo && form.nombre && form.categoria && form.direccion && form.region && form.comuna;
+      return form.tipo && form.nombre && form.apellidos && especialidadFinal && form.region && form.comuna && form.modalidad;
     }
     if (step === 2) return true;
-    if (step === 3) return !!form.email && rutValido && passwordMatch;
+    // Sin link de Agenda Clínica el botón "Agendar" del perfil lleva a WhatsApp, por eso pasa a ser obligatorio
+    if (step === 3) return !!form.email && rutValido && passwordMatch && (agendaValida || !!form.whatsapp.trim());
     return true;
   };
 
@@ -389,7 +401,37 @@ export default function UnirsePage() {
     setStep(s => Math.min(s + 1, 4));
   };
 
-  const back = () => setStep(s => Math.max(s - 1, 0));
+  const back = () => setStep(s => Math.max(s - 1, PRIMER_PASO));
+
+  /* Crea la cuenta en la API: usuario en Clerk + perfil en MySQL (queda pendiente de revisión) */
+  const enviarRegistro = async () => {
+    setEnviando(true);
+    setErrorEnvio("");
+    try {
+      const comunes = {
+        tipo: form.tipo, plan_id: PLANES_HABILITADOS ? planId : undefined,
+        rut: form.rut, email: form.email, password: form.password,
+        region: form.region, comuna: form.comuna, modalidad: form.modalidad,
+        descripcion: form.descripcion, biografia: form.bio,
+        whatsapp: form.whatsapp, sitio_web: agendaValida ? form.sitioWeb : "",
+        instagram: form.instagram, facebook: form.facebook, linkedin: form.linkedin, twitter: form.twitter,
+      };
+      const body = esClinica
+        ? { ...comunes, nombre: form.nombre, categoria: form.categoria, direccion: form.direccion,
+            profesionales_count: form.profesionales_count }
+        : { ...comunes, nombres: form.nombre, apellidos: form.apellidos, especialidad: especialidadFinal,
+            anios_experiencia: form.experiencia, precio_sesion: form.precio,
+            disponibilidad: form.disponibilidad, enfoques: form.enfoques };
+
+      const data = await apiFetch("/auth/registro", { method: "POST", body });
+      guardarToken(data.token);
+      setRegistro(data);
+    } catch (err) {
+      setErrorEnvio(mensajeDeError(err));
+    } finally {
+      setEnviando(false);
+    }
+  };
 
   const buildWsp = () => {
     const msg =
@@ -572,7 +614,7 @@ export default function UnirsePage() {
               </button>
             ))}
           </div>
-          {esClinica && (
+          {esClinica && PLANES_HABILITADOS && (
             <p className="mt-2 text-[12px] text-[#6e6e73]">
               Los centros y clínicas van al plan <strong className="text-[#1d1d1f]">Corporativo o Enterprise</strong> — puedes verlo en el paso anterior.
             </p>
@@ -581,13 +623,24 @@ export default function UnirsePage() {
 
         {/* Nombre */}
         <div>
-          <Label required>{esClinica ? "Nombre del centro o clínica" : "Nombre completo"}</Label>
+          <Label required>{esClinica ? "Nombre del centro o clínica" : "Nombres"}</Label>
           <Input
-            placeholder={esClinica ? "Ej: Centro Médico Providencia" : "Ej: María González"}
+            placeholder={esClinica ? "Ej: Centro Médico Providencia" : "Ej: María José"}
             value={form.nombre}
             onChange={e => set("nombre", e.target.value)}
           />
         </div>
+
+        {!esClinica && (
+          <div>
+            <Label required>Apellidos</Label>
+            <Input
+              placeholder="Ej: González Pérez"
+              value={form.apellidos}
+              onChange={e => set("apellidos", e.target.value)}
+            />
+          </div>
+        )}
 
         {/* PROFESIONAL: especialidad */}
         {!esClinica && (
@@ -625,6 +678,18 @@ export default function UnirsePage() {
                 <option key={c} value={c}>{c}</option>
               ))}
             </Select>
+          </div>
+        )}
+
+        {/* CLÍNICA: dirección (se muestra en el mapa del marketplace) */}
+        {esClinica && (
+          <div>
+            <Label required>Dirección</Label>
+            <Input
+              placeholder="Ej: Av. Providencia 1234, oficina 501"
+              value={form.direccion}
+              onChange={e => set("direccion", e.target.value)}
+            />
           </div>
         )}
 
@@ -751,8 +816,13 @@ export default function UnirsePage() {
           <Input type="email" placeholder="tu@email.com" value={form.email} onChange={e => set("email", e.target.value)} />
         </div>
         <div>
-          <Label>WhatsApp (con código de país)</Label>
+          <Label required={!agendaValida}>WhatsApp (con código de país)</Label>
           <Input type="tel" placeholder="Ej: 56912345678" value={form.whatsapp} onChange={e => set("whatsapp", e.target.value)} />
+          {!agendaValida && (
+            <p className="mt-2 font-light text-[#6e6e73]" style={{ fontSize: "12px" }}>
+              Si no tienes link de Agenda Clínica, los pacientes te contactarán por este WhatsApp para agendar.
+            </p>
+          )}
         </div>
         <div>
           <Label>Link de tu agenda clínica</Label>
@@ -795,6 +865,13 @@ export default function UnirsePage() {
               Debe ser un link de <strong>agendaclinicas.cl</strong>. Si aún no tienes, puedes continuar sin él.
             </p>
           )}
+          <p className="mt-1.5 font-light text-[#6e6e73]" style={{ fontSize: "12px" }}>
+            ¿No sabes qué es Agenda Clínica? Haz clic{" "}
+            <a href="https://www.agendaclinicas.cl" target="_blank" rel="noopener noreferrer"
+              className="font-medium text-[#00C853] underline underline-offset-2 hover:text-[#00a846]">
+              aquí
+            </a>
+          </p>
         </div>
 
         {/* Divider */}
@@ -896,15 +973,17 @@ export default function UnirsePage() {
       ["Tipo", form.tipo],
       ["Centro", form.nombre],
       ["Categoría", form.categoria || "—"],
+      ["Dirección", form.direccion],
       ["Región", form.region],
       ["Comuna", form.comuna],
       ["Modalidad", form.modalidad || "—"],
       ["Profesionales", form.profesionales_count || "—"],
       ["Email", form.email],
+      ["RUT", form.rut],
       ["WhatsApp", form.whatsapp || "—"],
     ] : [
       ["Plan", `${plan?.name} — ${plan?.price}${plan?.period}`],
-      ["Nombre", form.nombre],
+      ["Nombre", `${form.nombre} ${form.apellidos}`.trim()],
       ["Especialidad", especialidadFinal],
       ["Región", form.region],
       ["Comuna", form.comuna],
@@ -912,8 +991,9 @@ export default function UnirsePage() {
       ["Experiencia", form.experiencia ? `${form.experiencia} años` : "—"],
       ["Valor sesión", form.precio ? `$${Number(form.precio).toLocaleString("es-CL")} CLP` : "—"],
       ["Email", form.email],
+      ["RUT", form.rut],
       ["WhatsApp", form.whatsapp || "—"],
-    ];
+    ].filter(([label]) => PLANES_HABILITADOS || label !== "Plan");
 
     return (
       <div className="space-y-6">
@@ -932,68 +1012,80 @@ export default function UnirsePage() {
           ))}
         </div>
 
-        {/* Activación según plan */}
-        <div className="rounded-2xl border border-[#d2d2d7] px-5 py-4">
-          <p className="font-semibold text-[#1d1d1f] mb-1" style={{ fontSize: "15px" }}>
-            ¿Qué pasa después?
-          </p>
-          <p className="font-light text-[#6e6e73] leading-relaxed" style={{ fontSize: "13px" }}>
-            {plan?.flujo === "pago"
-              ? "Confirmas el pago vía Mercado Pago y tu perfil se activa automáticamente. Sin esperas, sin gestiones manuales."
-              : "Enviamos tu solicitud al equipo de Medify. Te contactamos en menos de 24 horas para coordinar condiciones, precio y activación de tu perfil de clínica."}
-          </p>
-        </div>
+        {/* Qué pasa después */}
+        {!registro && (
+          <div className="rounded-2xl border border-[#d2d2d7] px-5 py-4">
+            <p className="font-semibold text-[#1d1d1f] mb-1" style={{ fontSize: "15px" }}>
+              ¿Qué pasa después?
+            </p>
+            <p className="font-light text-[#6e6e73] leading-relaxed" style={{ fontSize: "13px" }}>
+              {plan?.flujo === "email"
+                ? "Creamos tu cuenta y nuestro equipo te contacta en menos de 24 horas para coordinar condiciones y activación de tu clínica."
+                : "Creamos tu cuenta sin costo. Nuestro equipo revisa tu perfil y lo publica en el marketplace. Mientras tanto ya puedes entrar a tu panel con tu RUT y contraseña."}
+            </p>
+          </div>
+        )}
 
-        {/* CTA — flujo automático o por email según el plan */}
+        {/* CTA */}
         <div className="rounded-2xl bg-[#000000] p-6 text-center">
-          {plan?.flujo === "pago" ? (
+          {!registro ? (
             <>
               <p className="font-semibold text-white mb-1" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
                 Un solo paso más.
               </p>
               <p className="font-light mb-6" style={{ fontSize: "14px", color: "rgba(255,255,255,0.45)" }}>
-                Al confirmar el pago tu perfil se activa automáticamente en el marketplace. Sin esperas.
+                Al crear tu cuenta aceptas que revisemos tus datos antes de publicar tu perfil.
               </p>
-              <a
-                href={plan.pagoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full rounded-full text-white transition-colors duration-150"
+              <button
+                type="button"
+                onClick={enviarRegistro}
+                disabled={enviando}
+                className="flex items-center justify-center gap-2 w-full rounded-full text-white transition-colors duration-150 disabled:opacity-60 disabled:cursor-wait"
                 style={{ fontSize: "17px", fontWeight: 400, padding: "14px", background: "#00C853" }}
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-                Proceder al pago — {plan.price}{plan.period}
-              </a>
-              <p className="mt-3 font-light" style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)" }}>
-                Pago seguro vía Mercado Pago · Tu perfil se activa al instante
-              </p>
+                {enviando ? "Creando tu cuenta…" : "Crear mi cuenta"}
+              </button>
+              {errorEnvio && (
+                <p role="alert" className="mt-4 rounded-xl px-4 py-3 text-left"
+                  style={{ fontSize: "13px", color: "#fecaca", background: "rgba(239,68,68,0.12)" }}>
+                  {errorEnvio}
+                </p>
+              )}
             </>
           ) : (
             <>
-              <p className="font-semibold text-white mb-1" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
-                Solicitud para clínica o centro médico.
-              </p>
-              <p className="font-light mb-6" style={{ fontSize: "14px", color: "rgba(255,255,255,0.45)" }}>
-                Enviamos tu solicitud a nuestro equipo. Te contactamos en menos de 24 horas para coordinar la activación y condiciones.
-              </p>
-              <a
-                href={`mailto:ventas@medify.cl?subject=${encodeURIComponent("Solicitud Plan Clínica — " + form.nombre)}&body=${encodeURIComponent(
-                  `Nombre: ${form.nombre}\nEspecialidad: ${especialidadFinal}\nRegión: ${form.region}\nComuna: ${form.comuna}\nModalidad: ${form.modalidad}\nEmail: ${form.email}\nWhatsApp: ${form.whatsapp}\nWeb/Agenda: ${form.sitioWeb}`
-                )}`}
-                className="flex items-center justify-center gap-2 w-full rounded-full text-white transition-colors duration-150"
-                style={{ fontSize: "17px", fontWeight: 400, padding: "14px", background: "#00C853" }}
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full" style={{ background: "rgba(0,200,83,0.15)" }}>
+                <svg className="w-6 h-6 text-[#00C853]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
-                Enviar solicitud por email
-              </a>
-              <p className="mt-3 font-light" style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)" }}>
-                O escríbenos directo a{" "}
-                <span style={{ color: "#00C853" }}>ventas@medify.cl</span>
+              </div>
+              <p className="font-semibold text-white mb-1" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
+                ¡Tu cuenta está creada!
               </p>
+              <p className="font-light mb-6" style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)" }}>
+                {registro.siguientePaso?.tipo === "pago"
+                  ? "Confirma el pago para activar tu plan y publicar tu perfil."
+                  : registro.siguientePaso?.tipo === "contacto"
+                  ? "Nuestro equipo te contactará en menos de 24 horas para coordinar la activación."
+                  : "Revisaremos tu perfil y te avisaremos por correo cuando esté publicado en el marketplace."}
+              </p>
+              {registro.siguientePaso?.tipo === "pago" && (
+                <a href={registro.siguientePaso.url} target="_blank" rel="noopener noreferrer"
+                  className="mb-3 flex items-center justify-center w-full rounded-full text-white"
+                  style={{ fontSize: "17px", fontWeight: 400, padding: "14px", background: "#00C853" }}>
+                  Proceder al pago — {plan?.price}{plan?.period}
+                </a>
+              )}
+              <Link href="/mi-perfil"
+                className="flex items-center justify-center w-full rounded-full transition-colors duration-150"
+                style={{
+                  fontSize: "17px", fontWeight: 400, padding: "14px",
+                  background: registro.siguientePaso?.tipo === "pago" ? "transparent" : "#00C853",
+                  color: "#fff",
+                  border: registro.siguientePaso?.tipo === "pago" ? "1px solid rgba(255,255,255,0.25)" : "none",
+                }}>
+                Ir a mi panel
+              </Link>
             </>
           )}
         </div>
@@ -1040,7 +1132,7 @@ export default function UnirsePage() {
           </h1>
           <p className="font-light leading-relaxed"
             style={{ fontSize: "17px", color: "rgba(255,255,255,0.4)" }}>
-            Profesionales verificados en todo Chile. Elige tu plan, completa tu perfil y empieza a recibir pacientes.
+            Profesionales verificados en todo Chile. {PLANES_HABILITADOS ? "Elige tu plan, completa" : "Crea tu cuenta gratis, completa"} tu perfil y empieza a recibir pacientes.
           </p>
 
           {/* 3 bullets */}
@@ -1077,17 +1169,17 @@ export default function UnirsePage() {
         {/* Navegación */}
         {step < 4 && (
           <div className="flex items-center justify-between mt-8">
-            {step > 0 ? (
+            {step > PRIMER_PASO ? (
               <button onClick={back}
                 className="font-medium text-[#6e6e73] hover:text-[#1d1d1f] transition-colors"
                 style={{ fontSize: "15px" }}>
                 ← Atrás
               </button>
             ) : (
-              <Link href="/precios"
+              <Link href={PLANES_HABILITADOS ? "/precios" : "/"}
                 className="font-medium text-[#6e6e73] hover:text-[#1d1d1f] transition-colors"
                 style={{ fontSize: "15px" }}>
-                Comparar planes
+                {PLANES_HABILITADOS ? "Comparar planes" : "← Volver"}
               </Link>
             )}
             <button onClick={next} disabled={!canNext()}
@@ -1098,7 +1190,7 @@ export default function UnirsePage() {
           </div>
         )}
 
-        {step === 4 && (
+        {step === 4 && !registro && (
           <button onClick={back}
             className="mt-4 w-full text-center font-medium text-[#6e6e73] hover:text-[#1d1d1f] transition-colors"
             style={{ fontSize: "15px" }}>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { apiFetch, guardarToken, mensajeDeError } from "@/lib/api";
 
 /* Validación básica de RUT chileno */
 const validateRUT = (rut) => {
@@ -52,13 +53,15 @@ export default function AccesoPage() {
     setError("");
     setLoading(true);
 
-    // TODO: reemplazar con validación real contra Clerk + backend Java
-    // El RUT actúa como identificador único del profesional
-    // Clerk valida el token y el backend confirma el profesional activo
-    await new Promise(r => setTimeout(r, 500));
-    router.push("/mi-perfil");
-
-    setLoading(false);
+    // El RUT identifica la cuenta; Clerk valida la contraseña y la API devuelve el token de sesión
+    try {
+      const { token } = await apiFetch("/auth/acceso", { method: "POST", body: form });
+      guardarToken(token);
+      router.push("/mi-perfil");
+    } catch (err) {
+      setError(mensajeDeError(err));
+      setLoading(false);
+    }
   };
 
   return (

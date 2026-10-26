@@ -1,15 +1,10 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-
-/* Demo — cuando el backend esté listo viene de la sesión */
-const DEMO_PRO = {
-  nombre: "Dennis Beltrán",
-  especialidad: "Psicóloga",
-  plan: "Profesional",
-  sitioWeb: "https://dennis-beltran.agendaclinicas.cl",
-};
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { apiFetch, cerrarSesion, getToken } from "@/lib/api";
+import { CuentaContext, NOMBRE_PLAN, nombreCuenta } from "./CuentaContext";
 
 const NAV_MAIN = [
   {
@@ -23,7 +18,7 @@ const NAV_MAIN = [
   },
   {
     label: "Ver perfil público",
-    href: "/marketplace",
+    href: "/",
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -34,9 +29,38 @@ const NAV_MAIN = [
 
 export default function MiPerfilLayout({ children }) {
   const pathname = usePathname();
-  const hasAgenda = !!DEMO_PRO.sitioWeb;
+  const router = useRouter();
+  const [cuenta, setCuenta] = useState(null);
+
+  /* Guard: sin token válido vuelve a /acceso */
+  useEffect(() => {
+    if (!getToken()) {
+      router.replace("/acceso");
+      return;
+    }
+    apiFetch("/auth/yo", { auth: "cuenta" })
+      .then(setCuenta)
+      .catch(() => router.replace("/acceso"));
+  }, [router]);
+
+  const salir = () => {
+    cerrarSesion();
+    router.replace("/acceso");
+  };
+
+  if (!cuenta) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f5f5f7] text-[#6e6e73]" style={{ fontSize: "13px" }}>
+        Cargando tu perfil…
+      </div>
+    );
+  }
+
+  const nombre = nombreCuenta(cuenta);
+  const hasAgenda = !!cuenta.sitio_web?.includes("agendaclinicas.cl");
 
   return (
+    <CuentaContext.Provider value={{ cuenta, setCuenta }}>
     <div className="flex min-h-screen bg-[#f5f5f7]">
 
       {/* ── Sidebar ── */}
@@ -59,15 +83,15 @@ export default function MiPerfilLayout({ children }) {
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-[#00C853]/20 flex items-center justify-center flex-shrink-0">
               <span className="font-semibold text-[#00C853]" style={{ fontSize: "13px" }}>
-                {DEMO_PRO.nombre.charAt(0)}
+                {nombre.charAt(0)}
               </span>
             </div>
             <div className="min-w-0">
               <p className="font-medium text-white truncate" style={{ fontSize: "13px" }}>
-                {DEMO_PRO.nombre}
+                {nombre}
               </p>
               <p className="font-light truncate" style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
-                {DEMO_PRO.especialidad}
+                {cuenta.especialidad ?? cuenta.tipo}
               </p>
             </div>
           </div>
@@ -76,7 +100,7 @@ export default function MiPerfilLayout({ children }) {
             style={{ background: "rgba(0,200,83,0.12)", border: "1px solid rgba(0,200,83,0.2)" }}>
             <span className="w-1.5 h-1.5 rounded-full bg-[#00C853]" />
             <span className="font-medium text-[#00C853]" style={{ fontSize: "10px" }}>
-              Plan {DEMO_PRO.plan}
+              Plan {NOMBRE_PLAN[cuenta.plan_id] ?? cuenta.plan_id}
             </span>
           </div>
         </div>
@@ -102,7 +126,7 @@ export default function MiPerfilLayout({ children }) {
 
           {/* Agenda Clínica — activa o bloqueada */}
           {hasAgenda ? (
-            <a href={DEMO_PRO.sitioWeb} target="_blank" rel="noopener noreferrer"
+            <a href={cuenta.sitio_web} target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 group"
               style={{ background: "rgba(0,200,83,0.06)", border: "1px solid rgba(0,200,83,0.15)" }}>
               <svg className="w-4 h-4 text-[#00C853]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -130,14 +154,14 @@ export default function MiPerfilLayout({ children }) {
 
         {/* Footer */}
         <div className="px-5 py-4 border-t border-white/8 space-y-2.5">
-          <Link href="/acceso"
+          <button onClick={salir}
             className="flex items-center gap-2 text-white/30 hover:text-white/55 transition-colors"
             style={{ fontSize: "12px" }}>
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
             </svg>
             Cerrar sesión
-          </Link>
+          </button>
           <Link href="/"
             className="flex items-center gap-2 text-white/30 hover:text-white/55 transition-colors"
             style={{ fontSize: "12px" }}>
@@ -153,5 +177,6 @@ export default function MiPerfilLayout({ children }) {
         {children}
       </main>
     </div>
+    </CuentaContext.Provider>
   );
 }

@@ -136,7 +136,7 @@ export default function RootLayout({ children }) {
               "description": "Encuentra y agenda con psicólogos, kinesiólogos, nutricionistas y más en Chile.",
               "potentialAction": {
                 "@type": "SearchAction",
-                "target": SITE_URL + "/marketplace?q={search_term_string}",
+                "target": SITE_URL + "/?q={search_term_string}",
                 "query-input": "required name=search_term_string"
               }
             })

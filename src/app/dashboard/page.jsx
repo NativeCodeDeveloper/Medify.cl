@@ -48,7 +48,7 @@ const STATS = [
 const ACCESOS = [
   { label: "Gestionar profesionales", href: "/dashboard/profesionales", desc: "Agregar, editar o eliminar perfiles del marketplace" },
   { label: "Gestionar planes", href: "/dashboard/planes", desc: "Actualizar precios, features y links de pago" },
-  { label: "Ver marketplace", href: "/marketplace", desc: "Así lo ve el público" },
+  { label: "Ver marketplace", href: "/", desc: "Así lo ve el público" },
   { label: "Ver formulario /unirse", href: "/unirse", desc: "Formulario que llenan los profesionales" },
 ];
 

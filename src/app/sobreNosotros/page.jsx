@@ -156,7 +156,7 @@ export default function SobreNosotros() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/marketplace"
+                href="/"
                 className="inline-flex items-center justify-center rounded-full text-white transition-colors duration-150"
                 style={{ fontSize: "17px", fontWeight: 400, padding: "13px 28px", background: "#00C853" }}
               >

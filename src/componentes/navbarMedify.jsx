@@ -46,10 +46,8 @@ export default function NavbarMedify() {
         </Link>
 
         <div className="flex items-center">
-          <a
-            href="https://www.agendaclinicas.cl"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/unirse"
             className="inline-flex items-center justify-center rounded-full transition-colors duration-150"
             style={{
               fontSize: "13px",
@@ -60,8 +58,8 @@ export default function NavbarMedify() {
               border: scrolled ? "none" : "1px solid rgba(255,255,255,0.2)",
             }}
           >
-            Unirse
-          </a>
+            Unirme
+          </Link>
         </div>
       </nav>
     </header>

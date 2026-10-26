@@ -80,7 +80,7 @@ export default function Portada() {
           {/* CTAs — Apple: pill, peso regular, azul o negro */}
           <div className="flex flex-wrap items-center gap-4">
             <Link
-              href="/marketplace"
+              href="/"
               className="inline-flex items-center justify-center rounded-full bg-[#00C853] hover:bg-[#00b347] text-white transition-colors duration-150"
               style={{ fontSize: "17px", fontWeight: 400, padding: "13px 24px" }}
             >
