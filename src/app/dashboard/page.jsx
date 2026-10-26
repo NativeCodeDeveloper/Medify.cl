@@ -1,61 +1,38 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { apiFetch, mensajeDeError } from "@/lib/api";
 import { PROFESSIONALS } from "../marketplace/data/professionals";
 
-const STATS = [
-  {
-    label: "Profesionales activos",
-    value: PROFESSIONALS.filter((p) => p.disponible).length,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-      </svg>
-    ),
-    color: "#00C853",
-  },
-  {
-    label: "Total profesionales",
-    value: PROFESSIONALS.length,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-      </svg>
-    ),
-    color: "#0071e3",
-  },
-  {
-    label: "Planes activos",
-    value: 3,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185z" />
-      </svg>
-    ),
-    color: "#6e6e73",
-  },
-  {
-    label: "Solicitudes pendientes",
-    value: 0,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-      </svg>
-    ),
-    color: "#F59E0B",
-  },
+const ACCESOS = [
+  { label: "Revisar solicitudes", href: "/dashboard/solicitudes", desc: "Aprobar o rechazar registros de /unirse" },
+  { label: "Profesionales", href: "/dashboard/profesionales", desc: "Editar, desactivar o eliminar cuentas" },
+  { label: "Centros y clínicas", href: "/dashboard/centros", desc: "Instituciones registradas" },
+  { label: "Ver marketplace", href: "/", desc: "Así lo ve el público" },
 ];
 
-const ACCESOS = [
-  { label: "Gestionar profesionales", href: "/dashboard/profesionales", desc: "Agregar, editar o eliminar perfiles del marketplace" },
-  { label: "Gestionar planes", href: "/dashboard/planes", desc: "Actualizar precios, features y links de pago" },
-  { label: "Ver marketplace", href: "/", desc: "Así lo ve el público" },
-  { label: "Ver formulario /unirse", href: "/unirse", desc: "Formulario que llenan los profesionales" },
-];
+const fecha = (iso) => new Date(iso).toLocaleDateString("es-CL", { day: "numeric", month: "short" });
 
 export default function DashboardOverview() {
+  const [resumen, setResumen] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    apiFetch("/admin/resumen", { auth: "admin" })
+      .then(setResumen)
+      .catch(err => setError(mensajeDeError(err)));
+  }, []);
+
+  const n = (v) => (resumen ? v : "—");
+  const stats = [
+    { label: "Profesionales publicados", value: n(resumen?.profesionales.aprobadas), color: "#00C853" },
+    { label: "Solicitudes pendientes", value: n((resumen?.profesionales.pendientes ?? 0) + (resumen?.centros.pendientes ?? 0)), color: "#b7791f", href: "/dashboard/solicitudes" },
+    { label: "Centros publicados", value: n(resumen?.centros.aprobadas), color: "#0369a1" },
+    { label: "Reseñas de pacientes", value: n(resumen?.resenas.visibles), color: "#F59E0B" },
+  ];
+
   return (
     <div className="p-8">
-      {/* Header */}
       <div className="mb-8">
         <p className="font-semibold text-[#6e6e73] uppercase mb-1" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
           Panel de administración
@@ -65,28 +42,30 @@ export default function DashboardOverview() {
         </h1>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {STATS.map((s) => (
-          <div key={s.label} className="bg-white rounded-2xl border border-[#e5e5ea] p-5">
-            <div className="flex items-center justify-between mb-3">
-              <span style={{ color: s.color }}>{s.icon}</span>
-            </div>
-            <p className="font-semibold text-[#1d1d1f] mb-0.5" style={{ fontSize: "28px", letterSpacing: "-0.04em" }}>
-              {s.value}
-            </p>
-            <p className="font-light text-[#6e6e73]" style={{ fontSize: "13px" }}>
-              {s.label}
-            </p>
-          </div>
-        ))}
-      </div>
+      {error && <p role="alert" className="mb-6 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-600">{error}</p>}
 
-      {/* Accesos rápidos */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
+        {stats.map((s) => {
+          const contenido = (
+            <>
+              <span className="mb-3 block h-2 w-2 rounded-full" style={{ background: s.color }} />
+              <p className="font-semibold text-[#1d1d1f] mb-0.5" style={{ fontSize: "28px", letterSpacing: "-0.04em" }}>{s.value}</p>
+              <p className="font-light text-[#6e6e73]" style={{ fontSize: "13px" }}>{s.label}</p>
+            </>
+          );
+          return s.href ? (
+            <Link key={s.label} href={s.href} className="bg-white rounded-2xl border border-[#e5e5ea] p-5 hover:border-[#00C853]/40 transition-colors">{contenido}</Link>
+          ) : (
+            <div key={s.label} className="bg-white rounded-2xl border border-[#e5e5ea] p-5">{contenido}</div>
+          );
+        })}
+      </div>
+      <p className="mb-8 text-[12px] text-[#86868b]">
+        Además hay {PROFESSIONALS.length} perfiles cargados a mano en el código (marketplace/data/professionals.js), que se muestran siempre en el marketplace.
+      </p>
+
       <div className="mb-8">
-        <h2 className="font-semibold text-[#1d1d1f] mb-4" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
-          Accesos rápidos
-        </h2>
+        <h2 className="font-semibold text-[#1d1d1f] mb-4" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>Accesos rápidos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {ACCESOS.map((a) => (
             <Link key={a.href} href={a.href}
@@ -103,58 +82,42 @@ export default function DashboardOverview() {
         </div>
       </div>
 
-      {/* Últimos profesionales */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
-            Profesionales en el marketplace
-          </h2>
-          <Link href="/dashboard/profesionales"
-            className="font-medium text-[#00C853] hover:underline underline-offset-4 transition-all"
-            style={{ fontSize: "13px" }}>
-            Ver todos →
+          <h2 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>Últimas solicitudes</h2>
+          <Link href="/dashboard/solicitudes" className="font-medium text-[#00C853] hover:underline underline-offset-4" style={{ fontSize: "13px" }}>
+            Ver todas →
           </Link>
         </div>
         <div className="bg-white rounded-2xl border border-[#e5e5ea] overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr style={{ borderBottom: "1px solid #e5e5ea", background: "#f5f5f7" }}>
-                {["Profesional", "Especialidad", "Región", "Plan", "Estado"].map((h) => (
-                  <th key={h} className="text-left px-5 py-3 font-semibold text-[#6e6e73]"
-                    style={{ fontSize: "11px", letterSpacing: "0.06em" }}>
-                    {h.toUpperCase()}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {PROFESSIONALS.map((p, i) => (
-                <tr key={p.id}
-                  style={{ borderBottom: i < PROFESSIONALS.length - 1 ? "1px solid #f5f5f7" : "none" }}>
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full overflow-hidden bg-[#f5f5f7] flex-shrink-0">
-                        <img src={p.image} alt={p.name} className="w-full h-full object-cover object-top" />
-                      </div>
-                      <span className="font-medium text-[#1d1d1f]" style={{ fontSize: "13px" }}>{p.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-5 py-3.5 font-light text-[#424245]" style={{ fontSize: "13px" }}>{p.role}</td>
-                  <td className="px-5 py-3.5 font-light text-[#424245]" style={{ fontSize: "13px" }}>{p.location}</td>
-                  <td className="px-5 py-3.5">
-                    <span className="rounded-full px-2.5 py-1 font-medium"
-                      style={{ fontSize: "11px", background: "rgba(0,200,83,0.1)", color: "#00C853" }}>
-                      Activo
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <span className={`w-2 h-2 rounded-full inline-block`}
-                      style={{ background: p.available ? "#00C853" : "#d2d2d7" }} />
-                  </td>
+          {!resumen ? (
+            <p className="px-5 py-8 text-center text-[13px] text-[#6e6e73]">{error ? "No disponible" : "Cargando…"}</p>
+          ) : resumen.ultimasPendientes.length === 0 ? (
+            <p className="px-5 py-8 text-center text-[13px] font-light text-[#6e6e73]">No hay solicitudes pendientes.</p>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr style={{ borderBottom: "1px solid #e5e5ea", background: "#f5f5f7" }}>
+                  {["Nombre", "Tipo", "Especialidad / categoría", "Comuna", "Fecha"].map((h) => (
+                    <th key={h} className="text-left px-5 py-3 font-semibold text-[#6e6e73] uppercase" style={{ fontSize: "11px", letterSpacing: "0.06em" }}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {resumen.ultimasPendientes.map((s, i, arr) => (
+                  <tr key={`${s.tipo_cuenta}-${s.id}`} style={{ borderBottom: i < arr.length - 1 ? "1px solid #f5f5f7" : "none" }}>
+                    <td className="px-5 py-3.5 font-medium text-[#1d1d1f]" style={{ fontSize: "13px" }}>
+                      {s.tipo_cuenta === "profesional" ? `${s.nombres} ${s.apellidos}` : s.nombre}
+                    </td>
+                    <td className="px-5 py-3.5 font-light text-[#424245]" style={{ fontSize: "13px" }}>{s.tipo_cuenta === "profesional" ? "Profesional" : s.tipo || "Centro"}</td>
+                    <td className="px-5 py-3.5 font-light text-[#424245]" style={{ fontSize: "13px" }}>{s.especialidad ?? s.categoria}</td>
+                    <td className="px-5 py-3.5 font-light text-[#424245]" style={{ fontSize: "13px" }}>{s.comuna}</td>
+                    <td className="px-5 py-3.5 font-light text-[#424245]" style={{ fontSize: "13px" }}>{fecha(s.created_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>

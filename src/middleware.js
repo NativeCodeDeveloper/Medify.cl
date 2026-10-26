@@ -62,13 +62,13 @@ export async function middleware(request) {
 
   /*
    * Rutas que NO tienen sentido en buscar.medify.cl
-   * → redirigir al home de medify.cl
+   * → redirigir al sitio principal (www.medifyclinic.cl)
    */
   const rutasExcluidas = ["/dashboard", "/mi-perfil", "/unirse", "/acceso", "/precios"];
   const esExcluida     = rutasExcluidas.some(r => url.pathname.startsWith(r));
 
   if (esExcluida) {
-    return NextResponse.redirect(new URL("https://medify.cl" + url.pathname));
+    return NextResponse.redirect(new URL("https://www.medifyclinic.cl" + url.pathname));
   }
 
   /* Todo lo demás (perfiles, filtros, etc.) pasa sin cambios */

@@ -107,7 +107,11 @@ export default function MiPerfilLayout({ children }) {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-3 space-y-0.5">
-          {NAV_MAIN.map((item) => {
+          {NAV_MAIN.map((base) => {
+            /* "Ver perfil público" lleva a su propio perfil cuando ya está publicado */
+            const item = base.label === "Ver perfil público" && cuenta.estado === "aprobada" && cuenta.slug
+              ? { ...base, href: `/marketplace/${cuenta.slug}` }
+              : base;
             const active = pathname === item.href;
             return (
               <Link key={item.href} href={item.href}

@@ -1,62 +1,32 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiFetch, mensajeDeError } from "@/lib/api";
 
-const INITIAL_PLANES = [
-  {
-    id: "esencial", tipo: "individual", nombre: "Esencial",
-    precio: 0, periodo: "Gratis",
-    descripcion: "Aparece en el marketplace. Los pacientes te encuentran y te contactan directamente.",
-    features: ["Perfil público verificado", "Visibilidad en el marketplace", "Botón WhatsApp", "Publicación en redes de Medify"],
-    flujo: "wsp", activo: true,
-    pagoUrl: "",
-  },
-  {
-    id: "profesional", tipo: "individual", nombre: "Profesional",
-    precio: 16990, periodo: "/mes + IVA",
-    descripcion: "Marketplace más agenda clínica, pagos online y gestión de pacientes.",
-    features: ["Todo lo del Plan Esencial", "Agenda clínica y calendario digital", "Pagos vía Mercado Pago", "Ficha clínica y gestión de pacientes", "Recordatorios automáticos"],
-    flujo: "pago", activo: true,
-    pagoUrl: "https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=PLAN_PROFESIONAL",
-  },
-  {
-    id: "avanzado", tipo: "individual", nombre: "Avanzado",
-    precio: 26990, periodo: "/mes + IVA",
-    descripcion: "Máxima automatización: recordatorios WhatsApp, ficha avanzada y reportes.",
-    features: ["Todo lo del Plan Profesional", "Recordatorios por WhatsApp", "Ficha clínica avanzada", "Reportes Excel y PDF"],
-    flujo: "pago", activo: true,
-    pagoUrl: "https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=PLAN_AVANZADO",
-  },
-  {
-    id: "vitrina-clinica", tipo: "corporativo", nombre: "Vitrina Clínica",
-    precio: 5990, periodo: "/mes + IVA",
-    descripcion: "Solo visibilidad en el marketplace. Sin agenda. Ideal para centros con sistema propio.",
-    features: ["Perfil en el Marketplace", "Botón Agendar hora a sistema propio", "Hasta 3 especialidades", "Ubicación en el mapa", "Publicación en redes Medify"],
-    flujo: "pago", activo: true,
-    pagoUrl: "https://www.mercadopago.cl/subscriptions/checkout?preapproval_plan_id=PLAN_VITRINA_CLINICA",
-  },
-  {
-    id: "corporativo", tipo: "corporativo", nombre: "Corporativo",
-    precio: 79900, periodo: "/mes + IVA",
-    descripcion: "Para clínicas con hasta 5 profesionales. Agenda integrada, gestión y reportería.",
-    features: ["Todo Vitrina Clínica", "Hasta 5 profesionales", "Agenda clínica integrada", "Panel administrativo", "Reportería ejecutiva", "Integraciones de facturación"],
-    flujo: "email", activo: true,
-    pagoUrl: "",
-  },
-  {
-    id: "enterprise", tipo: "corporativo", nombre: "Enterprise",
-    precio: 0, periodo: "A cotizar",
-    descripcion: "Personalizado para grandes instituciones.",
-    features: ["Implementación personalizada", "Soporte prioritario dedicado", "SLA y seguridad reforzada"],
-    flujo: "email", activo: true,
-    pagoUrl: "",
-  },
-];
+/* Planes guardados en medify-api (tabla planes). La API usa nombres en español de la BD;
+ * acá se traducen a la forma que ya usaba esta pantalla. */
+const desdeApi = (p) => ({
+  id: p.id, tipo: p.tipo, nombre: p.nombre,
+  precio: p.precio_clp, periodo: p.periodo ?? "",
+  descripcion: p.descripcion ?? "", features: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
+  flujo: p.flujo, pagoUrl: p.mercadopago_url ?? "", activo: !!p.activo,
+});
+const haciaApi = (f) => ({
+  nombre: f.nombre, precio_clp: f.precio, periodo: f.periodo, descripcion: f.descripcion,
+  caracteristicas: f.features, flujo: f.flujo, mercadopago_url: f.pagoUrl, activo: f.activo ? 1 : 0,
+});
 
-const FLUJO_LABELS = { pago: "Pago automático", wsp: "WhatsApp", email: "Por email" };
-const FLUJO_COLORS = { pago: "#00C853", wsp: "#25D366", email: "#0071e3" };
+const FLUJO_LABELS = { pago: "Pago automático", email: "Por email" };
+const FLUJO_COLORS = { pago: "#00C853", email: "#0071e3" };
 
 function PlanModal({ plan, onSave, onClose }) {
   const [form, setForm] = useState({ ...plan });
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState("");
+  const guardar = async () => {
+    setGuardando(true);
+    setError("");
+    try { await onSave(form); } catch (err) { setError(mensajeDeError(err)); } finally { setGuardando(false); }
+  };
   const [featInput, setFeatInput] = useState("");
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
@@ -117,7 +87,7 @@ function PlanModal({ plan, onSave, onClose }) {
           <div>
             <label className="block font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>Flujo de pago</label>
             <div className="flex gap-3">
-              {[["pago", "Pago automático (MP)"], ["wsp", "WhatsApp"], ["email", "Por email"]].map(([v, l]) => (
+              {[["pago", "Pago automático (MP)"], ["email", "Por email"]].map(([v, l]) => (
                 <button key={v} type="button" onClick={() => set("flujo", v)}
                   className="flex-1 rounded-xl border py-2.5 text-xs font-medium transition-all"
                   style={{
@@ -186,10 +156,11 @@ function PlanModal({ plan, onSave, onClose }) {
             className="rounded-full border border-[#d2d2d7] px-5 py-2.5 text-sm font-medium text-[#6e6e73] hover:border-[#1d1d1f] hover:text-[#1d1d1f] transition-all">
             Cancelar
           </button>
-          <button onClick={() => onSave(form)}
-            className="rounded-full text-white px-6 py-2.5 text-sm font-medium"
+          {error && <span role="alert" className="mr-auto self-center text-[13px] text-red-600">{error}</span>}
+          <button onClick={guardar} disabled={guardando}
+            className="rounded-full text-white px-6 py-2.5 text-sm font-medium disabled:opacity-60"
             style={{ background: "#00C853" }}>
-            Guardar cambios
+            {guardando ? "Guardando…" : "Guardar cambios"}
           </button>
         </div>
       </div>
@@ -198,14 +169,22 @@ function PlanModal({ plan, onSave, onClose }) {
 }
 
 export default function PlanesAdmin() {
-  const [planes, setPlanes] = useState(INITIAL_PLANES);
+  const [planes, setPlanes] = useState([]);
+  const [errorCarga, setErrorCarga] = useState("");
+
+  useEffect(() => {
+    apiFetch("/admin/planes", { auth: "admin" })
+      .then(ps => setPlanes(ps.map(desdeApi)))
+      .catch(err => setErrorCarga(mensajeDeError(err)));
+  }, []);
   const [modal, setModal] = useState(null);
   const [tab, setTab] = useState("individual");
 
   const filtered = planes.filter(p => p.tipo === tab);
 
-  const handleSave = (form) => {
-    setPlanes(ps => ps.map(p => p.id === form.id ? form : p));
+  const handleSave = async (form) => {
+    const guardado = desdeApi(await apiFetch(`/admin/planes/${form.id}`, { method: "PUT", body: haciaApi(form), auth: "admin" }));
+    setPlanes(ps => ps.map(p => p.id === guardado.id ? guardado : p));
     setModal(null);
   };
 
@@ -300,7 +279,9 @@ export default function PlanesAdmin() {
       </div>
 
       <p className="mt-4 font-light text-[#6e6e73]" style={{ fontSize: "12px" }}>
-        Los cambios de precio y link de pago deben actualizarse también en Mercado Pago y en el código de <code className="bg-[#f5f5f7] px-1.5 py-0.5 rounded text-[#1d1d1f]">/unirse</code> hasta que el backend esté conectado.
+        {errorCarga && <span className="mb-2 block text-red-600">{errorCarga}</span>}
+        Los cambios se guardan en la base de datos. El precio y el link de pago también deben coincidir con lo configurado en Mercado Pago.
+        Los planes se cobran solo cuando se active <code className="bg-[#f5f5f7] px-1.5 py-0.5 rounded text-[#1d1d1f]">PAGOS_HABILITADOS</code>.
       </p>
 
       {modal && <PlanModal plan={modal} onSave={handleSave} onClose={() => setModal(null)} />}

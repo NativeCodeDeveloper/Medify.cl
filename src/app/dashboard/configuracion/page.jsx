@@ -1,93 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { apiFetch, mensajeDeError } from "@/lib/api";
 
 /*
- * TODO backend: reemplazar estos arrays por llamadas a la API cuando esté listo:
- *   GET /api/admin/especialidades        → lista completa con grupos
- *   POST /api/admin/especialidades       → crear
- *   PUT /api/admin/especialidades/:id    → editar
- *   DELETE /api/admin/especialidades/:id → eliminar
- *
- *   GET /api/admin/categorias-centros        → lista con tipo_centro
- *   POST /api/admin/categorias-centros       → crear
- *   PUT /api/admin/categorias-centros/:id    → editar
- *   DELETE /api/admin/categorias-centros/:id → eliminar
- *
- *   GET /api/admin/ciudades → lista de ciudades disponibles en filtros
+ * Catálogos guardados en medify-api: /api/especialidades y /api/categorias
+ * (lectura pública, escritura solo admin). /unirse los crea solos si alguien elige "Otra"
+ * (quedan inactivos hasta que se revisen acá).
  */
 
-/* ─── Especialidades mock (origen: unirse/page.jsx) ─────────────────── */
-const ESPECIALIDADES_INIT = [
-  { id: "psicologia-clinica",       nombre: "Psicología Clínica",          grupo: "Salud Mental",            activo: true },
-  { id: "psicologia-infantil",      nombre: "Psicología Infantil",          grupo: "Salud Mental",            activo: true },
-  { id: "psiquiatria",              nombre: "Psiquiatría",                  grupo: "Salud Mental",            activo: true },
-  { id: "neuropsicologia",          nombre: "Neuropsicología",              grupo: "Salud Mental",            activo: true },
-  { id: "psicopedagogia",           nombre: "Psicopedagogía",               grupo: "Salud Mental",            activo: true },
-  { id: "medicina-general",         nombre: "Medicina General",             grupo: "Medicina",                activo: true },
-  { id: "medicina-familiar",        nombre: "Medicina Familiar",            grupo: "Medicina",                activo: true },
-  { id: "pediatria",                nombre: "Pediatría",                    grupo: "Medicina",                activo: true },
-  { id: "ginecologia",              nombre: "Ginecología",                  grupo: "Medicina",                activo: true },
-  { id: "cardiologia",              nombre: "Cardiología",                  grupo: "Medicina",                activo: true },
-  { id: "dermatologia",             nombre: "Dermatología",                 grupo: "Medicina",                activo: true },
-  { id: "neurologia",               nombre: "Neurología",                   grupo: "Medicina",                activo: true },
-  { id: "traumatologia",            nombre: "Traumatología",                grupo: "Medicina",                activo: true },
-  { id: "oftalmologia",             nombre: "Oftalmología",                 grupo: "Medicina",                activo: true },
-  { id: "otorrinolaringologia",     nombre: "Otorrinolaringología",         grupo: "Medicina",                activo: true },
-  { id: "urologia",                 nombre: "Urología",                     grupo: "Medicina",                activo: true },
-  { id: "endocrinologia",           nombre: "Endocrinología",               grupo: "Medicina",                activo: true },
-  { id: "gastroenterologia",        nombre: "Gastroenterología",            grupo: "Medicina",                activo: true },
-  { id: "oncologia",                nombre: "Oncología",                    grupo: "Medicina",                activo: true },
-  { id: "geriatria",                nombre: "Geriatría",                    grupo: "Medicina",                activo: true },
-  { id: "kinesiologia",             nombre: "Kinesiología",                 grupo: "Rehabilitación",          activo: true },
-  { id: "terapia-ocupacional",      nombre: "Terapia Ocupacional",          grupo: "Rehabilitación",          activo: true },
-  { id: "fonoaudiologia",           nombre: "Fonoaudiología",               grupo: "Rehabilitación",          activo: true },
-  { id: "fisioterapia",             nombre: "Fisioterapia",                 grupo: "Rehabilitación",          activo: true },
-  { id: "nutricion-clinica",        nombre: "Nutrición Clínica",            grupo: "Nutrición y Dietética",   activo: true },
-  { id: "nutricion-deportiva",      nombre: "Nutrición Deportiva",          grupo: "Nutrición y Dietética",   activo: true },
-  { id: "nutricion-estetica",       nombre: "Nutrición Estética",           grupo: "Nutrición y Dietética",   activo: true },
-  { id: "nutricion-infantil",       nombre: "Nutrición Infantil",           grupo: "Nutrición y Dietética",   activo: true },
-  { id: "odontologia-general",      nombre: "Odontología General",          grupo: "Odontología",             activo: true },
-  { id: "ortodoncia",               nombre: "Ortodoncia",                   grupo: "Odontología",             activo: true },
-  { id: "implantologia",            nombre: "Implantología",                grupo: "Odontología",             activo: true },
-  { id: "endodoncia",               nombre: "Endodoncia",                   grupo: "Odontología",             activo: true },
-  { id: "periodoncia",              nombre: "Periodoncia",                  grupo: "Odontología",             activo: true },
-  { id: "odontopediatria",          nombre: "Odontopediatría",              grupo: "Odontología",             activo: true },
-  { id: "acupuntura",               nombre: "Acupuntura",                   grupo: "Medicina Complementaria", activo: true },
-  { id: "medicina-china",           nombre: "Medicina Tradicional China",   grupo: "Medicina Complementaria", activo: true },
-  { id: "osteopatia",               nombre: "Osteopatía",                   grupo: "Medicina Complementaria", activo: true },
-  { id: "reiki",                    nombre: "Reiki",                        grupo: "Medicina Complementaria", activo: true },
-  { id: "medicina-integrativa",     nombre: "Medicina Integrativa",         grupo: "Medicina Complementaria", activo: true },
-  { id: "enfermeria",               nombre: "Enfermería",                   grupo: "Otras profesiones",       activo: true },
-  { id: "matrona",                  nombre: "Matrona / Matrón",             grupo: "Otras profesiones",       activo: true },
-  { id: "tecnologia-medica",        nombre: "Tecnología Médica",            grupo: "Otras profesiones",       activo: true },
-  { id: "farmacia-clinica",         nombre: "Farmacia Clínica",             grupo: "Otras profesiones",       activo: true },
-];
-
 const GRUPOS_ESP = ["Salud Mental", "Medicina", "Rehabilitación", "Nutrición y Dietética", "Odontología", "Medicina Complementaria", "Estética y Bienestar", "Otras profesiones"];
-
-/* ─── Categorías de centros mock (origen: dashboard/centros/page.jsx) ─ */
-const CATEGORIAS_INIT = [
-  { id: "salud-integral",            nombre: "Salud Integral",                tipo_centro: "Clínica",                   activo: true },
-  { id: "clinica-dental",            nombre: "Clínica Dental",                tipo_centro: "Clínica",                   activo: true },
-  { id: "ortodoncia-estetica",       nombre: "Ortodoncia y Estética Dental",  tipo_centro: "Clínica",                   activo: true },
-  { id: "clinica-ginecologica",      nombre: "Clínica Ginecológica",          tipo_centro: "Clínica",                   activo: true },
-  { id: "clinica-pediatrica",        nombre: "Clínica Pediátrica",            tipo_centro: "Clínica",                   activo: true },
-  { id: "clinica-traumatologica",    nombre: "Clínica Traumatológica",        tipo_centro: "Clínica",                   activo: true },
-  { id: "clinica-oncologica",        nombre: "Clínica Oncológica",            tipo_centro: "Clínica",                   activo: true },
-  { id: "clinica-maternidad",        nombre: "Clínica de Maternidad",         tipo_centro: "Clínica",                   activo: true },
-  { id: "medicina-general-cm",       nombre: "Medicina General",              tipo_centro: "Centro Médico",             activo: true },
-  { id: "especialidades-multiples",  nombre: "Especialidades Múltiples",      tipo_centro: "Centro Médico",             activo: true },
-  { id: "medicina-deporte",          nombre: "Medicina del Deporte",          tipo_centro: "Centro Médico",             activo: true },
-  { id: "medicina-preventiva",       nombre: "Medicina Preventiva",           tipo_centro: "Centro Médico",             activo: true },
-  { id: "salud-mental-cm",           nombre: "Salud Mental",                  tipo_centro: "Centro Médico",             activo: true },
-  { id: "kine-fisio",                nombre: "Kinesiología y Fisioterapia",   tipo_centro: "Centro de Rehabilitación",  activo: true },
-  { id: "rehab-neurologica",         nombre: "Rehabilitación Neurológica",    tipo_centro: "Centro de Rehabilitación",  activo: true },
-  { id: "rehab-deportiva",           nombre: "Rehabilitación Deportiva",      tipo_centro: "Centro de Rehabilitación",  activo: true },
-  { id: "salud-mental-adultos",      nombre: "Salud Mental Adultos",          tipo_centro: "Centro Psicológico",        activo: true },
-  { id: "psicologia-infantil-cat",   nombre: "Psicología Infantil y Adolescente", tipo_centro: "Centro Psicológico",   activo: true },
-  { id: "neuropsicologia-cat",       nombre: "Neuropsicología",               tipo_centro: "Centro Psicológico",        activo: true },
-  { id: "terapia-familiar",          nombre: "Terapia de Pareja y Familia",   tipo_centro: "Centro Psicológico",        activo: true },
-];
 
 const TIPOS_CENTRO_CAT = ["Clínica", "Centro Médico", "Centro de Rehabilitación", "Centro Psicológico", "Otro"];
 
@@ -223,8 +144,50 @@ function ModalCategoria({ item, onSave, onClose }) {
 }
 
 /* ─── Tab: Especialidades ─────────────────────────────────────────────── */
+/* CRUD de un catálogo contra la API. Los ítems de la BD tienen id numérico; los nuevos traen un slug
+ * temporal desde el modal (onSave agrega id: slugify(nombre)), así se distingue crear de editar. */
+function useCatalogo(recurso) {
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState("");
+
+  const cargar = useCallback(() => {
+    apiFetch(`/${recurso}?limit=500`)
+      .then(r => setItems(r.data.map(i => ({ ...i, activo: !!i.activo }))))
+      .catch(err => setError(mensajeDeError(err)));
+  }, [recurso]);
+
+  useEffect(cargar, [cargar]);
+
+  const ejecutar = async (fn) => {
+    setError("");
+    try { await fn(); cargar(); return true; } catch (err) { setError(mensajeDeError(err)); return false; }
+  };
+
+  const guardar = (form, campoExtra) => ejecutar(async () => {
+    const body = { nombre: form.nombre, descripcion: form.descripcion || null, [campoExtra]: form[campoExtra] || null };
+    const existente = typeof form.id === "number";
+    const guardado = existente
+      ? await apiFetch(`/${recurso}/${form.id}`, { method: "PUT", body, auth: "admin" })
+      : await apiFetch(`/${recurso}`, { method: "POST", body, auth: "admin" });
+    if (!!guardado.activo !== !!form.activo) {
+      await apiFetch(`/${recurso}/${guardado.id}/${form.activo ? "activar" : "desactivar"}`, { method: "PATCH", auth: "admin" });
+    }
+  });
+
+  const alternar = (item) => ejecutar(() =>
+    apiFetch(`/${recurso}/${item.id}/${item.activo ? "desactivar" : "activar"}`, { method: "PATCH", auth: "admin" }));
+
+  const eliminar = (id) => ejecutar(() => apiFetch(`/${recurso}/${id}`, { method: "DELETE", auth: "admin" }));
+
+  return { items, error, guardar, alternar, eliminar };
+}
+
+function AvisoError({ error }) {
+  return error ? <p role="alert" className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-600">{error}</p> : null;
+}
+
 function TabEspecialidades() {
-  const [items, setItems]   = useState(ESPECIALIDADES_INIT);
+  const { items, error, guardar, alternar, eliminar } = useCatalogo("especialidades");
   const [modal, setModal]   = useState(null);
   const [search, setSearch] = useState("");
   const [grupo, setGrupo]   = useState("Todos");
@@ -240,20 +203,13 @@ function TabEspecialidades() {
     );
   });
 
-  const handleSave = (form) => {
-    if (items.find(i => i.id === form.id) && modal?.id) {
-      setItems(prev => prev.map(i => i.id === form.id ? form : i));
-    } else {
-      setItems(prev => [...prev, form]);
-    }
-    setModal(null);
-  };
-
-  const handleDelete = (id) => { setItems(prev => prev.filter(i => i.id !== id)); setConfirm(null); };
-  const handleToggle = (id) => setItems(prev => prev.map(i => i.id === id ? { ...i, activo: !i.activo } : i));
+  const handleSave = async (form) => { if (await guardar(form, "grupo")) setModal(null); };
+  const handleDelete = async (id) => { await eliminar(id); setConfirm(null); };
+  const handleToggle = (id) => alternar(items.find(i => i.id === id));
 
   return (
     <div>
+      <AvisoError error={error} />
       {/* Barra de filtros */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[200px]">
@@ -349,7 +305,7 @@ function TabEspecialidades() {
 
 /* ─── Tab: Categorías de centros ──────────────────────────────────────── */
 function TabCategorias() {
-  const [items, setItems]   = useState(CATEGORIAS_INIT);
+  const { items, error, guardar, alternar, eliminar } = useCatalogo("categorias");
   const [modal, setModal]   = useState(null);
   const [search, setSearch] = useState("");
   const [tipo, setTipo]     = useState("Todos");
@@ -365,20 +321,13 @@ function TabCategorias() {
     );
   });
 
-  const handleSave = (form) => {
-    if (items.find(i => i.id === form.id) && modal?.id) {
-      setItems(prev => prev.map(i => i.id === form.id ? form : i));
-    } else {
-      setItems(prev => [...prev, form]);
-    }
-    setModal(null);
-  };
-
-  const handleDelete = (id) => { setItems(prev => prev.filter(i => i.id !== id)); setConfirm(null); };
-  const handleToggle = (id) => setItems(prev => prev.map(i => i.id === id ? { ...i, activo: !i.activo } : i));
+  const handleSave = async (form) => { if (await guardar(form, "tipo_centro")) setModal(null); };
+  const handleDelete = async (id) => { await eliminar(id); setConfirm(null); };
+  const handleToggle = (id) => alternar(items.find(i => i.id === id));
 
   return (
     <div>
+      <AvisoError error={error} />
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[200px]">
           <svg className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#86868b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -496,10 +445,8 @@ export default function ConfiguracionAdmin() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
         </svg>
         <p className="text-[12px] text-[#6e6e73]">
-          Estos catálogos son la <strong className="text-[#1d1d1f]">fuente de verdad</strong> para los formularios de registro y el marketplace.
-          Actualmente usan datos locales. Cuando el backend Java esté listo, se reemplazarán por{" "}
-          <code className="rounded bg-white px-1.5 py-0.5 text-[11px] text-[#1d1d1f]">GET /api/admin/especialidades</code> y{" "}
-          <code className="rounded bg-white px-1.5 py-0.5 text-[11px] text-[#1d1d1f]">GET /api/admin/categorias-centros</code>.
+          Estos catálogos alimentan el registro (<code className="rounded bg-white px-1.5 py-0.5 text-[11px] text-[#1d1d1f]">/unirse</code>)
+          y los filtros del marketplace. Desactiva en vez de eliminar si algún profesional o centro ya lo usa.
         </p>
       </div>
 

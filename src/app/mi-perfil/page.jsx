@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { apiFetch, mensajeDeError } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { apiFetch, cerrarSesion, mensajeDeError } from "@/lib/api";
 import { NOMBRE_PLAN, nombreCuenta, useCuenta } from "./CuentaContext";
 
 /* Campos editables vía PUT /auth/yo (el resto —RUT, correo, plan, especialidad— lo cambia el equipo Medify) */
@@ -56,6 +57,61 @@ function Select({ children, ...props }) {
       style={{ fontSize: "14px" }} {...props}>
       {children}
     </select>
+  );
+}
+
+/* Baja definitiva: la API pide la contraseña, borra la cuenta en Clerk y en la BD, y la sesión deja de servir */
+function EliminarCuenta() {
+  const router = useRouter();
+  const [abierto, setAbierto] = useState(false);
+  const [password, setPassword] = useState("");
+  const [eliminando, setEliminando] = useState(false);
+  const [error, setError] = useState("");
+
+  const eliminar = async () => {
+    setEliminando(true);
+    setError("");
+    try {
+      await apiFetch("/auth/yo", { method: "DELETE", body: { password }, auth: "cuenta" });
+      cerrarSesion();
+      router.replace("/");
+    } catch (err) {
+      setError(mensajeDeError(err));
+      setEliminando(false);
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-[#fecaca] bg-white p-6">
+      <h2 className="font-semibold text-[#1d1d1f] mb-1" style={{ fontSize: "14px", letterSpacing: "-0.01em" }}>Eliminar mi cuenta</h2>
+      <p className="font-light text-[#6e6e73] mb-4" style={{ fontSize: "12px" }}>
+        Tu perfil desaparece del marketplace y ya no podrás iniciar sesión. Esta acción no se puede deshacer.
+      </p>
+      {!abierto ? (
+        <button onClick={() => setAbierto(true)}
+          className="rounded-full border border-[#fecaca] px-5 py-2 text-[13px] font-medium text-red-500 hover:bg-red-50 transition-colors">
+          Eliminar mi cuenta
+        </button>
+      ) : (
+        <div className="space-y-3 max-w-sm">
+          <label className="block font-semibold text-[#6e6e73] uppercase" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>
+            Confirma con tu contraseña
+          </label>
+          <Input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} />
+          {error && <p role="alert" className="text-red-500" style={{ fontSize: "12px" }}>{error}</p>}
+          <div className="flex gap-2">
+            <button onClick={() => { setAbierto(false); setPassword(""); setError(""); }}
+              className="rounded-full border border-[#d2d2d7] px-5 py-2 text-[13px] text-[#6e6e73] hover:border-[#1d1d1f]">
+              Cancelar
+            </button>
+            <button onClick={eliminar} disabled={!password || eliminando}
+              className="rounded-full bg-red-500 px-5 py-2 text-[13px] font-medium text-white hover:bg-red-600 disabled:opacity-50">
+              {eliminando ? "Eliminando…" : "Eliminar definitivamente"}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -351,6 +407,8 @@ export default function MiPerfilPage() {
             ))}
           </div>
         </div>
+
+        <EliminarCuenta />
 
       </div>
     </div>
