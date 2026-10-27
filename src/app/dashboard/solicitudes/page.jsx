@@ -46,8 +46,8 @@ export default function Solicitudes() {
   };
 
   return (
-    <div className="p-8">
-      <div className="mb-7 flex items-end justify-between gap-4">
+    <div className="p-5 sm:p-8">
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="font-semibold text-[#6e6e73] uppercase mb-1" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
             Registro desde /unirse

@@ -29,6 +29,8 @@ const NAV_MAIN = [
 
 export default function MiPerfilLayout({ children }) {
   const pathname = usePathname();
+  const [menuAbierto, setMenuAbierto] = useState(false); // menú lateral en celular
+  useEffect(() => setMenuAbierto(false), [pathname]);   // se cierra al navegar
   const router = useRouter();
   const [cuenta, setCuenta] = useState(null);
 
@@ -64,7 +66,12 @@ export default function MiPerfilLayout({ children }) {
     <div className="flex min-h-screen bg-[#f5f5f7]">
 
       {/* ── Sidebar ── */}
-      <aside className="w-[240px] flex-shrink-0 flex flex-col bg-[#1d1d1f] fixed top-0 left-0 bottom-0 z-50">
+      {/* Fondo oscuro detrás del menú abierto (solo celular) */}
+      {menuAbierto && (
+        <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setMenuAbierto(false)} aria-hidden />
+      )}
+
+      <aside className={`w-[240px] flex-shrink-0 flex flex-col bg-[#1d1d1f] fixed top-0 left-0 bottom-0 z-50 overflow-y-auto transition-transform duration-200 lg:translate-x-0 ${menuAbierto ? "translate-x-0" : "-translate-x-full"}`}>
 
         {/* Logo */}
         <div className="px-5 pt-5 pb-4 border-b border-white/8">
@@ -179,7 +186,18 @@ export default function MiPerfilLayout({ children }) {
         </div>
       </aside>
 
-      <main className="flex-1 ml-[240px] min-h-screen">
+      <main className="flex-1 min-w-0 min-h-screen lg:ml-[240px]">
+        {/* Barra superior (solo celular): logo + botón para abrir el menú */}
+        <div className="sticky top-0 z-30 flex h-14 items-center justify-between bg-[#1d1d1f] px-4 lg:hidden">
+          <Image src="/logonavar.png" alt="Medify" width={90} height={24} className="h-6 w-auto object-contain" />
+          <span className="ml-2 mr-auto font-semibold text-white/35" style={{ fontSize: "9px", letterSpacing: "0.14em" }}>PROFESIONAL</span>
+          <button onClick={() => setMenuAbierto(true)} aria-label="Abrir menú"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 hover:bg-white/10">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          </button>
+        </div>
         {children}
       </main>
     </div>

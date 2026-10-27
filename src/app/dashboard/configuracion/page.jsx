@@ -235,8 +235,8 @@ function TabEspecialidades() {
 
       <p className="mb-3 text-[12px] text-[#86868b]">{filtered.length} especialidade{filtered.length !== 1 ? "s" : ""}</p>
 
-      <div className="overflow-hidden rounded-2xl border border-[#e5e5ea] bg-white">
-        <table className="w-full">
+      <div className="overflow-x-auto rounded-2xl border border-[#e5e5ea] bg-white">
+        <table className="w-full min-w-[640px]">
           <thead>
             <tr className="border-b border-[#e5e5ea] bg-[#f5f5f7]">
               {["Especialidad", "Grupo", "Estado", ""].map(h => (
@@ -352,8 +352,8 @@ function TabCategorias() {
 
       <p className="mb-3 text-[12px] text-[#86868b]">{filtered.length} categoría{filtered.length !== 1 ? "s" : ""}</p>
 
-      <div className="overflow-hidden rounded-2xl border border-[#e5e5ea] bg-white">
-        <table className="w-full">
+      <div className="overflow-x-auto rounded-2xl border border-[#e5e5ea] bg-white">
+        <table className="w-full min-w-[640px]">
           <thead>
             <tr className="border-b border-[#e5e5ea] bg-[#f5f5f7]">
               {["Categoría", "Tipo de centro", "Estado", ""].map(h => (
@@ -430,7 +430,7 @@ export default function ConfiguracionAdmin() {
   ];
 
   return (
-    <div className="p-8">
+    <div className="p-5 sm:p-8">
       {/* Header */}
       <div className="mb-2">
         <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-[#6e6e73]">Sistema</p>

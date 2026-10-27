@@ -386,20 +386,48 @@ export default function UnirsePage() {
   const agendaValida = isValidAgendaUrl(form.sitioWeb);
   const agendaIngresada = form.sitioWeb.trim().length > 0;
 
-  const canNext = () => {
-    if (step === 0) return !!planId;
+  /* Lo que falta completar en el paso actual, con el nombre tal como aparece en el formulario.
+   * Se muestra al presionar "Continuar" para que la persona sepa exactamente qué le falta. */
+  const faltantes = () => {
+    const f = [];
+    if (step === 0 && !planId) f.push("Elegir un plan");
     if (step === 1) {
-      if (esClinica) return form.tipo && form.nombre && form.categoria && form.direccion && form.region && form.comuna;
-      return form.tipo && form.nombre && form.apellidos && especialidadFinal && form.region && form.comuna && form.modalidad;
+      if (!form.tipo) f.push("Tipo de cuenta");
+      if (!form.nombre.trim()) f.push(esClinica ? "Nombre del centro o clínica" : "Nombres");
+      if (esClinica) {
+        if (!form.categoria) f.push("Categoría del centro");
+        if (!form.direccion.trim()) f.push("Dirección");
+      } else {
+        if (!form.apellidos.trim()) f.push("Apellidos");
+        if (!form.especialidad) f.push("Especialidad");
+        else if (form.especialidad === "Otra" && !form.especialidadOtra.trim()) f.push("Escribe tu especialidad");
+      }
+      if (!form.region) f.push("Región");
+      if (!form.comuna) f.push("Comuna");
+      if (!esClinica && !form.modalidad) f.push("Modalidad de atención");
     }
-    if (step === 2) return true;
-    // Sin link de Agenda Clínica el botón "Agendar" del perfil lleva a WhatsApp, por eso pasa a ser obligatorio
-    if (step === 3) return !!form.email && !sugerenciaCorreo && rutValido && passwordMatch && (agendaValida || !!form.whatsapp.trim());
-    return true;
+    if (step === 3) {
+      if (!form.email.trim()) f.push("Email");
+      else if (sugerenciaCorreo) f.push(`Email (revisa cómo está escrito: ¿${sugerenciaCorreo}?)`);
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) f.push("Email válido");
+      // Sin link de Agenda Clínica el botón "Agendar" del perfil lleva a WhatsApp, por eso pasa a ser obligatorio
+      if (!agendaValida && !form.whatsapp.trim()) f.push("WhatsApp (o un link de Agenda Clínica)");
+      if (!form.rut.trim()) f.push("RUT");
+      else if (!rutValido) f.push("RUT válido (revisa el dígito verificador)");
+      if (form.password.length < MIN_PASSWORD) f.push(`Contraseña de al menos ${MIN_PASSWORD} caracteres`);
+      else if (form.password !== form.confirmPassword) f.push("Confirmar contraseña (no coinciden)");
+    }
+    return f;
   };
+  const canNext = () => faltantes().length === 0;
+  const [mostrarFaltantes, setMostrarFaltantes] = useState(false);
 
   const next = () => {
-    if (!canNext()) return;
+    if (!canNext()) {
+      setMostrarFaltantes(true);
+      return;
+    }
+    setMostrarFaltantes(false);
     /* Al ir de paso 3 → 4, si no tiene URL válida de agendaclinicas.cl muestra toast */
     if (step === 3 && !agendaValida) {
       setShowToast(true);
@@ -408,7 +436,7 @@ export default function UnirsePage() {
     setStep(s => Math.min(s + 1, 4));
   };
 
-  const back = () => setStep(s => Math.max(s - 1, PRIMER_PASO));
+  const back = () => { setMostrarFaltantes(false); setStep(s => Math.max(s - 1, PRIMER_PASO)); };
 
   /* Crea la cuenta en la API: usuario en Clerk + perfil en MySQL (queda pendiente de revisión) */
   const enviarRegistro = async () => {
@@ -426,7 +454,7 @@ export default function UnirsePage() {
       };
       const body = esClinica
         ? { ...comunes, nombre: form.nombre, categoria: form.categoria, direccion: form.direccion,
-            profesionales_count: form.profesionales_count }
+            profesionales_count: form.profesionales_count, enfoques: form.enfoques }
         : { ...comunes, nombres: form.nombre, apellidos: form.apellidos, especialidad: especialidadFinal,
             anios_experiencia: form.experiencia, precio_sesion: form.precio,
             disponibilidad: form.disponibilidad, enfoques: form.enfoques };
@@ -436,8 +464,9 @@ export default function UnirsePage() {
       // La foto del paso 1 se sube recién ahora, con la sesión de la cuenta nueva. Si falla, la cuenta
       // igual queda creada y la puede subir después desde su panel.
       if (form.foto) {
-        await subirFoto("/auth/yo/foto", form.foto, "cuenta").catch(() => {
-          data.fotoPendiente = true;
+        await subirFoto("/auth/yo/foto", form.foto, "cuenta").catch(err => {
+          console.error("[Registro] No se pudo subir la foto:", err);
+          data.fotoPendiente = mensajeDeError(err);
         });
       }
       setRegistro(data);
@@ -594,7 +623,7 @@ export default function UnirsePage() {
                 {form.fotoPreview ? "Cambiar foto" : "Subir foto"}
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   className="hidden"
                   onChange={e => {
                     const file = e.target.files?.[0];
@@ -615,7 +644,7 @@ export default function UnirsePage() {
         {/* Tipo de cuenta */}
         <div>
           <Label required>Tipo de cuenta</Label>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
             {TIPOS_CUENTA.map((t) => (
               <button type="button" key={t} onClick={() => setTipo(t)}
                 className="rounded-xl border-2 px-3 py-3 text-center transition-all"
@@ -1109,7 +1138,7 @@ export default function UnirsePage() {
               </p>
               {registro.fotoPendiente && (
                 <p className="mb-2 font-light" style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)" }}>
-                  No pudimos subir tu foto. Puedes agregarla desde tu panel.
+                  No pudimos subir tu foto ({registro.fotoPendiente}). Puedes agregarla desde tu panel.
                 </p>
               )}
               <p className="font-light mb-6" style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)" }}>
@@ -1233,11 +1262,26 @@ export default function UnirsePage() {
                 {PLANES_HABILITADOS ? "Comparar planes" : "← Volver"}
               </Link>
             )}
-            <button onClick={next} disabled={!canNext()}
-              className="inline-flex items-center justify-center rounded-full text-white transition-all disabled:opacity-35 disabled:cursor-not-allowed"
-              style={{ fontSize: "15px", fontWeight: 400, padding: "12px 28px", background: "#00C853" }}>
+            <button onClick={next}
+              className="inline-flex items-center justify-center rounded-full text-white transition-all"
+              style={{ fontSize: "15px", fontWeight: 400, padding: "12px 28px", background: "#00C853", opacity: canNext() ? 1 : 0.55 }}>
               {step === 3 ? "Revisar →" : "Continuar →"}
             </button>
+          </div>
+        )}
+
+        {/* Qué falta para avanzar (se actualiza mientras la persona completa los campos) */}
+        {step < 4 && mostrarFaltantes && faltantes().length > 0 && (
+          <div role="alert" className="mt-4 rounded-2xl border border-[#e5e5ea] bg-[#f5f5f7] px-5 py-4">
+            <p className="font-semibold text-[#1d1d1f]" style={{ fontSize: "13px" }}>Para continuar te falta completar:</p>
+            <ul className="mt-2 space-y-1">
+              {faltantes().map(f => (
+                <li key={f} className="flex items-center gap-2 text-[#424245]" style={{ fontSize: "13px" }}>
+                  <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#ff3b30]" />
+                  {f}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 

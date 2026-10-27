@@ -14,10 +14,10 @@ export function ServiciosEditor({ value, onChange, max = 30 }) {
   return (
     <div className="space-y-2">
       {servicios.map((s, i) => (
-        <div key={i} className="flex items-center gap-2">
-          <input className={`${inputCls} flex-1`} placeholder="Ej: Sesión de psicoterapia individual"
+        <div key={i} className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+          <input className={`${inputCls} min-w-0 basis-full sm:basis-auto sm:flex-1`} placeholder="Ej: Sesión de psicoterapia individual"
             value={s.nombre ?? ""} maxLength={120} onChange={e => actualizar(i, "nombre", e.target.value)} />
-          <input className={`${inputCls} w-32`} type="number" min="0" placeholder="Precio (opcional)"
+          <input className={`${inputCls} flex-1 sm:w-36 sm:flex-none`} type="number" min="0" inputMode="numeric" placeholder="Precio (opcional)"
             value={s.precio ?? ""} onChange={e => actualizar(i, "precio", e.target.value)} />
           <button type="button" onClick={() => quitar(i)} aria-label="Quitar servicio"
             className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#d2d2d7] text-[#86868b] hover:border-[#1d1d1f] hover:text-[#1d1d1f]">

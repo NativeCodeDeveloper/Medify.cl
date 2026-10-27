@@ -71,24 +71,53 @@ export function mensajeDeError(err) {
   return err?.message || "Ocurrió un error inesperado.";
 }
 
+/* Lee la imagen para poder achicarla. createImageBitmap no existe o no decodifica algunos formatos en todos
+ * los navegadores (ej. HEIC del iPhone/Mac): si falla, se intenta con un <img>. null = no se pudo leer. */
+async function leerImagen(file) {
+  if (typeof createImageBitmap === "function") {
+    try { return await createImageBitmap(file); } catch { /* sigue con <img> */ }
+  }
+  const url = URL.createObjectURL(file);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    return img;
+  } catch {
+    return null;
+  } finally {
+    setTimeout(() => URL.revokeObjectURL(url), 0); // se libera después de dibujar
+  }
+}
+
+const FORMATOS_DIRECTOS = ["image/jpeg", "image/png", "image/webp"];
+
 /* Achica la foto en el navegador antes de subirla (máx. 1200px, JPEG ~85%): una foto de celular de 4 MB
  * queda en ~150 KB, sube rápido y no choca con el límite de 3 MB de la API. */
 async function reducirImagen(file, max = 1200) {
-  if (!file.type.startsWith("image/")) throw new ApiError(400, "El archivo debe ser una imagen");
-  const bitmap = await createImageBitmap(file).catch(() => null);
-  if (!bitmap) throw new ApiError(400, "No pudimos leer la imagen. Prueba con JPG o PNG.");
-  const escala = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+  const img = await leerImagen(file);
+  if (!img) {
+    // No se pudo leer en este navegador: si ya es JPG/PNG/WebP liviano se sube tal cual
+    if (FORMATOS_DIRECTOS.includes(file.type) && file.size <= 3 * 1024 * 1024) return file;
+    throw new ApiError(400, "No pudimos procesar esa imagen. Usa una foto JPG o PNG (las fotos HEIC del iPhone no son compatibles).");
+  }
+  const ancho = img.width || img.naturalWidth;
+  const alto = img.height || img.naturalHeight;
+  const escala = Math.min(1, max / Math.max(ancho, alto));
   const canvas = document.createElement("canvas");
-  canvas.width = Math.round(bitmap.width * escala);
-  canvas.height = Math.round(bitmap.height * escala);
-  canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  return new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.85));
+  canvas.width = Math.round(ancho * escala);
+  canvas.height = Math.round(alto * escala);
+  canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.85));
+  if (!blob) throw new ApiError(400, "No pudimos procesar esa imagen. Prueba con otra foto JPG o PNG.");
+  return blob;
 }
 
 /* Sube una foto de perfil/logo (multipart, campo "foto") y devuelve la cuenta actualizada */
 export async function subirFoto(path, file, auth) {
   const form = new FormData();
-  form.append("foto", await reducirImagen(file), "foto.jpg");
+  const imagen = await reducirImagen(file);
+  form.append("foto", imagen, imagen === file ? file.name : "foto.jpg");
   const token = getToken(auth);
   let res;
   try {

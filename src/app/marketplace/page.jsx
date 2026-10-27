@@ -9,36 +9,14 @@ import {
 import { usePerfiles } from "./usePerfiles";
 
 /* ─── Datos ──────────────────────────────────────────────────────────── */
+/* Solo lo que Medify hace de verdad: no cobra ni gestiona reservas, no valida títulos automáticamente */
 const BENEFITS = [
-  { title: "Profesionales verificados",   text: "Cada perfil pasa por un proceso de validación de credenciales." },
-  { title: "Reserva online segura",       text: "Tu información y pagos están protegidos en todo momento." },
-  { title: "Cancelación flexible",        text: "Reprograma sin costo si no puedes asistir a tu sesión." },
-  { title: "Atención humana",             text: "Soporte personalizado siempre que lo necesites." },
+  { title: "Perfiles revisados",    text: "Nuestro equipo revisa cada perfil antes de publicarlo." },
+  { title: "Contacto directo",      text: "Agenda en la agenda del profesional o escríbele por WhatsApp." },
+  { title: "Opiniones reales",      text: "Lee las reseñas de otros pacientes antes de elegir." },
+  { title: "Sin costo para ti",     text: "Buscar y contactar profesionales en Medify es gratis." },
 ];
 
-const MOCK_CENTROS = [
-  {
-    nombre: "Centro Médico Providencia",
-    tipo: "Centro Médico",
-    ubicacion: "Providencia, Santiago",
-    especialidades: ["Medicina General", "Psicología", "Nutrición"],
-    profesionales: 12,
-  },
-  {
-    nombre: "Clínica Dental Norte",
-    tipo: "Centro Odontológico",
-    ubicacion: "Ñuñoa, Santiago",
-    especialidades: ["Odontología General", "Ortodoncia", "Implantología"],
-    profesionales: 5,
-  },
-  {
-    nombre: "Clínica Bienestar Chillán",
-    tipo: "Clínica",
-    ubicacion: "Chillán, Ñuble",
-    especialidades: ["Kinesiología", "Medicina Complementaria", "Fisioterapia"],
-    profesionales: 8,
-  },
-];
 
 const STATS = [
   { valor: "+2.500", label: "Profesionales" },
@@ -248,61 +226,83 @@ function ProfessionalsSection({ professionals }) {
   );
 }
 
-/* ─── Centros Médicos y Clínicas ─────────────────────────────────────── */
-function ClinicsSection() {
+/* ─── Centros Médicos y Clínicas (carrusel horizontal) ─────────────── */
+/* Primero los centros registrados en /unirse y aprobados; después los cargados a mano en el código. */
+function ClinicsSection({ perfiles }) {
+  const centros = perfiles.filter((p) => p.es_profesional === false);
+  const filaRef = useRef(null);
+  if (!centros.length) return null;
+
+  const mover = (dir) => {
+    const fila = filaRef.current;
+    if (fila) fila.scrollBy({ left: dir * fila.clientWidth * 0.9, behavior: "smooth" });
+  };
+
   return (
     <section className="border-t border-[#d2d2d7] bg-white py-10">
       <div className="mx-auto max-w-[1100px] px-5 sm:px-8">
-        <div className="mb-5 flex items-baseline justify-between">
+        <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <h2 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "18px", letterSpacing: "-0.02em" }}>
-              Centros Médicos y Clínicas
+              Centros médicos y clínicas
             </h2>
-            <p className="mt-1 text-[12px] text-[#6e6e73]">Instituciones verificadas en la Red Medify</p>
+            <p className="mt-1 text-[12px] text-[#6e6e73]">Instituciones de la Red Medify</p>
           </div>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {MOCK_CENTROS.map((c) => (
-            <div
-              key={c.nombre}
-              className="flex flex-col overflow-hidden rounded-2xl border border-[#d2d2d7] bg-white transition hover:shadow-md"
-            >
-              {/* Header */}
-              <div className="flex items-center gap-3 border-b border-[#f5f5f7] p-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f5f5f7]">
-                  <Building2 size={20} className="text-[#6e6e73]" strokeWidth={1.6} />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-[#86868b]">{c.tipo}</p>
-                  <h3 className="truncate font-semibold text-[#1d1d1f]" style={{ fontSize: "13px", letterSpacing: "-0.01em" }}>
-                    {c.nombre}
-                  </h3>
-                  <p className="text-[11px] text-[#86868b]">{c.ubicacion}</p>
-                </div>
-              </div>
-
-              {/* Especialidades */}
-              <div className="flex flex-1 flex-col p-4">
-                <div className="flex flex-wrap gap-1.5">
-                  {c.especialidades.map((e) => (
-                    <span key={e} className="rounded-full bg-[#f5f5f7] px-2.5 py-1 text-[10px] font-semibold text-[#6e6e73]">
-                      {e}
-                    </span>
-                  ))}
-                </div>
-                {/* mt-auto mantiene el footer siempre al pie */}
-                <div className="mt-auto flex items-center justify-between pt-4">
-                  <span className="text-[11px] text-[#86868b]">{c.profesionales} profesionales</span>
-                  <button
-                    className="flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold text-white transition hover:opacity-90"
-                    style={{ background: "#00C853" }}
-                  >
-                    Ver más <ChevronRight size={11} />
-                  </button>
-                </div>
-              </div>
+          {centros.length > 1 && (
+            <div className="hidden gap-2 sm:flex">
+              {[-1, 1].map((dir) => (
+                <button key={dir} type="button" onClick={() => mover(dir)} aria-label={dir < 0 ? "Anteriores" : "Siguientes"}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d2d2d7] text-[#6e6e73] transition hover:border-[#1d1d1f] hover:text-[#1d1d1f]">
+                  <ChevronRight size={16} className={dir < 0 ? "rotate-180" : ""} />
+                </button>
+              ))}
             </div>
-          ))}
+          )}
+        </div>
+
+        {/* Fila deslizable: con el dedo en celular, con las flechas o el trackpad en escritorio */}
+        <div ref={filaRef}
+          className="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-5 px-5 pb-2 sm:mx-0 sm:scroll-px-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {centros.map((c) => {
+            const etiquetas = (c.especialidades?.length ? c.especialidades : (c.servicios ?? []).map((sv) => sv.nombre)).slice(0, 3);
+            const lugar = c.comuna && c.region ? `${c.comuna}, ${c.region}` : (c.ubicacion || c.ciudad);
+            return (
+              <article key={c.id}
+                className="flex w-[85%] flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#d2d2d7] bg-white transition hover:shadow-md sm:w-[calc((100%-1.5rem)/3)]">
+                <div className="flex items-center gap-3 border-b border-[#f5f5f7] p-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f5f5f7]">
+                    {c.imagen_url
+                      ? <Image src={c.imagen_url} alt="" width={44} height={44} className="h-full w-full object-cover" />
+                      : <Building2 size={20} className="text-[#6e6e73]" strokeWidth={1.6} />}
+                  </span>
+                  <div className="min-w-0">
+                    {c.tipo && <p className="text-[10px] font-semibold uppercase tracking-wide text-[#86868b]">{c.tipo}</p>}
+                    <h3 className="truncate font-semibold text-[#1d1d1f]" style={{ fontSize: "13px", letterSpacing: "-0.01em" }}>{c.nombre}</h3>
+                    {lugar && <p className="truncate text-[11px] text-[#86868b]">{lugar}</p>}
+                  </div>
+                </div>
+                <div className="flex flex-1 flex-col p-4">
+                  {etiquetas.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {etiquetas.map((e) => (
+                        <span key={e} className="rounded-full bg-[#f5f5f7] px-2.5 py-1 text-[10px] font-semibold text-[#6e6e73]">{e}</span>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+                    <span className="text-[11px] text-[#86868b]">
+                      {c.profesionales_count ? `${c.profesionales_count} profesionales` : c.especialidad_principal}
+                    </span>
+                    <Link href={`/marketplace/${c.id}`}
+                      className="flex flex-shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold text-white transition hover:opacity-90"
+                      style={{ background: "#00C853" }}>
+                      Ver más <ChevronRight size={11} />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -559,7 +559,7 @@ export default function Marketplace() {
       <div id="profesionales">
         <ProfessionalsSection professionals={filtered} />
       </div>
-      <ClinicsSection />
+      <ClinicsSection perfiles={perfiles} />
       <NearbyMap perfiles={perfiles} />
       <Stats />
       <ProCta />

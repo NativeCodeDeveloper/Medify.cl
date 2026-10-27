@@ -10,7 +10,7 @@ const EDITABLES = {
   profesional: ["nombres", "apellidos", "region", "comuna", "direccion", "url_mapa", "servicios", "modalidad", "anios_experiencia", "precio_sesion",
     "disponibilidad", "descripcion", "biografia", "enfoques", "whatsapp", "telefono", "sitio_web",
     "instagram", "facebook", "linkedin", "twitter"],
-  centro: ["nombre", "direccion", "url_mapa", "servicios", "region", "comuna", "modalidad", "profesionales_count", "descripcion",
+  centro: ["nombre", "direccion", "url_mapa", "servicios", "enfoques", "region", "comuna", "modalidad", "profesionales_count", "descripcion",
     "biografia", "whatsapp", "telefono", "sitio_web", "instagram", "facebook", "linkedin", "twitter"],
 };
 
@@ -168,10 +168,10 @@ export default function MiPerfilPage() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-5 sm:p-8">
 
       {/* ── Header ── */}
-      <div className="mb-8 flex items-center justify-between gap-6">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4 sm:gap-6">
         <div className="flex items-center gap-5">
           {/* Foto de perfil: clic o hover para cambiarla (se sube a Cloudflare vía la API) */}
           <label className="group relative flex-shrink-0 cursor-pointer" title="Cambiar foto">
@@ -248,7 +248,7 @@ export default function MiPerfilPage() {
       )}
 
       {/* ── Stats rápidos ── */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 gap-3 mb-8 sm:grid-cols-3 sm:gap-4">
         {[
           { label: "Estado del perfil", value: estado.label, dot: estado.dot },
           { label: "Plan", value: NOMBRE_PLAN[cuenta.plan_id] ?? cuenta.plan_id ?? "Gratis" },
@@ -268,7 +268,7 @@ export default function MiPerfilPage() {
       <div className="mb-8">
         {hasAgenda ? (
           /* ACTIVA */
-          <div className="rounded-2xl p-6 flex items-center justify-between gap-6"
+          <div className="rounded-2xl p-5 sm:p-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
             style={{ background: "#f5f5f7", border: "1px solid #e5e5ea" }}>
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -301,7 +301,7 @@ export default function MiPerfilPage() {
           </div>
         ) : (
           /* BLOQUEADA */
-          <div className="rounded-2xl p-6 flex items-center justify-between gap-6"
+          <div className="rounded-2xl p-5 sm:p-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
             style={{ background: "#f5f5f7", border: "1px dashed #d2d2d7" }}>
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#e5e5ea] flex items-center justify-center flex-shrink-0">
@@ -401,8 +401,8 @@ export default function MiPerfilPage() {
             <Field label="Bio completo (perfil)">
               <Textarea value={perfil.biografia} onChange={e => set("biografia", e.target.value)} />
             </Field>
-            {esProfesional && (
-              <Field label="Enfoques / Especialidades (separados por coma)">
+            {(
+              <Field label={esProfesional ? "Enfoques / Especialidades (separados por coma)" : "Especialidades que ofrece el centro (separadas por coma)"}>
                 <Input value={perfil.enfoques} onChange={e => set("enfoques", e.target.value)} />
               </Field>
             )}

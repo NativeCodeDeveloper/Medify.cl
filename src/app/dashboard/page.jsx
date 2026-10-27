@@ -32,7 +32,7 @@ export default function DashboardOverview() {
   ];
 
   return (
-    <div className="p-8">
+    <div className="p-5 sm:p-8">
       <div className="mb-8">
         <p className="font-semibold text-[#6e6e73] uppercase mb-1" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
           Panel de administración
@@ -89,13 +89,13 @@ export default function DashboardOverview() {
             Ver todas →
           </Link>
         </div>
-        <div className="bg-white rounded-2xl border border-[#e5e5ea] overflow-hidden">
+        <div className="bg-white rounded-2xl border border-[#e5e5ea] overflow-x-auto">
           {!resumen ? (
             <p className="px-5 py-8 text-center text-[13px] text-[#6e6e73]">{error ? "No disponible" : "Cargando…"}</p>
           ) : resumen.ultimasPendientes.length === 0 ? (
             <p className="px-5 py-8 text-center text-[13px] font-light text-[#6e6e73]">No hay solicitudes pendientes.</p>
           ) : (
-            <table className="w-full">
+            <table className="w-full min-w-[560px]">
               <thead>
                 <tr style={{ borderBottom: "1px solid #e5e5ea", background: "#f5f5f7" }}>
                   {["Nombre", "Tipo", "Especialidad / categoría", "Comuna", "Fecha"].map((h) => (

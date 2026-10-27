@@ -49,7 +49,7 @@ const CAMPOS = {
   profesional: ["nombres", "apellidos", "email", "especialidad", "plan_id", "modalidad", "region", "comuna", "direccion", "url_mapa", "servicios",
     "anios_experiencia", "precio_sesion", "disponibilidad", "sitio_web", "whatsapp", "telefono",
     "descripcion", "biografia", "enfoques", "instagram", "facebook", "linkedin", "twitter"],
-  centro: ["nombre", "tipo", "email", "categoria", "plan_id", "direccion", "url_mapa", "servicios", "modalidad", "region", "comuna",
+  centro: ["nombre", "tipo", "email", "categoria", "plan_id", "direccion", "url_mapa", "servicios", "enfoques", "modalidad", "region", "comuna",
     "profesionales_count", "sitio_web", "whatsapp", "telefono", "descripcion", "biografia",
     "instagram", "facebook", "linkedin", "twitter"],
 };
@@ -252,7 +252,7 @@ function Modal({ tipo, cuenta, catalogo, planes, onClose, onSaved }) {
           <Campo label="Bio completa (perfil)" full>
             <textarea rows={3} className={`${inputCls} resize-none`} value={form.biografia ?? ""} onChange={e => set("biografia", e.target.value)} />
           </Campo>
-          {esProfesional && <Campo label="Enfoques (separados por coma)" full>{input("enfoques")}</Campo>}
+          <Campo label={esProfesional ? "Enfoques (separados por coma)" : "Especialidades ofrecidas (separadas por coma)"} full>{input("enfoques")}</Campo>
           {["instagram", "facebook", "linkedin", "twitter"].map(r => (
             <Campo key={r} label={r === "twitter" ? "X (Twitter)" : r[0].toUpperCase() + r.slice(1)}>{input(r)}</Campo>
           ))}
@@ -338,8 +338,8 @@ export default function CuentasAdmin({ tipo }) {
     !q || [cfg.nombre(c), c.email, c.rut, cfg.rubro(c)].some(v => v?.toLowerCase().includes(q)));
 
   return (
-    <div className="p-8">
-      <div className="mb-7 flex items-center justify-between">
+    <div className="p-5 sm:p-8">
+      <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-[#6e6e73]">Marketplace</p>
           <h1 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "26px", letterSpacing: "-0.02em" }}>{cfg.titulo}</h1>
@@ -372,7 +372,7 @@ export default function CuentasAdmin({ tipo }) {
       {error && <p role="alert" className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-600">{error}</p>}
 
       <div className="overflow-x-auto rounded-2xl border border-[#e5e5ea] bg-white">
-        <table className="w-full">
+        <table className="w-full min-w-[820px]">
           <thead>
             <tr className="border-b border-[#e5e5ea] bg-[#f5f5f7]">
               {cfg.columnas.map(h => (
