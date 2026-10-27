@@ -1,12 +1,13 @@
 "use client";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Building2, ChevronRight, MapPin, BadgeCheck,
+  ChevronRight, MapPin, BadgeCheck,
   UserRound, Search, ChevronDown,
 } from "lucide-react";
 import { usePerfiles } from "./usePerfiles";
+import FotoPerfil from "@/componentes/FotoPerfil";
 
 /* ─── Datos ──────────────────────────────────────────────────────────── */
 /* Solo lo que Medify hace de verdad: no cobra ni gestiona reservas, no valida títulos automáticamente */
@@ -18,12 +19,6 @@ const BENEFITS = [
 ];
 
 
-const STATS = [
-  { valor: "+2.500", label: "Profesionales" },
-  { valor: "+35.000", label: "Pacientes" },
-  { valor: "+50", label: "Especialidades" },
-  { valor: "+120.000", label: "Reservas realizadas" },
-];
 
 /* Opciones de los filtros: salen de los perfiles cargados (estáticos + registrados) */
 function opcionesFiltros(perfiles) {
@@ -154,10 +149,9 @@ function ProfessionalCard({ p }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-[#dedee3] bg-white shadow-[0_10px_35px_rgba(29,29,31,0.06)] transition duration-300 hover:-translate-y-1 hover:border-[#b8e8ca] hover:shadow-[0_20px_50px_rgba(29,29,31,0.12)]">
       <div className="relative h-56 overflow-hidden bg-[#eef1ef]">
-        <Image
-          src={p.imagen_url || "/doctores1.png"}
+        <FotoPerfil
+          src={p.imagen_url}
           alt={p.nombre}
-          fill
           sizes="(max-width:768px) 100vw, (max-width:1100px) 50vw, 33vw"
           className="object-cover object-top transition duration-500 group-hover:scale-[1.025]"
         />
@@ -270,10 +264,8 @@ function ClinicsSection({ perfiles }) {
               <article key={c.id}
                 className="flex w-[85%] flex-shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#d2d2d7] bg-white transition hover:shadow-md sm:w-[calc((100%-1.5rem)/3)]">
                 <div className="flex items-center gap-3 border-b border-[#f5f5f7] p-4">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f5f5f7]">
-                    {c.imagen_url
-                      ? <Image src={c.imagen_url} alt="" width={44} height={44} className="h-full w-full object-cover" />
-                      : <Building2 size={20} className="text-[#6e6e73]" strokeWidth={1.6} />}
+                  <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl">
+                    <FotoPerfil src={c.imagen_url} alt={c.nombre} sizes="44px" chica className="object-cover" />
                   </span>
                   <div className="min-w-0">
                     {c.tipo && <p className="text-[10px] font-semibold uppercase tracking-wide text-[#86868b]">{c.tipo}</p>}
@@ -394,7 +386,7 @@ function NearbyMap({ perfiles }) {
                   >
                     <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full"
                       style={{ border: `2px solid ${selected?.id === p.id ? "#00C853" : "#e5e5ea"}` }}>
-                      <Image src={p.imagen_url || "/doctores1.png"} alt={p.nombre} fill sizes="40px" className="object-cover object-top" />
+                      <FotoPerfil src={p.imagen_url} alt={p.nombre} sizes="40px" chica />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-[12px] font-semibold text-[#1d1d1f]">{p.nombre}</p>
@@ -431,27 +423,6 @@ function NearbyMap({ perfiles }) {
             )}
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Stats ──────────────────────────────────────────────────────────── */
-function Stats() {
-  return (
-    <section className="border-t border-[#d2d2d7] bg-white">
-      <div className="mx-auto grid max-w-[1100px] grid-cols-2 px-5 sm:px-8 lg:grid-cols-4">
-        {STATS.map((s, i) => (
-          <div
-            key={s.label}
-            className={`py-7 text-center ${i < 3 ? "border-r-0 lg:border-r border-[#d2d2d7]" : ""} ${i < 2 ? "border-b border-[#d2d2d7] lg:border-b-0" : ""}`}
-          >
-            <p className="font-semibold text-[#1d1d1f]" style={{ fontSize: "clamp(1.3rem,2.2vw,1.8rem)", letterSpacing: "-0.03em" }}>
-              {s.valor}
-            </p>
-            <p className="mt-0.5 text-[11px] text-[#6e6e73]">{s.label}</p>
-          </div>
-        ))}
       </div>
     </section>
   );
@@ -532,6 +503,15 @@ export default function Marketplace() {
   const [specialty, setSpecialty] = useState("Todos los campos de estudio");
 
   const perfiles = usePerfiles();
+
+  // Búsqueda desde la URL (?q=psicólogo): la usa la caja de búsqueda de Google (SearchAction del layout)
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) {
+      setSearch(q);
+      document.getElementById("profesionales")?.scrollIntoView();
+    }
+  }, []);
   const opciones = useMemo(() => opcionesFiltros(perfiles), [perfiles]);
 
   const filtered = perfiles.filter((p) => {
@@ -561,7 +541,6 @@ export default function Marketplace() {
       </div>
       <ClinicsSection perfiles={perfiles} />
       <NearbyMap perfiles={perfiles} />
-      <Stats />
       <ProCta />
     </div>
   );

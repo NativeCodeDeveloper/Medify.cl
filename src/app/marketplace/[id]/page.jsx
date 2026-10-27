@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { PROFESSIONALS } from "../data/professionals";
 import { apiFetch, mensajeDeError } from "@/lib/api";
+import FotoPerfil from "@/componentes/FotoPerfil";
 
 const MapSingle = dynamic(() => import("../MapSingle"), { ssr: false });
 
@@ -179,7 +180,7 @@ export default function ProfessionalProfile() {
   const whatsappPropio = professional?.numero_whatsapp
     ? `https://wa.me/${professional.numero_whatsapp}?text=${mensajeWsp}`
     : null;
-  const whatsappHref = whatsappPropio || `https://wa.me/56991749964`;
+  const whatsappHref = whatsappPropio || `https://wa.me/56966091038`;
   const ratingTexto = resumen.total ? `${resumen.promedio} · ${resumen.total} reseña${resumen.total !== 1 ? "s" : ""}` : "Sin reseñas aún";
 
   if (cargandoPerfil) {
@@ -227,10 +228,9 @@ export default function ProfessionalProfile() {
             {/* Foto circular con ring verde */}
             <div className="flex-shrink-0"
               style={{ padding: "3px", borderRadius: "9999px", background: "linear-gradient(135deg,#00C853,#00e676)" }}>
-              <div className="rounded-full overflow-hidden bg-[#1d1d1f]"
+              <div className="relative rounded-full overflow-hidden bg-[#1d1d1f]"
                 style={{ width: "120px", height: "120px", border: "3px solid #000" }}>
-                <Image src={professional.imagen_url || "/doctores1.png"} alt={professional.nombre}
-                  width={120} height={120} className="w-full h-full object-cover object-top" />
+                <FotoPerfil src={professional.imagen_url} alt={professional.nombre} sizes="120px" chica />
               </div>
             </div>
 

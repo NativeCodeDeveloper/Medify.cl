@@ -42,7 +42,7 @@ export default function MapSingle({ lat, lng, nombre, imagen_url, direccion }) {
             box-shadow:0 3px 12px rgba(0,0,0,.25);background:#f5f5f7;
           ">
             <img
-              src="${imagen_url || "/doctores1.png"}"
+              src="${imagen_url || "/logofavicom.png"}"
               alt="${nombre}"
               style="width:100%;height:100%;object-fit:cover;object-position:top;"
               onerror="this.style.display='none'"

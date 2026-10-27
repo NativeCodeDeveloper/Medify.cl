@@ -96,7 +96,7 @@ const BUSINESS = [
       "Integraciones de facturación",
     ],
     cta: "Solicitar asesoría",
-    href: "https://wa.me/56991749964?text=Quiero%20cotizar%20el%20plan%20Corporativo%20de%20Medify",
+    href: "https://wa.me/56966091038?text=Quiero%20cotizar%20el%20plan%20Corporativo%20de%20Medify",
   },
   {
     id: "enterprise",
@@ -112,7 +112,7 @@ const BUSINESS = [
       "Alta disponibilidad y cumplimiento normativo",
     ],
     cta: "Contactar a Medify",
-    href: "https://wa.me/56991749964?text=Quiero%20informaci%C3%B3n%20del%20plan%20Enterprise%20de%20Medify",
+    href: "https://wa.me/56966091038?text=Quiero%20informaci%C3%B3n%20del%20plan%20Enterprise%20de%20Medify",
   },
 ];
 
@@ -285,7 +285,7 @@ export default function PreciosPage() {
             Nuestro equipo te ayuda a encontrar el plan ideal para tu práctica. Sin compromiso.
           </p>
           <a
-            href="https://wa.me/56991749964?text=Hola,%20necesito%20ayuda%20para%20elegir%20un%20plan%20de%20Medify"
+            href="https://wa.me/56966091038?text=Hola,%20necesito%20ayuda%20para%20elegir%20un%20plan%20de%20Medify"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-full text-white transition-colors duration-150"

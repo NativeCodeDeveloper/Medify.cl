@@ -487,7 +487,7 @@ export default function UnirsePage() {
       `• Experiencia: ${form.experiencia} años\n• Valor sesión: $${form.precio} CLP\n• Disponibilidad: ${form.disponibilidad}\n• Enfoques: ${form.enfoques}\n\n` +
       `*Contacto*\n` +
       `• Email: ${form.email}\n• WhatsApp: ${form.whatsapp}\n• Agenda/Web: ${form.sitioWeb}`;
-    return `https://wa.me/56991749964?text=${encodeURIComponent(msg)}`;
+    return `https://wa.me/56966091038?text=${encodeURIComponent(msg)}`;
   };
 
   /* ── Paso 0: Selección de plan ── */

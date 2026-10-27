@@ -5,7 +5,8 @@ export default function robots() {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/_next/'],
+      // Páginas privadas o de login: no tienen sentido en Google
+      disallow: ['/api/', '/_next/', '/dashboard', '/mi-perfil', '/login', '/acceso'],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,
