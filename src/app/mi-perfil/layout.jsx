@@ -81,9 +81,11 @@ export default function MiPerfilLayout({ children }) {
         {/* Profile summary */}
         <div className="px-5 py-4 border-b border-white/8">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#00C853]/20 flex items-center justify-center flex-shrink-0">
+            <div className="w-9 h-9 overflow-hidden rounded-full bg-[#00C853]/20 flex items-center justify-center flex-shrink-0">
               <span className="font-semibold text-[#00C853]" style={{ fontSize: "13px" }}>
-                {nombre.charAt(0)}
+                {cuenta.foto_url || cuenta.logo_url
+                  ? <img src={cuenta.foto_url || cuenta.logo_url} alt="" className="h-full w-full rounded-full object-cover" />
+                  : nombre.charAt(0)}
               </span>
             </div>
             <div className="min-w-0">

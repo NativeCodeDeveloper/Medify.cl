@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiFetch, cerrarSesion, mensajeDeError } from "@/lib/api";
+import { apiFetch, cerrarSesion, mensajeDeError, subirFoto } from "@/lib/api";
 import { NOMBRE_PLAN, nombreCuenta, useCuenta } from "./CuentaContext";
 
 /* Campos editables vía PUT /auth/yo (el resto —RUT, correo, plan, especialidad— lo cambia el equipo Medify) */
@@ -13,10 +13,12 @@ const EDITABLES = {
     "biografia", "whatsapp", "telefono", "sitio_web", "instagram", "facebook", "linkedin", "twitter"],
 };
 
+/* Paleta sobria (estilo Apple): texto siempre oscuro, el estado se lee en el punto.
+ * Verde solo para "publicado", que es la única buena noticia que hay que destacar. */
 const ESTADOS = {
-  pendiente: { label: "En revisión", color: "#b7791f" },
-  aprobada: { label: "Publicado", color: "#00C853" },
-  rechazada: { label: "Desactivado", color: "#6e6e73" },
+  pendiente: { label: "En revisión", dot: "#86868b" },
+  aprobada: { label: "Publicado", dot: "#00C853" },
+  rechazada: { label: "Desactivado", dot: "#d2d2d7" },
 };
 
 const REDES = [
@@ -123,6 +125,23 @@ export default function MiPerfilPage() {
   const [perfil, setPerfil] = useState(() =>
     Object.fromEntries(EDITABLES[cuenta.tipo_cuenta].map(k => [k, cuenta[k] ?? ""])));
   const [saved, setSaved] = useState(false);
+  const [subiendoFoto, setSubiendoFoto] = useState(false);
+  const fotoUrl = cuenta.foto_url || cuenta.logo_url; // profesional: foto · centro: logo
+
+  const handleFoto = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // permite volver a elegir el mismo archivo
+    if (!file) return;
+    setSubiendoFoto(true);
+    setError("");
+    try {
+      setCuenta(await subirFoto("/auth/yo/foto", file, "cuenta"));
+    } catch (err) {
+      setError(mensajeDeError(err));
+    } finally {
+      setSubiendoFoto(false);
+    }
+  };
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
   const set = (k, v) => setPerfil(p => ({ ...p, [k]: v }));
@@ -152,12 +171,28 @@ export default function MiPerfilPage() {
       {/* ── Header ── */}
       <div className="mb-8 flex items-center justify-between gap-6">
         <div className="flex items-center gap-5">
-          <div className="w-16 h-16 rounded-full overflow-hidden bg-[#f5f5f7] flex items-center justify-center flex-shrink-0"
-            style={{ border: "2px solid #e5e5ea" }}>
-            <span className="font-bold text-[#6e6e73]" style={{ fontSize: "22px" }}>
-              {nombre.charAt(0)}
+          {/* Foto de perfil: clic o hover para cambiarla (se sube a Cloudflare vía la API) */}
+          <label className="group relative flex-shrink-0 cursor-pointer" title="Cambiar foto">
+            <div className="w-16 h-16 rounded-full overflow-hidden bg-[#f5f5f7] flex items-center justify-center"
+              style={{ border: "2px solid #e5e5ea" }}>
+              {fotoUrl ? (
+                <img src={fotoUrl} alt="Foto de perfil" className="w-full h-full object-cover" />
+              ) : (
+                <span className="font-bold text-[#6e6e73]" style={{ fontSize: "22px" }}>{nombre.charAt(0)}</span>
+              )}
+            </div>
+            <span className={`absolute inset-0 flex items-center justify-center rounded-full transition-opacity ${subiendoFoto ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+              style={{ background: "rgba(0,0,0,0.45)" }}>
+              {subiendoFoto ? (
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+              ) : (
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+              )}
             </span>
-          </div>
+            <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFoto} disabled={subiendoFoto} />
+          </label>
           <div>
             <p className="font-semibold text-[#6e6e73] uppercase mb-1" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
               Red Medify
@@ -167,6 +202,9 @@ export default function MiPerfilPage() {
             </h1>
             <p className="font-light text-[#6e6e73] mt-0.5" style={{ fontSize: "12px" }}>
               RUT {cuenta.rut} · {cuenta.email}
+            </p>
+            <p className="font-light text-[#86868b]" style={{ fontSize: "11px" }}>
+              {fotoUrl ? "Haz clic en tu foto para cambiarla" : (esProfesional ? "Haz clic en el círculo para subir tu foto" : "Haz clic en el círculo para subir tu logo")}
             </p>
           </div>
         </div>
@@ -192,26 +230,33 @@ export default function MiPerfilPage() {
       )}
 
       {cuenta.estado === "pendiente" && (
-        <div className="mb-6 rounded-2xl px-5 py-4" style={{ background: "#fffbeb", border: "1px solid #fde68a" }}>
-          <p className="font-semibold text-[#1d1d1f]" style={{ fontSize: "14px" }}>Tu perfil está en revisión</p>
-          <p className="font-light text-[#6e6e73]" style={{ fontSize: "13px" }}>
-            Nuestro equipo lo revisará y te avisaremos cuando aparezca en el marketplace. Mientras tanto puedes completar tus datos.
-          </p>
+        <div className="mb-6 flex items-start gap-4 rounded-2xl border border-[#e5e5ea] bg-white px-5 py-4">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#f5f5f7]">
+            <svg className="h-[18px] w-[18px] text-[#6e6e73]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.7}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
+            </svg>
+          </span>
+          <div>
+            <p className="font-semibold text-[#1d1d1f]" style={{ fontSize: "14px", letterSpacing: "-0.01em" }}>Tu perfil está en revisión</p>
+            <p className="font-light text-[#6e6e73]" style={{ fontSize: "13px" }}>
+              Te avisaremos por correo cuando aparezca en el marketplace. Mientras tanto puedes completar tus datos.
+            </p>
+          </div>
         </div>
       )}
 
       {/* ── Stats rápidos ── */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Estado del perfil", value: estado.label, color: estado.color, dot: true },
-          { label: "Plan", value: NOMBRE_PLAN[cuenta.plan_id] ?? cuenta.plan_id ?? "—", color: "#1d1d1f" },
-          { label: "Modalidad", value: perfil.modalidad || "—", color: "#1d1d1f" },
+          { label: "Estado del perfil", value: estado.label, dot: estado.dot },
+          { label: "Plan", value: NOMBRE_PLAN[cuenta.plan_id] ?? cuenta.plan_id ?? "Gratis" },
+          { label: "Modalidad", value: perfil.modalidad || "—" },
         ].map(s => (
           <div key={s.label} className="bg-white rounded-2xl border border-[#e5e5ea] px-5 py-4">
             <p className="font-semibold text-[#6e6e73] uppercase mb-2" style={{ fontSize: "10px", letterSpacing: "0.08em" }}>{s.label}</p>
             <div className="flex items-center gap-2">
-              {s.dot && <span className="w-2 h-2 rounded-full" style={{ background: s.color }} />}
-              <p className="font-semibold" style={{ fontSize: "15px", color: s.color, letterSpacing: "-0.01em" }}>{s.value}</p>
+              {s.dot && <span className="w-2 h-2 rounded-full" style={{ background: s.dot }} />}
+              <p className="font-semibold text-[#1d1d1f]" style={{ fontSize: "15px", letterSpacing: "-0.01em" }}>{s.value}</p>
             </div>
           </div>
         ))}
@@ -267,7 +312,7 @@ export default function MiPerfilPage() {
                   Agenda Clínica
                 </p>
                 <p style={{ fontSize: "13px", color: "#6e6e73" }}>
-                  Gestiona tus citas, cobros y pacientes — todo en un solo lugar.
+                  Tu agenda online, cobros y fichas de pacientes, conectados a tu perfil en Medify.
                 </p>
               </div>
             </div>

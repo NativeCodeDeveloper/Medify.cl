@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { apiFetch, mensajeDeError } from "@/lib/api";
+import { apiFetch, mensajeDeError, subirFoto } from "@/lib/api";
 
 /* Gestión de cuentas reales (medify-api /admin/cuentas). La usan /dashboard/profesionales (tipo="profesional")
  * y /dashboard/centros (tipo="centro"). Los perfiles cargados a mano en marketplace/data/professionals.js
@@ -17,10 +17,11 @@ const ESTADOS = [
   { key: "inactiva", label: "Inactivas" },
 ];
 
+/* Etiquetas neutras con un punto de color (estilo Apple); verde solo para "publicada" */
 const ESTADO_BADGE = {
-  pendiente: { label: "Pendiente", bg: "#fffbeb", color: "#b7791f" },
-  aprobada: { label: "Publicada", bg: "rgba(0,200,83,.1)", color: "#00a344" },
-  rechazada: { label: "Inactiva", bg: "#f5f5f7", color: "#6e6e73" },
+  pendiente: { label: "Pendiente", dot: "#86868b" },
+  aprobada: { label: "Publicada", dot: "#00C853" },
+  rechazada: { label: "Inactiva", dot: "#d2d2d7" },
 };
 
 const CONFIG = {
@@ -74,6 +75,17 @@ const ICONOS = {
   borrar: "M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0",
 };
 
+/* Foto de perfil (profesional) o logo (centro); si no tiene, la inicial */
+function Avatar({ cuenta, nombre, size = 36 }) {
+  const url = cuenta.foto_url || cuenta.logo_url;
+  return (
+    <div className="flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#f5f5f7] text-[#6e6e73]"
+      style={{ width: size, height: size, fontSize: size * 0.4, fontWeight: 600 }}>
+      {url ? <img src={url} alt="" className="h-full w-full object-cover object-top" /> : (nombre || "?").charAt(0)}
+    </div>
+  );
+}
+
 /* ─── Modal crear / editar ─── */
 function Modal({ tipo, cuenta, catalogo, planes, onClose, onSaved }) {
   const esNueva = !cuenta.id;
@@ -84,7 +96,24 @@ function Modal({ tipo, cuenta, catalogo, planes, onClose, onSaved }) {
   });
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
+  const [conFoto, setConFoto] = useState(cuenta); // se refresca al subir una foto nueva
+  const [subiendo, setSubiendo] = useState(false);
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+
+  const cambiarFoto = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setSubiendo(true);
+    setError("");
+    try {
+      setConFoto(await subirFoto(`/admin/cuentas/${tipo}/${cuenta.id}/foto`, file, "admin"));
+    } catch (err) {
+      setError(mensajeDeError(err));
+    } finally {
+      setSubiendo(false);
+    }
+  };
 
   const guardar = async () => {
     setGuardando(true);
@@ -127,6 +156,16 @@ function Modal({ tipo, cuenta, catalogo, planes, onClose, onSaved }) {
         </div>
 
         <div className="grid grid-cols-1 gap-4 px-7 py-6 sm:grid-cols-2">
+          {!esNueva && (
+            <div className="sm:col-span-2 flex items-center gap-4">
+              <Avatar cuenta={conFoto} nombre={CONFIG[tipo].nombre(cuenta)} size={56} />
+              <label className={`cursor-pointer rounded-full border border-[#d2d2d7] px-4 py-2 text-[12px] font-medium text-[#1d1d1f] transition-colors hover:border-[#1d1d1f] ${subiendo ? "opacity-60" : ""}`}>
+                {subiendo ? "Subiendo…" : (conFoto.foto_url || conFoto.logo_url) ? `Cambiar ${esProfesional ? "foto" : "logo"}` : `Subir ${esProfesional ? "foto" : "logo"}`}
+                <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={cambiarFoto} disabled={subiendo} />
+              </label>
+              <span className="text-[11px] text-[#86868b]">Se ve en el marketplace y en su perfil.</span>
+            </div>
+          )}
           {esNueva && (
             <p className="sm:col-span-2 rounded-xl bg-[#f5f5f7] px-4 py-3 text-[12px] text-[#6e6e73]">
               Un perfil creado desde aquí se publica en el marketplace pero <strong>no tiene acceso</strong> a /mi-perfil.
@@ -344,9 +383,14 @@ export default function CuentasAdmin({ tipo }) {
                 <tr key={c.id} className="transition-colors hover:bg-[#f5f5f7]/50"
                   style={{ borderBottom: i < filtradas.length - 1 ? "1px solid #f5f5f7" : "none" }}>
                   <td className="px-5 py-3.5">
-                    <p className="text-[13px] font-medium text-[#1d1d1f]">{cfg.nombre(c)}</p>
-                    <p className="text-[11px] font-light text-[#6e6e73]">{c.email} · {c.rut}</p>
-                    {!c.tiene_acceso && <p className="text-[10px] text-[#86868b]">Creado por el equipo · sin acceso</p>}
+                    <div className="flex items-center gap-3">
+                      <Avatar cuenta={c} nombre={cfg.nombre(c)} />
+                      <div>
+                        <p className="text-[13px] font-medium text-[#1d1d1f]">{cfg.nombre(c)}</p>
+                        <p className="text-[11px] font-light text-[#6e6e73]">{c.email} · {c.rut}</p>
+                        {!c.tiene_acceso && <p className="text-[10px] text-[#86868b]">Creado por el equipo · sin acceso</p>}
+                      </div>
+                    </div>
                   </td>
                   <td className="px-5 py-3.5 text-[13px] font-light text-[#424245]">{cfg.rubro(c)}</td>
                   <td className="px-5 py-3.5 text-[13px] font-light text-[#424245]">{[c.comuna, c.region].filter(Boolean).join(", ")}</td>
@@ -360,7 +404,8 @@ export default function CuentasAdmin({ tipo }) {
                     ) : <span className="text-[12px] font-light text-[#86868b]">{c.whatsapp ? "WhatsApp" : "Sin link"}</span>}
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className="rounded-full px-2.5 py-1 text-[11px] font-medium" style={{ background: badge.bg, color: badge.color }}>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f5f7] px-2.5 py-1 text-[11px] font-medium text-[#1d1d1f]">
+                      <span className="h-1.5 w-1.5 rounded-full" style={{ background: badge.dot }} />
                       {badge.label}
                     </span>
                   </td>
@@ -413,7 +458,7 @@ export default function CuentasAdmin({ tipo }) {
 
       {modal !== null && (
         <Modal tipo={tipo} cuenta={modal} catalogo={catalogo} planes={planes}
-          onClose={() => setModal(null)}
+          onClose={() => { setModal(null); cargar(); }}
           onSaved={() => { setModal(null); cargar(); }} />
       )}
 

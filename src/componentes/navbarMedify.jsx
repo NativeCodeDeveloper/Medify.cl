@@ -45,7 +45,20 @@ export default function NavbarMedify() {
           />
         </Link>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          {/* Profesionales y centros ya registrados entran con RUT + contraseña */}
+          <Link
+            href="/acceso"
+            className="inline-flex items-center justify-center rounded-full transition-colors duration-150"
+            style={{
+              fontSize: "13px",
+              fontWeight: 400,
+              padding: "5px 12px",
+              color: scrolled ? "#1d1d1f" : "rgba(255,255,255,0.85)",
+            }}
+          >
+            Ingresar
+          </Link>
           <Link
             href="/unirse"
             className="inline-flex items-center justify-center rounded-full transition-colors duration-150"

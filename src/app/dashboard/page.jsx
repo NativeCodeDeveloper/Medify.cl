@@ -26,7 +26,7 @@ export default function DashboardOverview() {
   const n = (v) => (resumen ? v : "—");
   const stats = [
     { label: "Profesionales publicados", value: n(resumen?.profesionales.aprobadas), color: "#00C853" },
-    { label: "Solicitudes pendientes", value: n((resumen?.profesionales.pendientes ?? 0) + (resumen?.centros.pendientes ?? 0)), color: "#b7791f", href: "/dashboard/solicitudes" },
+    { label: "Solicitudes pendientes", value: n((resumen?.profesionales.pendientes ?? 0) + (resumen?.centros.pendientes ?? 0)), color: "#86868b", href: "/dashboard/solicitudes" },
     { label: "Centros publicados", value: n(resumen?.centros.aprobadas), color: "#0369a1" },
     { label: "Reseñas de pacientes", value: n(resumen?.resenas.visibles), color: "#F59E0B" },
   ];

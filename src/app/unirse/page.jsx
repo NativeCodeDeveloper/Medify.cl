@@ -221,6 +221,9 @@ const PASOS = ["Tu plan", "Datos básicos", "Tu práctica", "Contacto", "Confirm
 const PLANES_HABILITADOS = false;
 const PRIMER_PASO = PLANES_HABILITADOS ? 0 : 1;
 
+/* Largo mínimo de contraseña: lo exige Clerk (configuración de la app Medify) y la API valida lo mismo */
+const MIN_PASSWORD = 15;
+
 /* ─── UI helpers ─────────────────────────────────────────────────── */
 function Label({ children, required }) {
   return (
@@ -362,7 +365,8 @@ export default function UnirsePage() {
   };
 
   const rutValido = form.rut.length > 3 ? validateRUT(form.rut) : null;
-  const passwordMatch = form.password.length >= 8 && form.password === form.confirmPassword;
+  const passwordCorta = form.password.length > 0 && form.password.length < MIN_PASSWORD;
+  const passwordMatch = form.password.length >= MIN_PASSWORD && form.password === form.confirmPassword;
   const passwordMismatch = form.confirmPassword && form.password !== form.confirmPassword;
 
   /* Valida que la URL sea del dominio agendaclinicas.cl */
@@ -916,8 +920,13 @@ export default function UnirsePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label required>Contraseña</Label>
-              <Input type="password" placeholder="Mínimo 8 caracteres" value={form.password}
+              <Input type="password" placeholder={`Mínimo ${MIN_PASSWORD} caracteres`} value={form.password}
                 onChange={e => set("password", e.target.value)} />
+              {passwordCorta && (
+                <p className="mt-1.5 text-red-500" style={{ fontSize: "12px" }}>
+                  Faltan {MIN_PASSWORD - form.password.length} caracteres (mínimo {MIN_PASSWORD}).
+                </p>
+              )}
             </div>
             <div>
               <Label required>Confirmar contraseña</Label>

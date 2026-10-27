@@ -70,3 +70,37 @@ export function mensajeDeError(err) {
   }
   return err?.message || "Ocurrió un error inesperado.";
 }
+
+/* Achica la foto en el navegador antes de subirla (máx. 1200px, JPEG ~85%): una foto de celular de 4 MB
+ * queda en ~150 KB, sube rápido y no choca con el límite de 3 MB de la API. */
+async function reducirImagen(file, max = 1200) {
+  if (!file.type.startsWith("image/")) throw new ApiError(400, "El archivo debe ser una imagen");
+  const bitmap = await createImageBitmap(file).catch(() => null);
+  if (!bitmap) throw new ApiError(400, "No pudimos leer la imagen. Prueba con JPG o PNG.");
+  const escala = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * escala);
+  canvas.height = Math.round(bitmap.height * escala);
+  canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  return new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.85));
+}
+
+/* Sube una foto de perfil/logo (multipart, campo "foto") y devuelve la cuenta actualizada */
+export async function subirFoto(path, file, auth) {
+  const form = new FormData();
+  form.append("foto", await reducirImagen(file), "foto.jpg");
+  const token = getToken(auth);
+  let res;
+  try {
+    res = await fetch(`${API_URL}${path}`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: form,
+    });
+  } catch {
+    throw new ApiError(0, "No pudimos conectar con el servidor. Revisa tu conexión e intenta de nuevo.");
+  }
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new ApiError(res.status, data?.error || "No se pudo subir la imagen.");
+  return data;
+}
