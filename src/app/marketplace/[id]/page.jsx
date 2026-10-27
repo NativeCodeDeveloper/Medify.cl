@@ -408,6 +408,28 @@ export default function ProfessionalProfile() {
                 </div>
               </div>
             )}
+
+            {/* ── Servicios ── */}
+            {professional.servicios?.length > 0 && (
+              <div className="rounded-2xl border border-[#d2d2d7] p-7">
+                <h2 className="font-semibold text-[#1d1d1f] mb-4"
+                  style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
+                  Servicios
+                </h2>
+                <ul className="divide-y divide-[#f0f0f2]">
+                  {professional.servicios.map((sv, i) => (
+                    <li key={i} className="flex items-baseline justify-between gap-4 py-3 first:pt-0 last:pb-0">
+                      <span className="text-[#1d1d1f]" style={{ fontSize: "14px" }}>{sv.nombre}</span>
+                      {sv.precio != null && (
+                        <span className="flex-shrink-0 font-medium text-[#1d1d1f]" style={{ fontSize: "14px" }}>
+                          ${Number(sv.precio).toLocaleString("es-CL")}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Right: contacto sticky */}
@@ -536,6 +558,23 @@ export default function ProfessionalProfile() {
           </div>
 
         </div>
+
+        {/* ── Mapa con iframe de Google (perfiles registrados, sin coordenadas) ── */}
+        {!(professional.lat && professional.lng) && professional.url_mapa && (
+          <div className="mt-8">
+            <h2 className="font-semibold text-[#1d1d1f] mb-4"
+              style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
+              Ubicación
+            </h2>
+            {professional.direccion && (
+              <p className="-mt-2 mb-4 font-light text-[#6e6e73]" style={{ fontSize: "13px" }}>{professional.direccion}</p>
+            )}
+            <div className="overflow-hidden rounded-2xl border border-[#d2d2d7]" style={{ height: "320px" }}>
+              <iframe src={professional.url_mapa} title={`Ubicación de ${professional.nombre}`}
+                className="h-full w-full border-0" loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade" />
+            </div>
+          </div>
+        )}
 
         {/* ── Mapa de ubicación (Leaflet) ── */}
         {professional.lat && professional.lng && (

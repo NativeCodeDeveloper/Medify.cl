@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { apiFetch, guardarToken, mensajeDeError } from "@/lib/api";
+import { ServiciosEditor, serviciosParaApi } from "@/componentes/PerfilCampos";
 
 /* ─── Opciones ───────────────────────────────────────────────────── */
 /* ── Especialidades por categoría ── */
@@ -305,7 +306,7 @@ export default function UnirsePage() {
   const [registro, setRegistro] = useState(null); // respuesta de POST /auth/registro: { cuenta, siguientePaso }
   const [form, setForm] = useState({
     foto: null, fotoPreview: null,
-    tipo: "", categoria: "", profesionales_count: "",
+    tipo: "", categoria: "", profesionales_count: "", servicios: [],
     nombre: "", apellidos: "", direccion: "", especialidad: "", especialidadOtra: "",
     region: "", comuna: "", modalidad: "",
     experiencia: "", precio: "", disponibilidad: "",
@@ -415,7 +416,8 @@ export default function UnirsePage() {
       const comunes = {
         tipo: form.tipo, plan_id: PLANES_HABILITADOS ? planId : undefined,
         rut: form.rut, email: form.email, password: form.password,
-        region: form.region, comuna: form.comuna, modalidad: form.modalidad,
+        region: form.region, comuna: form.comuna, direccion: form.direccion, modalidad: form.modalidad,
+        servicios: serviciosParaApi(form.servicios),
         descripcion: form.descripcion, biografia: form.bio,
         whatsapp: form.whatsapp, sitio_web: agendaValida ? form.sitioWeb : "",
         instagram: form.instagram, facebook: form.facebook, linkedin: form.linkedin, twitter: form.twitter,
@@ -685,17 +687,20 @@ export default function UnirsePage() {
           </div>
         )}
 
-        {/* CLÍNICA: dirección (se muestra en el mapa del marketplace) */}
-        {esClinica && (
-          <div>
-            <Label required>Dirección</Label>
-            <Input
-              placeholder="Ej: Av. Providencia 1234, oficina 501"
-              value={form.direccion}
-              onChange={e => set("direccion", e.target.value)}
-            />
-          </div>
-        )}
+        {/* Dirección: se muestra en el mapa del marketplace (obligatoria para centros, opcional si atiendes solo online) */}
+        <div>
+          <Label required={esClinica}>{esClinica ? "Dirección" : "Dirección de tu consulta"}</Label>
+          <Input
+            placeholder="Ej: Av. Providencia 1234, oficina 501"
+            value={form.direccion}
+            onChange={e => set("direccion", e.target.value)}
+          />
+          {!esClinica && (
+            <p className="mt-1.5 font-light text-[#86868b]" style={{ fontSize: "12px" }}>
+              Con tu dirección apareces en el mapa del marketplace. Déjala vacía si atiendes solo online.
+            </p>
+          )}
+        </div>
 
         {/* Región */}
         <div>
@@ -774,6 +779,10 @@ export default function UnirsePage() {
           <Input placeholder="Ej: Medicina General, Psicología, Nutrición, Kinesiología" value={form.enfoques}
             onChange={e => set("enfoques", e.target.value)} />
         </div>
+        <div>
+          <Label>Servicios que ofreces</Label>
+          <ServiciosEditor value={form.servicios} onChange={v => set("servicios", v)} />
+        </div>
       </div>
     ) : (
       /* ── Step 2 PROFESIONAL ── */
@@ -809,6 +818,10 @@ export default function UnirsePage() {
           <Label>Enfoques o áreas (separados por coma)</Label>
           <Input placeholder="Ej: Ansiedad, Terapia cognitivo-conductual, Adultos" value={form.enfoques}
             onChange={e => set("enfoques", e.target.value)} />
+        </div>
+        <div>
+          <Label>Servicios que ofreces</Label>
+          <ServiciosEditor value={form.servicios} onChange={v => set("servicios", v)} />
         </div>
       </div>
     );
@@ -996,6 +1009,7 @@ export default function UnirsePage() {
       ["Especialidad", especialidadFinal],
       ["Región", form.region],
       ["Comuna", form.comuna],
+      ["Dirección", form.direccion || "—"],
       ["Modalidad", form.modalidad],
       ["Experiencia", form.experiencia ? `${form.experiencia} años` : "—"],
       ["Valor sesión", form.precio ? `$${Number(form.precio).toLocaleString("es-CL")} CLP` : "—"],

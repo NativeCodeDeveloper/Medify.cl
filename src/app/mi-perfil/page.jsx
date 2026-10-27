@@ -3,13 +3,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch, cerrarSesion, mensajeDeError, subirFoto } from "@/lib/api";
 import { NOMBRE_PLAN, nombreCuenta, useCuenta } from "./CuentaContext";
+import { MapaInput, ServiciosEditor, serviciosParaApi } from "@/componentes/PerfilCampos";
 
 /* Campos editables vía PUT /auth/yo (el resto —RUT, correo, plan, especialidad— lo cambia el equipo Medify) */
 const EDITABLES = {
-  profesional: ["nombres", "apellidos", "region", "comuna", "modalidad", "anios_experiencia", "precio_sesion",
+  profesional: ["nombres", "apellidos", "region", "comuna", "direccion", "url_mapa", "servicios", "modalidad", "anios_experiencia", "precio_sesion",
     "disponibilidad", "descripcion", "biografia", "enfoques", "whatsapp", "telefono", "sitio_web",
     "instagram", "facebook", "linkedin", "twitter"],
-  centro: ["nombre", "direccion", "region", "comuna", "modalidad", "profesionales_count", "descripcion",
+  centro: ["nombre", "direccion", "url_mapa", "servicios", "region", "comuna", "modalidad", "profesionales_count", "descripcion",
     "biografia", "whatsapp", "telefono", "sitio_web", "instagram", "facebook", "linkedin", "twitter"],
 };
 
@@ -123,7 +124,7 @@ export default function MiPerfilPage() {
 
   /* Copia editable: los null de la BD pasan a "" para que los inputs queden controlados */
   const [perfil, setPerfil] = useState(() =>
-    Object.fromEntries(EDITABLES[cuenta.tipo_cuenta].map(k => [k, cuenta[k] ?? ""])));
+    Object.fromEntries(EDITABLES[cuenta.tipo_cuenta].map(k => [k, k === "servicios" ? (cuenta.servicios ?? []) : (cuenta[k] ?? "")])));
   const [saved, setSaved] = useState(false);
   const [subiendoFoto, setSubiendoFoto] = useState(false);
   const fotoUrl = cuenta.foto_url || cuenta.logo_url; // profesional: foto · centro: logo
@@ -154,7 +155,8 @@ export default function MiPerfilPage() {
     setGuardando(true);
     setError("");
     try {
-      const actualizada = await apiFetch("/auth/yo", { method: "PUT", body: perfil, auth: "cuenta" });
+      const body = { ...perfil, servicios: serviciosParaApi(perfil.servicios) };
+      const actualizada = await apiFetch("/auth/yo", { method: "PUT", body, auth: "cuenta" });
       setCuenta(actualizada);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -425,15 +427,29 @@ export default function MiPerfilPage() {
             <Field label="Link de tu agenda (botón «Agendar hora»)">
               <Input placeholder="tu-nombre.agendaclinicas.cl" value={perfil.sitio_web} onChange={e => set("sitio_web", e.target.value)} />
             </Field>
-            {!esProfesional && (
-              <div className="sm:col-span-2">
-                <Field label="Dirección (aparece en el mapa)">
-                  <Input placeholder="Ej: Av. Libertad 765, Chillán" value={perfil.direccion}
-                    onChange={e => set("direccion", e.target.value)} />
-                </Field>
-              </div>
-            )}
+            <div className="sm:col-span-2">
+              <Field label={esProfesional ? "Dirección de tu consulta (aparece en el mapa)" : "Dirección (aparece en el mapa)"}>
+                <Input placeholder="Ej: Av. Libertad 765, oficina 302" value={perfil.direccion}
+                  onChange={e => set("direccion", e.target.value)} />
+              </Field>
+            </div>
+            <div className="sm:col-span-2">
+              <Field label="Mapa de Google (opcional)">
+                <MapaInput value={perfil.url_mapa} onChange={v => set("url_mapa", v)} direccion={perfil.direccion} />
+              </Field>
+            </div>
           </div>
+        </div>
+
+        {/* Servicios */}
+        <div className="bg-white rounded-2xl border border-[#e5e5ea] p-6">
+          <h2 className="font-semibold text-[#1d1d1f] mb-1" style={{ fontSize: "14px", letterSpacing: "-0.01em" }}>
+            Servicios
+          </h2>
+          <p className="font-light text-[#6e6e73] mb-5" style={{ fontSize: "12px" }}>
+            Lo que ofreces, con su precio si quieres mostrarlo. Aparecen en tu perfil público.
+          </p>
+          <ServiciosEditor value={perfil.servicios} onChange={v => set("servicios", v)} />
         </div>
 
         {/* Redes sociales */}

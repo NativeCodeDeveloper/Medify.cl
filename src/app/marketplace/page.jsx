@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -310,51 +310,113 @@ function ClinicsSection() {
 }
 
 /* ─── Ubicaciones de profesionales y consultas ──────────────────────── */
+const FILTROS_MAPA = [
+  { key: "todos", label: "Todos" },
+  { key: "profesional", label: "Profesionales" },
+  { key: "centro", label: "Clínicas" },
+];
+
 function NearbyMap({ perfiles }) {
-  const availableLocations = perfiles.filter((p) => p.url_mapa || (p.lat && p.lng));
-  const [selectedId, setSelectedId] = useState(availableLocations[0]?.id);
-  const selected = availableLocations.find((p) => p.id === selectedId) || availableLocations[0];
-  const mapUrl = selected?.url_mapa || `https://maps.google.com/maps?q=${selected?.lat},${selected?.lng}&z=15&output=embed`;
+  const [busqueda, setBusqueda] = useState("");
+  const [tipo, setTipo] = useState("todos");
+  const listaRef = useRef(null);
+
+  // Todos los que tienen ubicación: coordenadas (perfiles cargados a mano) o mapa de Google (registrados)
+  const conUbicacion = perfiles.filter((p) => p.url_mapa || (p.lat && p.lng));
+  const q = busqueda.trim().toLowerCase();
+  const visibles = conUbicacion.filter((p) =>
+    (tipo === "todos" || (tipo === "profesional" ? p.es_profesional !== false : p.es_profesional === false)) &&
+    (!q || [p.nombre, p.especialidad_principal, p.ubicacion, p.comuna].some((v) => v?.toLowerCase().includes(q)))
+  );
+
+  const [selectedId, setSelectedId] = useState(null);
+  const selected = visibles.find((p) => p.id === selectedId) || visibles[0];
+  const mapUrl = selected?.url_mapa || (selected && `https://maps.google.com/maps?q=${selected.lat},${selected.lng}&z=15&output=embed`);
+
+  // Flechas del carrusel: avanzan ~3 tarjetas hacia arriba/abajo
+  const mover = (dir) => listaRef.current?.scrollBy({ top: dir * 210, behavior: "smooth" });
 
   return (
     <section className="border-t border-[#d2d2d7] bg-[#f5f5f7]">
       <div className="mx-auto max-w-[1100px] px-5 py-10 sm:px-8">
-        <div className="overflow-hidden rounded-2xl border border-[#d2d2d7] bg-white lg:grid lg:grid-cols-[300px_1fr]">
+        <div className="overflow-hidden rounded-2xl border border-[#d2d2d7] bg-white lg:grid lg:grid-cols-[320px_1fr]">
 
-          {/* Panel izquierdo */}
-          <div className="border-b border-[#d2d2d7] p-7 lg:border-b-0 lg:border-r">
+          {/* Panel izquierdo: filtros + carrusel vertical */}
+          <div className="flex flex-col border-b border-[#d2d2d7] p-6 lg:border-b-0 lg:border-r">
             <h2 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "18px", letterSpacing: "-0.02em" }}>
               Ubicaciones disponibles
             </h2>
-            <p className="mt-2 text-[12px] leading-5 text-[#6e6e73]">
-              Selecciona un profesional o consulta para revisar su ubicación antes de agendar.
+            <p className="mt-1.5 text-[12px] leading-5 text-[#6e6e73]">
+              Busca un profesional o clínica y revisa su ubicación antes de agendar.
             </p>
 
-            {/* Lista de profesionales */}
-            <div className="mt-6 space-y-2">
-              {availableLocations.slice(0, 4).map((p) => (
-                <button
-                  type="button"
-                  key={p.id}
-                  onClick={() => setSelectedId(p.id)}
-                  className={`flex w-full items-center gap-3 rounded-xl p-2.5 text-left transition ${selected?.id === p.id ? "bg-[#eefaf2] ring-1 ring-[#b8e8ca]" : "hover:bg-[#f5f5f7]"}`}
-                >
-                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full" style={{ border: "2.5px solid #00C853" }}>
-                    <Image src={p.imagen_url} alt={p.nombre} fill sizes="40px" className="object-cover object-top" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[12px] font-semibold text-[#1d1d1f]">{p.nombre}</p>
-                    <p className="text-[11px] text-[#86868b]">{p.especialidad_principal} · {p.ubicacion}</p>
-                  </div>
-                  <ChevronRight size={15} className={selected?.id === p.id ? "text-[#00a846]" : "text-[#a1a1a6]"} />
+            <div className="relative mt-4">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#86868b]" />
+              <input
+                type="search"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Buscar por nombre, especialidad o comuna"
+                className="w-full rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] py-2.5 pl-9 pr-3 text-[13px] text-[#1d1d1f] outline-none transition focus:border-[#00C853] focus:bg-white focus:ring-2 focus:ring-[#00C853]/10"
+              />
+            </div>
+            <div className="mt-3 grid grid-cols-3 rounded-xl bg-[#f5f5f7] p-1">
+              {FILTROS_MAPA.map((f) => (
+                <button key={f.key} type="button" onClick={() => setTipo(f.key)}
+                  className="rounded-lg py-1.5 text-[12px] transition"
+                  style={{
+                    fontWeight: tipo === f.key ? 600 : 400,
+                    color: tipo === f.key ? "#1d1d1f" : "#6e6e73",
+                    background: tipo === f.key ? "#ffffff" : "transparent",
+                    boxShadow: tipo === f.key ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                  }}>
+                  {f.label}
                 </button>
               ))}
             </div>
+
+            {/* Carrusel vertical: altura fija, se desplaza hacia abajo con la rueda o con las flechas */}
+            <div className="relative mt-4">
+              <button type="button" onClick={() => mover(-1)} aria-label="Ver anteriores"
+                className="absolute -top-1 left-1/2 z-10 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full border border-[#d2d2d7] bg-white text-[#6e6e73] shadow-sm hover:text-[#1d1d1f]">
+                <ChevronDown size={14} className="rotate-180" />
+              </button>
+              <div ref={listaRef}
+                className="h-[300px] snap-y snap-mandatory space-y-2 overflow-y-auto py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {visibles.length === 0 ? (
+                  <p className="py-10 text-center text-[12px] text-[#86868b]">Sin resultados para esta búsqueda.</p>
+                ) : visibles.map((p) => (
+                  <button
+                    type="button"
+                    key={p.id}
+                    onClick={() => setSelectedId(p.id)}
+                    className={`flex w-full snap-start items-center gap-3 rounded-xl p-2.5 text-left transition ${selected?.id === p.id ? "bg-[#f5f5f7] ring-1 ring-[#d2d2d7]" : "hover:bg-[#f5f5f7]"}`}
+                  >
+                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full"
+                      style={{ border: `2px solid ${selected?.id === p.id ? "#00C853" : "#e5e5ea"}` }}>
+                      <Image src={p.imagen_url || "/doctores1.png"} alt={p.nombre} fill sizes="40px" className="object-cover object-top" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[12px] font-semibold text-[#1d1d1f]">{p.nombre}</p>
+                      <p className="truncate text-[11px] text-[#86868b]">{p.especialidad_principal} · {p.comuna || p.ubicacion}</p>
+                    </div>
+                    <ChevronRight size={15} className={selected?.id === p.id ? "text-[#00a846]" : "text-[#a1a1a6]"} />
+                  </button>
+                ))}
+              </div>
+              <button type="button" onClick={() => mover(1)} aria-label="Ver siguientes"
+                className="absolute -bottom-1 left-1/2 z-10 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full border border-[#d2d2d7] bg-white text-[#6e6e73] shadow-sm hover:text-[#1d1d1f]">
+                <ChevronDown size={14} />
+              </button>
+            </div>
+            <p className="mt-3 text-center text-[11px] text-[#86868b]">
+              {visibles.length} {visibles.length === 1 ? "ubicación" : "ubicaciones"}
+            </p>
           </div>
 
           {/* Mapa */}
           <div className="relative min-h-[390px] bg-[#e8ece9] lg:min-h-0">
-            {selected && (
+            {selected ? (
               <iframe
                 key={selected.id}
                 src={mapUrl}
@@ -364,6 +426,8 @@ function NearbyMap({ perfiles }) {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
+            ) : (
+              <p className="absolute inset-0 flex items-center justify-center text-[13px] text-[#6e6e73]">Selecciona una ubicación</p>
             )}
           </div>
         </div>

@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { apiFetch, mensajeDeError, subirFoto } from "@/lib/api";
+import { MapaInput, ServiciosEditor, serviciosParaApi } from "@/componentes/PerfilCampos";
 
 /* Gestión de cuentas reales (medify-api /admin/cuentas). La usan /dashboard/profesionales (tipo="profesional")
  * y /dashboard/centros (tipo="centro"). Los perfiles cargados a mano en marketplace/data/professionals.js
@@ -45,10 +46,10 @@ const CONFIG = {
 
 /* Campos que se mandan a la API desde el modal */
 const CAMPOS = {
-  profesional: ["nombres", "apellidos", "email", "especialidad", "plan_id", "modalidad", "region", "comuna",
+  profesional: ["nombres", "apellidos", "email", "especialidad", "plan_id", "modalidad", "region", "comuna", "direccion", "url_mapa", "servicios",
     "anios_experiencia", "precio_sesion", "disponibilidad", "sitio_web", "whatsapp", "telefono",
     "descripcion", "biografia", "enfoques", "instagram", "facebook", "linkedin", "twitter"],
-  centro: ["nombre", "tipo", "email", "categoria", "plan_id", "direccion", "modalidad", "region", "comuna",
+  centro: ["nombre", "tipo", "email", "categoria", "plan_id", "direccion", "url_mapa", "servicios", "modalidad", "region", "comuna",
     "profesionales_count", "sitio_web", "whatsapp", "telefono", "descripcion", "biografia",
     "instagram", "facebook", "linkedin", "twitter"],
 };
@@ -91,7 +92,7 @@ function Modal({ tipo, cuenta, catalogo, planes, onClose, onSaved }) {
   const esNueva = !cuenta.id;
   const esProfesional = tipo === "profesional";
   const [form, setForm] = useState(() => {
-    const base = Object.fromEntries(CAMPOS[tipo].map(k => [k, cuenta[k] ?? ""]));
+    const base = Object.fromEntries(CAMPOS[tipo].map(k => [k, k === "servicios" ? (cuenta.servicios ?? []) : (cuenta[k] ?? "")]));
     return { ...base, rut: cuenta.rut ?? "" };
   });
   const [guardando, setGuardando] = useState(false);
@@ -120,6 +121,7 @@ function Modal({ tipo, cuenta, catalogo, planes, onClose, onSaved }) {
     setError("");
     try {
       const body = Object.fromEntries(CAMPOS[tipo].map(k => [k, form[k]]));
+      body.servicios = serviciosParaApi(form.servicios);
       if (!body.email) delete body.email; // vacío = no tocar el correo
       const data = esNueva
         ? await apiFetch(`/admin/cuentas/${tipo}`, { method: "POST", body: { ...body, rut: form.rut }, auth: "admin" })
@@ -225,6 +227,13 @@ function Modal({ tipo, cuenta, catalogo, planes, onClose, onSaved }) {
           </Campo>
           <Campo label="Región">{input("region")}</Campo>
           <Campo label="Comuna">{input("comuna")}</Campo>
+          {esProfesional && <Campo label="Dirección de la consulta" full>{input("direccion", { placeholder: "Ej: Av. Libertad 765, oficina 302" })}</Campo>}
+          <Campo label="Mapa de Google (opcional)" full>
+            <MapaInput value={form.url_mapa} onChange={v => set("url_mapa", v)} direccion={form.direccion} />
+          </Campo>
+          <Campo label="Servicios" full>
+            <ServiciosEditor value={form.servicios} onChange={v => set("servicios", v)} />
+          </Campo>
 
           {esProfesional ? (
             <>
