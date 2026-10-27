@@ -20,6 +20,9 @@ const BENEFITS = [
 
 
 
+/* Texto para comparar en la búsqueda: sin tildes ni mayúsculas */
+const normalizar = (t) => String(t ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
 /* Opciones de los filtros: salen de los perfiles cargados (estáticos + registrados) */
 function opcionesFiltros(perfiles) {
   const unicos = (fn) => [...new Set(perfiles.map(fn).filter(Boolean))];
@@ -514,10 +517,15 @@ export default function Marketplace() {
   }, []);
   const opciones = useMemo(() => opcionesFiltros(perfiles), [perfiles]);
 
+  const q = normalizar(search.trim());
   const filtered = perfiles.filter((p) => {
-    const q = search.toLowerCase();
+    // La búsqueda mira nombre, especialidad, enfoques, servicios, tipo y lugar ("psicologia" encuentra "Psicología")
+    const textoPerfil = normalizar([
+      p.nombre, p.tipo, p.especialidad_principal, p.comuna, p.ciudad, p.ubicacion,
+      ...(p.especialidades ?? []), ...(p.servicios ?? []).map((sv) => sv.nombre),
+    ].filter(Boolean).join(" "));
     return (
-      (!q || p.nombre.toLowerCase().includes(q) || p.tipo?.toLowerCase().includes(q)) &&
+      (!q || textoPerfil.includes(q)) &&
       (city === "Todas las ciudades" || (p.ciudad || p.comuna || p.ubicacion) === city) &&
       (modality === "Todas las modalidades" || p.modalidad_atencion === modality || p.modalidad_atencion === "Ambas") &&
       (specialty === "Todos los campos de estudio" || p.especialidad_principal === specialty)

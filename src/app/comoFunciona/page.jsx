@@ -11,21 +11,23 @@ const inter = Inter({
 const STEPS = [
   {
     num: "01",
-    title: "Crea tu perfil profesional.",
-    desc: "Regístrate, completa tu ficha y aparece en el marketplace. Los pacientes te encontrarán por especialidad, zona y disponibilidad. Sin costo inicial.",
+    title: "Crea tu perfil.",
+    desc: "Regístrate gratis y completa tu especialidad, servicios, valores, dirección y foto. Mientras más completo esté tu perfil, más fácil es que te encuentren.",
     cta: null,
   },
   {
     num: "02",
-    title: "Suscríbete y sé visible.",
-    desc: "Elige tu plan y activa tu suscripción. Obtienes posición destacada en los resultados de búsqueda, recordatorios automáticos, pagos online e historial clínico completo.",
-    cta: { label: "Ver planes", href: "/precios" },
+    title: "Lo revisamos y publicamos.",
+    desc: "Nuestro equipo revisa tus datos. Cuando tu perfil se publica te avisamos por correo, y apareces en el marketplace y en el mapa de ubicaciones.",
+    cta: { label: "Crear mi perfil", href: "/unirse" },
+    // Planes desactivados por ahora (registro gratuito). Al activar los pagos:
+    // cta: { label: "Ver planes", href: "/precios" },
     featured: true,
   },
   {
     num: "03",
-    title: "Gestiona y crece.",
-    desc: "Recibe reservas directas desde tu perfil. Atiende más pacientes en menos tiempo. Medify se encarga del resto.",
+    title: "Los pacientes te contactan.",
+    desc: "Te encuentran por especialidad o comuna, revisan tu perfil y reseñas, y agendan en tu agenda online o te escriben por WhatsApp. Sin intermediarios ni comisiones.",
     cta: null,
   },
 ];
@@ -50,10 +52,10 @@ export default function ComoFunciona() {
             className="font-semibold text-[#1d1d1f] leading-[1.1] mb-5 max-w-[560px]"
             style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", letterSpacing: "-0.025em" }}
           >
-            De cero a lleno de pacientes. En tres pasos.
+            Tu consulta, visible. En tres pasos.
           </h2>
           <p className="text-[19px] font-light text-[#6e6e73] leading-[1.6] max-w-[480px]">
-            Crea tu perfil, elige tu plan y empieza a recibir pacientes desde toda Chile.
+            Crea tu perfil gratis, nuestro equipo lo revisa y los pacientes te encuentran y te contactan directamente.
           </p>
         </div>
 
@@ -104,17 +106,17 @@ export default function ComoFunciona() {
               className="font-semibold text-[#1d1d1f] mb-2"
               style={{ fontSize: "21px", letterSpacing: "-0.015em" }}
             >
-              Por fin, más tiempo para tus pacientes.
+              Tu perfil, siempre al día.
             </p>
             <p
               className="font-light text-[#6e6e73] leading-[1.6] max-w-[480px]"
               style={{ fontSize: "15px" }}
             >
-              Simplifica tu consulta, elimina el desorden administrativo y dedícate a lo que realmente importa.
+              Cambia tus servicios, valores, foto o link de agenda cuando quieras desde tu cuenta. Sin trámites.
             </p>
           </div>
           <Link
-            href="/precios"
+            href="/unirse" /* antes /precios: planes desactivados por ahora */
             className="flex-shrink-0 inline-flex items-center justify-center rounded-full bg-[#1d1d1f] hover:bg-[#000000] px-[22px] py-[12px] text-[17px] font-normal text-white transition-colors duration-150"
           >
             Comenzar ahora

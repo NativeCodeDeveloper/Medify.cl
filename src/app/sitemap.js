@@ -22,7 +22,7 @@ export default async function sitemap() {
   const paginas = [
     { url: SITE_URL, changeFrequency: 'daily', priority: 1 },
     { url: `${SITE_URL}/unirse`, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${SITE_URL}/precios`, changeFrequency: 'monthly', priority: 0.6 },
+    // /precios fuera del sitemap mientras los planes estén desactivados (registro gratuito)
     { url: `${SITE_URL}/comoFunciona`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${SITE_URL}/sobreNosotros`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/contacto`, changeFrequency: 'monthly', priority: 0.5 },

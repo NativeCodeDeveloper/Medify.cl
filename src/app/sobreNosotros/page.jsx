@@ -4,22 +4,23 @@ import CarruselInfinito from "@/componentes/CarruselInfinito";
 import FadeInSection from "@/componentes/FadeInSection";
 import Link from "next/link";
 
+/* Solo promesas que Medify cumple hoy: no gestiona reservas ni pagos, no valida títulos automáticamente */
 const VALORES = [
   {
-    title: "Accesibilidad",
-    desc: "Cualquier persona en Chile debe poder encontrar al especialista que necesita, sin barreras de distancia ni burocracia.",
+    title: "Información clara",
+    desc: "Cada perfil muestra especialidad, servicios, valores, dirección y modalidad de atención. Eliges con datos, no a ciegas.",
   },
   {
-    title: "Confianza",
-    desc: "Cada profesional en Medify tiene credenciales verificadas. Los pacientes eligen con información real.",
+    title: "Contacto directo",
+    desc: "Agendas con el profesional en su propia agenda o le escribes por WhatsApp. Sin intermediarios y sin comisiones.",
   },
   {
-    title: "Simplicidad",
-    desc: "Reservar una hora médica debería ser tan fácil como pedir un taxi. Lo diseñamos así.",
+    title: "Perfiles revisados",
+    desc: "Nuestro equipo revisa cada perfil antes de publicarlo y retira los que no cumplen nuestras reglas.",
   },
   {
-    title: "Privacidad",
-    desc: "Los datos de pacientes y profesionales son tratados con los más altos estándares de seguridad.",
+    title: "Datos cuidados",
+    desc: "Pedimos solo lo necesario, no vendemos información y cada profesional puede eliminar su cuenta cuando quiera.",
   },
 ];
 
@@ -44,10 +45,10 @@ export default function SobreNosotros() {
             Nosotros
           </p>
           <h1 className="font-semibold text-white leading-[1.06] mb-5" style={{ fontSize: "clamp(2rem,5.5vw,3.5rem)", letterSpacing: "-0.035em" }}>
-            Conectando la salud de Chile.
+            Encontrar a tu profesional de salud no debería ser difícil.
           </h1>
           <p className="font-light leading-relaxed" style={{ fontSize: "17px", color: "rgba(255,255,255,0.4)" }}>
-            Somos el puente entre profesionales de salud y las personas que los necesitan, en cualquier rincón del país.
+            Medify reúne a profesionales de la salud, clínicas y centros médicos de todo Chile en un solo lugar, con la información que necesitas para elegir.
           </p>
         </div>
       </div>
@@ -62,7 +63,7 @@ export default function SobreNosotros() {
                 Quiénes somos
               </p>
               <p className="font-light text-[#424245] leading-relaxed mb-8" style={{ fontSize: "17px" }}>
-                Medify nació para cambiar la forma en que los chilenos acceden a los profesionales de salud. Somos un marketplace que conecta pacientes con psicólogos, kinesiólogos, médicos y más — sin burocracia, sin esperas, desde cualquier lugar.
+                Medify nace en Chile, del mismo equipo que creó Agenda Clínica. Lo hicimos porque encontrar un buen profesional todavía depende de recomendaciones sueltas, perfiles desactualizados y llamadas sin respuesta. En Medify cada perfil reúne lo que importa para decidir: especialidad, servicios y valores, dirección, modalidad de atención y la opinión de otros pacientes.
               </p>
 
               <div className="space-y-7">
@@ -71,7 +72,7 @@ export default function SobreNosotros() {
                     Misión
                   </h3>
                   <p className="font-light text-[#6e6e73] leading-relaxed" style={{ fontSize: "15px" }}>
-                    Democratizar el acceso a la salud en Chile, conectando a las personas con los profesionales que necesitan, donde y cuando lo necesiten.
+                    Que cualquier persona en Chile encuentre al profesional de salud indicado y pueda contactarlo directamente, sin intermediarios ni costos ocultos.
                   </p>
                 </div>
                 <div>
@@ -79,7 +80,7 @@ export default function SobreNosotros() {
                     Visión
                   </h3>
                   <p className="font-light text-[#6e6e73] leading-relaxed" style={{ fontSize: "15px" }}>
-                    Ser la plataforma de referencia en salud de Chile y Latinoamérica — donde cada persona encuentre al especialista indicado y cada profesional pueda crecer su práctica.
+                    Ser el lugar donde los chilenos buscan salud: un directorio confiable y al día, donde los buenos profesionales se hacen visibles por la calidad de su trabajo.
                   </p>
                 </div>
               </div>
@@ -90,9 +91,10 @@ export default function SobreNosotros() {
               <div className="relative w-full max-w-sm h-72 bg-[#f5f5f7] rounded-3xl overflow-hidden">
                 <Image
                   src="/logofavicom.png"
-                  alt="Medify en acción"
+                  alt="Logo de Medify"
                   fill
-                  className="object-cover"
+                  sizes="384px"
+                  className="object-contain bg-[#1f2129] p-10"
                 />
               </div>
             </div>
@@ -109,7 +111,7 @@ export default function SobreNosotros() {
                 Lo que nos guía
               </p>
               <h2 className="font-semibold text-[#1d1d1f] leading-[1.1]" style={{ fontSize: "clamp(1.6rem,3.5vw,2.4rem)", letterSpacing: "-0.025em" }}>
-                Los valores detrás de Medify.
+                Lo que puedes esperar de Medify.
               </h2>
             </div>
 
@@ -137,7 +139,7 @@ export default function SobreNosotros() {
               Especialidades
             </p>
             <h2 className="font-semibold text-[#1d1d1f] leading-[1.1]" style={{ fontSize: "clamp(1.6rem,3.5vw,2.4rem)", letterSpacing: "-0.025em" }}>
-              Un especialista para cada necesidad.
+              Profesionales de muchas áreas, en un solo lugar.
             </h2>
           </div>
           <CarruselInfinito especialidades={ESPECIALIDADES} />
@@ -149,10 +151,10 @@ export default function SobreNosotros() {
         <section className="bg-[#000000] px-6 py-[80px]">
           <div className="max-w-[600px] mx-auto text-center">
             <h2 className="font-semibold text-white mb-5" style={{ fontSize: "clamp(1.8rem,4vw,2.8rem)", letterSpacing: "-0.03em" }}>
-              ¿Listo para dar el siguiente paso?
+              ¿Buscas un profesional o eres uno?
             </h2>
             <p className="font-light leading-relaxed mb-10" style={{ fontSize: "17px", color: "rgba(255,255,255,0.45)" }}>
-              Ya sea que busques un especialista o quieras crecer tu práctica, Medify es el lugar.
+              Encuentra a quien necesitas en minutos, o crea gratis el perfil de tu consulta y haz que te encuentren.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
@@ -160,10 +162,11 @@ export default function SobreNosotros() {
                 className="inline-flex items-center justify-center rounded-full text-white transition-colors duration-150"
                 style={{ fontSize: "17px", fontWeight: 400, padding: "13px 28px", background: "#00C853" }}
               >
-                Buscar especialista
+                Buscar profesional
               </Link>
+              {/* Planes desactivados por ahora (registro gratuito). Antes: href="/precios", "Ver planes" */}
               <Link
-                href="/precios"
+                href="/unirse"
                 className="inline-flex items-center justify-center rounded-full text-white transition-all duration-150"
                 style={{
                   fontSize: "17px",
@@ -173,7 +176,7 @@ export default function SobreNosotros() {
                   background: "rgba(255,255,255,0.06)",
                 }}
               >
-                Ver planes
+                Crear mi perfil gratis
               </Link>
             </div>
           </div>

@@ -13,32 +13,35 @@ const FOOTER_LINKS = [
     heading: "Medify",
     items: [
       { label: "Cómo funciona", href: "/comoFunciona" },
-      { label: "Marketplace", href: "/" },
       { label: "Sobre nosotros", href: "/sobreNosotros" },
+      { label: "Contacto", href: "/contacto" },
     ],
   },
   {
     heading: "Profesionales",
     items: [
-      { label: "Ver planes", href: "/precios" },
-      { label: "Beneficios", href: "/beneficios" },
+      { label: "Unirme a Medify", href: "/unirse" },
+      { label: "Ingresar a mi cuenta", href: "/acceso" },
       { label: "Soporte", href: "/soporte" },
+      // Planes desactivados por ahora (registro gratuito). Al activar los pagos:
+      // { label: "Ver planes", href: "/precios" },
     ],
   },
   {
+    // Abren el marketplace ya filtrado (la portada lee ?q=). Usar especialidades que tengan perfiles
+    // publicados: un link que lleva a "Sin resultados" se ve abandonado.
     heading: "Especialidades",
     items: [
-      { label: "Psicología", href: "/" },
-      { label: "Kinesiología", href: "/" },
-      { label: "Nutrición", href: "/" },
-      { label: "Medicina General", href: "/" },
+      { label: "Psicología", href: "/?q=Psicología" },
+      { label: "Odontología", href: "/?q=Odontología" },
+      { label: "Podología", href: "/?q=Podología" },
+      { label: "Medicina estética", href: "/?q=Medicina estética" },
     ],
   },
   {
     heading: "Legal",
     items: [
-      { label: "Política de privacidad", href: "/politica" },
-      { label: "Contacto", href: "/contacto" },
+      { label: "Privacidad y términos", href: "/politica" },
     ],
   },
 ];
@@ -91,7 +94,7 @@ export default function Footer() {
                 className="h-4 w-auto object-contain"
               />
               <p className="text-[#6e6e73]" style={{ fontSize: "12px" }}>
-                Copyright © {new Date().getFullYear()} Medify.cl. Todos los derechos reservados.
+                © {new Date().getFullYear()} Medify. Todos los derechos reservados.
               </p>
             </div>
 
