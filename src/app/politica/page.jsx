@@ -1,383 +1,306 @@
 "use client";
 import { useState } from "react";
-import { Michroma, Space_Grotesk } from "next/font/google";
-import { ChevronDown, Shield, FileText, Lock } from "lucide-react";
+import Link from "next/link";
+import { Shield, FileText, Lock } from "lucide-react";
 
-const michroma = Michroma({ subsets: ["latin"], weight: "400", display: "swap" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "600", "700"], display: "swap" });
+/* Políticas de Medify. Describen lo que la plataforma hace hoy: directorio de profesionales y centros
+ * (no ficha clínica ni agendamiento propio). Si cambia el producto — pagos, nuevos proveedores,
+ * datos que se guardan — hay que actualizar este texto y la fecha. */
+const ACTUALIZADO = "26 de octubre de 2026";
+const CONTACTO = "ventas@medify.cl";
+
+const TABS = [
+  { id: "privacidad", label: "Privacidad", icon: Shield },
+  { id: "terminos", label: "Términos de uso", icon: FileText },
+  { id: "seguridad", label: "Seguridad", icon: Lock },
+];
+
+function Seccion({ titulo, children }) {
+  return (
+    <section className="border-t border-[#e5e5ea] pt-7 first:border-t-0 first:pt-0">
+      <h3 className="mb-3 font-semibold text-[#1d1d1f]" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>{titulo}</h3>
+      <div className="space-y-3 font-light leading-relaxed text-[#424245]" style={{ fontSize: "15px" }}>{children}</div>
+    </section>
+  );
+}
+
+function Lista({ items }) {
+  return (
+    <ul className="space-y-2">
+      {items.map((t) => (
+        <li key={t} className="flex gap-3">
+          <span className="mt-[9px] h-1 w-1 flex-shrink-0 rounded-full bg-[#86868b]" />
+          <span>{t}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Privacidad() {
+  return (
+    <>
+      <Seccion titulo="Quiénes somos">
+        <p>
+          Medify es un directorio en línea que permite a pacientes encontrar profesionales de la salud, clínicas y
+          centros médicos en Chile. Medify no presta atención de salud, no administra fichas clínicas y no gestiona
+          la reserva de horas: el agendamiento ocurre directamente con cada profesional, a través de su propia agenda
+          o de su WhatsApp.
+        </p>
+        <p>
+          Tratamos los datos personales conforme a la Ley N° 19.628 sobre Protección de la Vida Privada y, a medida
+          que entre en vigencia, a la Ley N° 21.719 sobre Protección de Datos Personales.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Qué datos recopilamos">
+        <p><strong className="font-medium text-[#1d1d1f]">Profesionales y centros que se registran:</strong></p>
+        <Lista items={[
+          "Nombre o razón social, RUT y correo electrónico.",
+          "Especialidad o categoría, región, comuna y dirección de la consulta (opcional para quienes atienden solo online).",
+          "WhatsApp, teléfono, link de agenda y redes sociales que decidan informar.",
+          "Presentación, servicios, valores, foto de perfil o logo.",
+        ]} />
+        <p>
+          La contraseña la administra nuestro proveedor de autenticación de forma cifrada. Medify no la ve ni la almacena.
+        </p>
+        <p><strong className="font-medium text-[#1d1d1f]">Pacientes que dejan una reseña:</strong> el nombre que escriban, la calificación y el comentario.</p>
+        <p>
+          <strong className="font-medium text-[#1d1d1f]">No recopilamos datos de salud.</strong> Medify no solicita ni guarda
+          diagnósticos, antecedentes clínicos ni información de previsión.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Para qué los usamos">
+        <Lista items={[
+          "Publicar el perfil de cada profesional o centro, una vez revisado por nuestro equipo.",
+          "Permitir que los pacientes encuentren y contacten al profesional que elijan.",
+          "Enviar correos del servicio: confirmación de registro y resultado de la revisión del perfil.",
+          "Moderar reseñas y prevenir usos abusivos o fraudulentos de la plataforma.",
+        ]} />
+        <p>No vendemos ni cedemos datos personales para publicidad.</p>
+      </Seccion>
+
+      <Seccion titulo="Qué información es pública">
+        <p>
+          Del perfil aprobado se muestran: nombre, especialidad, foto, presentación, servicios y valores, comuna,
+          dirección de la consulta, WhatsApp, link de agenda, redes sociales y reseñas. El RUT y el correo de acceso
+          no se publican.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Proveedores que nos ayudan a operar">
+        <p>Para funcionar usamos servicios de terceros que tratan datos solo por encargo de Medify:</p>
+        <Lista items={[
+          "Clerk: autenticación y resguardo de contraseñas.",
+          "Cloudflare: almacenamiento y entrega de fotos de perfil y logos.",
+          "Brevo: envío de correos del servicio.",
+          "Vercel: publicación del sitio web.",
+        ]} />
+        <p>Algunos de estos proveedores procesan datos fuera de Chile, con sus propias medidas de seguridad.</p>
+      </Seccion>
+
+      <Seccion titulo="Cookies">
+        <p>
+          Usamos únicamente lo necesario para mantener tu sesión iniciada en el panel de profesionales o de
+          administración. No usamos cookies de publicidad ni herramientas de seguimiento de terceros.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Cuánto tiempo los guardamos">
+        <p>
+          Mientras la cuenta esté activa. Si eliminas tu cuenta desde tu panel, borramos de inmediato tu perfil, tu
+          foto y tu acceso; tu perfil deja de mostrarse y ya no podrás iniciar sesión.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Tus derechos">
+        <p>Puedes acceder, rectificar, eliminar u oponerte al tratamiento de tus datos:</p>
+        <Lista items={[
+          "Profesionales y centros: editan o eliminan su información directamente desde su panel en Medify.",
+          `Cualquier persona, incluidos pacientes que dejaron una reseña: escribiendo a ${CONTACTO}.`,
+        ]} />
+        <p>Respondemos dentro de los plazos que establece la ley.</p>
+      </Seccion>
+    </>
+  );
+}
+
+function Terminos() {
+  return (
+    <>
+      <Seccion titulo="Qué es Medify">
+        <p>
+          Medify es un directorio que da visibilidad a profesionales de la salud, clínicas y centros médicos.
+          No es un prestador de salud, no participa en la atención y no cobra ni intermedia el pago de las consultas.
+        </p>
+        <p>
+          Medify no garantiza un número de pacientes, consultas ni reservas. La visibilidad de cada perfil depende,
+          entre otros factores, de las búsquedas que hagan los pacientes.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Registro y publicación">
+        <Lista items={[
+          "El registro es gratuito. Si en el futuro se incorporan planes de pago, se informarán antes y no se cobrará nada sin tu aceptación.",
+          "Cada perfil es revisado por nuestro equipo antes de publicarse. Medify puede solicitar antecedentes, rechazar una solicitud o desactivar un perfil que no cumpla estos términos.",
+          "Puedes eliminar tu cuenta cuando quieras desde tu panel.",
+        ]} />
+      </Seccion>
+
+      <Seccion titulo="Responsabilidades del profesional o centro">
+        <Lista items={[
+          "Entregar información veraz y mantenerla actualizada: identidad, especialidad, dirección, servicios y valores.",
+          "Contar con las habilitaciones legales para ejercer, incluida su inscripción en el Registro Nacional de Prestadores Individuales de Salud cuando corresponda.",
+          "Ser titular o tener autorización para usar la foto, el logo y los textos que publique.",
+          "Responder de la atención que preste a sus pacientes, que es de su exclusiva responsabilidad.",
+        ]} />
+      </Seccion>
+
+      <Seccion titulo="Reseñas">
+        <p>
+          Las reseñas deben reflejar experiencias reales. No se permiten contenidos ofensivos, discriminatorios,
+          falsos, publicitarios ni que revelen datos de salud de terceros. Medify puede ocultar las reseñas que no
+          cumplan estas reglas.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Uso no permitido">
+        <Lista items={[
+          "Suplantar a otra persona o institución.",
+          "Publicar información engañosa sobre servicios, títulos o resultados.",
+          "Intentar acceder a cuentas ajenas o vulnerar la seguridad de la plataforma.",
+          "Extraer datos de otros perfiles de forma automatizada.",
+        ]} />
+      </Seccion>
+
+      <Seccion titulo="Responsabilidad de Medify">
+        <p>
+          Medify procura que la plataforma funcione de forma continua y segura, pero no responde por la atención de
+          salud que presten los profesionales, ni por acuerdos, cobros o reservas que se realicen directamente entre
+          ellos y los pacientes.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Ley aplicable y cambios">
+        <p>
+          Estos términos se rigen por la ley chilena. Si los modificamos, publicaremos la nueva versión en esta página
+          con su fecha de actualización y, si el cambio es relevante, lo avisaremos por correo a las cuentas registradas.
+        </p>
+      </Seccion>
+    </>
+  );
+}
+
+function Seguridad() {
+  return (
+    <>
+      <Seccion titulo="Cómo protegemos la información">
+        <Lista items={[
+          "Toda la comunicación con Medify viaja cifrada (HTTPS).",
+          "Las contraseñas se resguardan cifradas en nuestro proveedor de autenticación, exigen al menos 15 caracteres y se rechazan las que aparecen en filtraciones conocidas.",
+          "Las sesiones expiran automáticamente y se invalidan de inmediato si una cuenta se desactiva o se elimina.",
+          "Limitamos los intentos de inicio de sesión para frenar ataques de fuerza bruta.",
+          "El panel de administración solo es accesible para el equipo autorizado de Medify.",
+          "Los datos que ingresas se validan antes de guardarse, y las imágenes se verifican antes de publicarse.",
+        ]} />
+      </Seccion>
+
+      <Seccion titulo="Acceso a los datos">
+        <p>
+          Solo el equipo de Medify que lo necesita para operar la plataforma accede a la información no pública,
+          como el RUT y el correo de acceso.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Si ocurre un incidente">
+        <p>
+          Si detectamos un incidente de seguridad que afecte datos personales, lo investigaremos, tomaremos las
+          medidas para contenerlo y avisaremos a las personas afectadas y a las autoridades cuando la ley lo exija.
+        </p>
+      </Seccion>
+
+      <Seccion titulo="Recomendaciones">
+        <Lista items={[
+          "Usa una contraseña única para Medify, que no uses en otros sitios.",
+          "Cierra sesión si usas un computador compartido.",
+          `Si notas actividad extraña en tu cuenta, escríbenos de inmediato a ${CONTACTO}.`,
+        ]} />
+      </Seccion>
+    </>
+  );
+}
 
 export default function PoliticaPage() {
-  const [activeTab, setActiveTab] = useState("privacidad");
-
-  const tabs = [
-    { id: "privacidad", label: "Privacidad", icon: Shield },
-    { id: "terminos", label: "Términos de Uso", icon: FileText },
-    { id: "seguridad", label: "Seguridad", icon: Lock },
-  ];
+  const [tab, setTab] = useState("privacidad");
+  const Contenido = { privacidad: Privacidad, terminos: Terminos, seguridad: Seguridad }[tab];
+  const titulo = {
+    privacidad: "Política de privacidad",
+    terminos: "Términos de uso",
+    seguridad: "Seguridad",
+  }[tab];
 
   return (
-    <div className="min-h-screen w-full relative bg-white text-neutral-900">
-      {/* Header */}
-      <div className="max-w-5xl mx-auto px-6 py-16 lg:py-24">
-        <div className="text-center mb-12">
-          <h1 className={`text-4xl lg:text-6xl font-bold tracking-tight text-neutral-900 mb-6 ${spaceGrotesk.className}`}>
-            <strong className="bg-gradient-to-r from-blue-400 to-teal-500 bg-clip-text text-transparent">
-              Políticas y Términos
-            </strong>
+    <div className="min-h-screen bg-[#f5f5f7]">
+      <div className="mx-auto max-w-[860px] px-5 pb-20 pt-16 sm:px-8 sm:pt-20">
+
+        <div className="mb-10 text-center">
+          <p className="mb-3 font-semibold uppercase text-[#6e6e73]" style={{ fontSize: "12px", letterSpacing: "0.08em" }}>
+            Legal
+          </p>
+          <h1 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "clamp(2rem,5vw,3rem)", letterSpacing: "-0.03em", lineHeight: 1.05 }}>
+            Políticas y términos
           </h1>
-          <p className="text-lg text-neutral-700 max-w-2xl mx-auto">
-            Transparencia y seguridad en cada detalle de nuestro servicio.
+          <p className="mx-auto mt-4 max-w-[520px] font-light text-[#6e6e73]" style={{ fontSize: "17px" }}>
+            Qué datos usamos, para qué y cómo los protegemos. Sin letra chica.
           </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? "bg-blue-500 text-white shadow-lg shadow-blue-500/50"
-                    : "bg-white border border-neutral-200 text-neutral-700 hover:border-blue-400 hover:text-blue-500"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                {tab.label}
+        {/* Control segmentado */}
+        <div className="mb-8 flex justify-center">
+          <div className="inline-flex rounded-full bg-[#e8e8ed] p-1" role="tablist">
+            {TABS.map(({ id, label, icon: Icon }) => (
+              <button key={id} role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 transition-all sm:px-5"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: tab === id ? 500 : 400,
+                  color: tab === id ? "#1d1d1f" : "#6e6e73",
+                  background: tab === id ? "#ffffff" : "transparent",
+                  boxShadow: tab === id ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
+                }}>
+                <Icon size={15} strokeWidth={1.8} />
+                <span className={tab === id ? "" : "hidden sm:inline"}>{label}</span>
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm p-8 lg:p-12">
-          {activeTab === "privacidad" && (
-            <div className="space-y-6">
-              <h2 className={`text-3xl font-bold text-neutral-900 mb-4 ${spaceGrotesk.className}`}>
-                Política de Privacidad y Protección de Datos Personales
-              </h2>
-              <p className="text-neutral-700 leading-relaxed">
-                En cumplimiento de la Ley N° 19.628 sobre Protección de la Vida Privada y la Ley N° 20.584 sobre Derechos 
-                y Deberes de los Pacientes, Medify se compromete a proteger sus datos personales y datos de salud con los 
-                más altos estándares de seguridad y confidencialidad.
-              </p>
-              
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Marco Legal</h3>
-                  <p className="text-neutral-700">
-                    Nuestro tratamiento de datos se rige por la Ley N° 19.628 sobre Protección de la Vida Privada, 
-                    la Ley N° 20.584 que regula los derechos y deberes de los pacientes, y el Decreto N° 41 del 
-                    Ministerio de Salud sobre ficha clínica electrónica.
-                  </p>
-                </div>
+        <article className="rounded-3xl bg-white p-7 shadow-[0_1px_3px_rgba(0,0,0,0.04)] sm:p-12">
+          <h2 className="font-semibold text-[#1d1d1f]" style={{ fontSize: "28px", letterSpacing: "-0.02em" }}>{titulo}</h2>
+          <p className="mb-9 mt-1 text-[#86868b]" style={{ fontSize: "13px" }}>Última actualización: {ACTUALIZADO}</p>
+          <div className="space-y-7">
+            <Contenido />
+          </div>
+        </article>
 
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Datos Recopilados</h3>
-                  <p className="text-neutral-700 mb-2">
-                    Recopilamos únicamente los datos necesarios para la prestación de servicios de salud:
-                  </p>
-                  <ul className="list-disc list-inside text-neutral-700 space-y-1 ml-4">
-                    <li>Datos de identificación personal (RUT, nombre, dirección, contacto)</li>
-                    <li>Datos de salud (ficha clínica, diagnósticos, tratamientos, exámenes)</li>
-                    <li>Datos de previsión y facturación (FONASA, ISAPRE, seguros)</li>
-                    <li>Datos de uso de la plataforma (accesos, agendamiento)</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Finalidad del Tratamiento</h3>
-                  <p className="text-neutral-700">
-                    Sus datos personales y de salud se utilizan exclusivamente para: gestión de agendamiento de citas 
-                    médicas, elaboración y mantención de ficha clínica electrónica, facturación y cobro de prestaciones, 
-                    cumplimiento de obligaciones legales sanitarias, y mejora de la calidad de atención. Jamás compartimos 
-                    información médica sin su consentimiento expreso o mandato legal.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Conservación de Datos</h3>
-                  <p className="text-neutral-700">
-                    En cumplimiento del artículo 15 de la Ley N° 20.584, las fichas clínicas y registros médicos se 
-                    conservan por un período mínimo de 15 años desde la última atención. Los datos administrativos se 
-                    mantienen según los plazos legales tributarios y contables vigentes.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Sus Derechos</h3>
-                  <p className="text-neutral-700 mb-2">
-                    De acuerdo a la legislación chilena, usted tiene derecho a:
-                  </p>
-                  <ul className="list-disc list-inside text-neutral-700 space-y-1 ml-4">
-                    <li>Acceder a sus datos personales y de salud</li>
-                    <li>Solicitar la rectificación de datos inexactos o desactualizados</li>
-                    <li>Cancelar datos que hayan sido tratados incorrectamente</li>
-                    <li>Oponerse al tratamiento de sus datos en casos específicos</li>
-                    <li>Obtener copia de su ficha clínica electrónica</li>
-                    <li>Conocer quién ha accedido a su información médica</li>
-                  </ul>
-                  <p className="text-neutral-700 mt-2">
-                    Para ejercer estos derechos, puede contactarnos a través de contacto@medify.cl o nuestros 
-                    canales oficiales de atención.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Consentimiento Informado</h3>
-                  <p className="text-neutral-700">
-                    El tratamiento de sus datos de salud requiere su consentimiento libre, informado y específico, 
-                    conforme a lo establecido en la Ley N° 20.584. Este consentimiento puede ser revocado en 
-                    cualquier momento, salvo cuando exista obligación legal de conservar la información.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "terminos" && (
-            <div className="space-y-6">
-              <h2 className={`text-3xl font-bold text-neutral-900 mb-4 ${spaceGrotesk.className}`}>
-                Términos y Condiciones de Uso
-              </h2>
-              <p className="text-neutral-700 leading-relaxed">
-                Al utilizar Medify, usted acepta los siguientes términos y condiciones que regulan el uso de nuestra 
-                plataforma en conformidad con la legislación chilena vigente.
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Naturaleza del Servicio</h3>
-                  <p className="text-neutral-700">
-                    Medify es una plataforma tecnológica que proporciona herramientas digitales de apoyo a la gestión 
-                    clínica y administrativa de profesionales e instituciones de salud, incluyendo: sistema de agendamiento 
-                    de citas médicas, ficha clínica electrónica conforme al Decreto N° 41/2012, gestión de pacientes y 
-                    prestaciones, sistema de facturación y cobro, y herramientas de telemedicina. Medify NO es un prestador 
-                    de servicios de salud ni sustituye la relación médico-paciente.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Usuarios de la Plataforma</h3>
-                  <p className="text-neutral-700 mb-2">
-                    Pueden utilizar Medify:
-                  </p>
-                  <ul className="list-disc list-inside text-neutral-700 space-y-1 ml-4">
-                    <li>Profesionales de la salud con título válido y registrado en la Superintendencia de Salud</li>
-                    <li>Instituciones de salud debidamente autorizadas (clínicas, centros médicos, consultas)</li>
-                    <li>Personal administrativo autorizado por los profesionales o instituciones</li>
-                    <li>Pacientes con cuentas creadas para acceso a sus propios datos</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Responsabilidades del Profesional de Salud</h3>
-                  <p className="text-neutral-700 mb-2">
-                    Los profesionales de salud que utilizan Medify se comprometen a:
-                  </p>
-                  <ul className="list-disc list-inside text-neutral-700 space-y-1 ml-4">
-                    <li>Contar con título profesional vigente y registro en Superintendencia de Salud</li>
-                    <li>Cumplir con el Código de Ética Profesional de su respectivo colegio profesional</li>
-                    <li>Mantener el secreto profesional conforme al artículo 134 del Código Sanitario</li>
-                    <li>Garantizar la veracidad y exactitud de la información clínica registrada</li>
-                    <li>Obtener consentimiento informado de pacientes según Ley N° 20.584</li>
-                    <li>Utilizar la plataforma exclusivamente para fines profesionales legítimos</li>
-                    <li>Mantener la confidencialidad de sus credenciales de acceso</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Responsabilidad Médica</h3>
-                  <p className="text-neutral-700">
-                    La responsabilidad por las decisiones clínicas, diagnósticos, tratamientos y atención médica recae 
-                    exclusivamente en el profesional de salud tratante, no en Medify. Nuestra plataforma es una herramienta 
-                    de apoyo administrativo y de registro, sin intervención en el acto médico. Los profesionales mantienen 
-                    total autonomía e independencia profesional en el ejercicio de su práctica clínica.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Uso Permitido</h3>
-                  <p className="text-neutral-700 mb-2">
-                    Se prohíbe expresamente:
-                  </p>
-                  <ul className="list-disc list-inside text-neutral-700 space-y-1 ml-4">
-                    <li>Compartir credenciales de acceso con terceros no autorizados</li>
-                    <li>Acceder a información de pacientes sin relación terapéutica justificada</li>
-                    <li>Modificar, alterar o falsificar registros clínicos</li>
-                    <li>Utilizar la plataforma para fines distintos a la atención de salud</li>
-                    <li>Realizar ingeniería inversa, descompilar o intentar acceder al código fuente</li>
-                    <li>Introducir malware, virus o código malicioso</li>
-                    <li>Realizar actividades que comprometan la seguridad del sistema</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Propiedad Intelectual</h3>
-                  <p className="text-neutral-700">
-                    Medify, su código fuente, diseño, interfaz, logotipos y contenidos están protegidos por derechos de 
-                    autor y propiedad intelectual. Los datos clínicos ingresados por los profesionales son de su propiedad, 
-                    manteniendo Medify solo derechos de almacenamiento y procesamiento conforme a estos términos. Los 
-                    pacientes conservan propiedad sobre sus datos personales y de salud.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Facturación y Pagos</h3>
-                  <p className="text-neutral-700">
-                    Los servicios de Medify se facturan conforme al plan contratado. Los profesionales/instituciones son 
-                    responsables de emitir boletas o facturas a sus pacientes conforme a la normativa tributaria chilena 
-                    (Ley sobre Impuesto a las Ventas y Servicios). Medify puede facilitar la emisión de documentos 
-                    tributarios electrónicos en convenio con proveedores certificados por el SII.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Suspensión y Terminación</h3>
-                  <p className="text-neutral-700">
-                    Medify se reserva el derecho de suspender o terminar el acceso a la plataforma en caso de: 
-                    incumplimiento de estos términos, uso fraudulento o ilegal, riesgo para la seguridad del sistema, 
-                    falta de pago de los servicios contratados, o solicitud de la autoridad sanitaria competente. 
-                    En caso de terminación, se garantiza acceso a los datos clínicos por el plazo legal de 15 años.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Limitaciones de Responsabilidad</h3>
-                  <p className="text-neutral-700">
-                    Medify no se hace responsable por: decisiones clínicas tomadas por profesionales de salud, 
-                    pérdida de ingresos o daños indirectos derivados del uso de la plataforma, interrupciones del 
-                    servicio por mantenimiento programado (notificado con anticipación), fallas atribuibles a 
-                    problemas de conectividad del usuario, o uso indebido de la plataforma por parte de usuarios. 
-                    Mantenemos disponibilidad de servicio superior al 99.5% anual.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Ley Aplicable y Jurisdicción</h3>
-                  <p className="text-neutral-700">
-                    Estos términos se rigen por las leyes de la República de Chile. Cualquier controversia será sometida 
-                    a la jurisdicción de los tribunales ordinarios de justicia de Santiago, renunciando las partes a 
-                    cualquier otro fuero que pudiere corresponderles.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Modificaciones</h3>
-                  <p className="text-neutral-700">
-                    Medify puede modificar estos términos previa notificación con 30 días de anticipación. El uso 
-                    continuado de la plataforma después de la fecha de vigencia de las modificaciones constituye 
-                    aceptación de los nuevos términos.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "seguridad" && (
-            <div className="space-y-6">
-              <h2 className={`text-3xl font-bold text-neutral-900 mb-4 ${spaceGrotesk.className}`}>
-                Políticas de Seguridad de la Información
-              </h2>
-              <p className="text-neutral-700 leading-relaxed">
-                En cumplimiento del Decreto N° 41 del MINSAL sobre Fichas Clínicas Electrónicas y la normativa de 
-                seguridad de datos de salud, implementamos medidas técnicas, físicas y administrativas para proteger 
-                su información médica y personal.
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Medidas Técnicas de Seguridad</h3>
-                  <p className="text-neutral-700 mb-2">
-                    Implementamos las siguientes medidas de seguridad informática:
-                  </p>
-                  <ul className="list-disc list-inside text-neutral-700 space-y-1 ml-4">
-                    <li>Cifrado de datos en tránsito mediante SSL/TLS 1.3</li>
-                    <li>Cifrado de datos en reposo con algoritmos AES-256</li>
-                    <li>Autenticación multifactor para acceso al sistema</li>
-                    <li>Control de acceso basado en roles (RBAC)</li>
-                    <li>Registro de auditoría de todos los accesos a fichas clínicas</li>
-                    <li>Firewalls y sistemas de detección de intrusiones (IDS/IPS)</li>
-                    <li>Actualizaciones de seguridad automáticas</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Ficha Clínica Electrónica</h3>
-                  <p className="text-neutral-700">
-                    Nuestra ficha clínica electrónica cumple con los requisitos del Decreto N° 41/2012 del MINSAL, 
-                    garantizando: integridad mediante firma electrónica avanzada, trazabilidad completa de todos los 
-                    accesos y modificaciones, confidencialidad mediante cifrado y control de acceso, disponibilidad 
-                    con respaldos automáticos cada 24 horas, y autenticidad con identificación única de cada profesional.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Respaldo y Recuperación</h3>
-                  <p className="text-neutral-700">
-                    Mantenemos copias de seguridad automatizadas diarias de toda la información, almacenadas en centros 
-                    de datos con certificación ISO 27001 ubicados en Chile. Los respaldos se conservan por el plazo 
-                    legal mínimo de 15 años. Contamos con planes de continuidad operacional y recuperación ante desastres 
-                    (DR/BCP) probados regularmente.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Secreto Profesional</h3>
-                  <p className="text-neutral-700">
-                    Todo el personal que tiene acceso a datos de salud está sujeto a obligaciones de confidencialidad 
-                    médica según lo establecido en el Código Sanitario (artículo 134) y la Ley N° 20.584. Nuestros 
-                    colaboradores firman acuerdos de confidencialidad y reciben capacitación periódica en protección 
-                    de datos de salud.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Auditorías y Certificaciones</h3>
-                  <p className="text-neutral-700">
-                    Realizamos auditorías de seguridad trimestrales, tanto internas como por terceros certificados. 
-                    Todos los accesos a fichas clínicas quedan registrados con fecha, hora, usuario y tipo de acción, 
-                    conforme a la normativa vigente. Los pacientes pueden solicitar el registro de accesos a su ficha 
-                    clínica en cualquier momento.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Notificación de Incidentes</h3>
-                  <p className="text-neutral-700">
-                    En caso de vulneración de seguridad que afecte datos personales o de salud, notificaremos a los 
-                    titulares afectados dentro de las 72 horas siguientes, informando la naturaleza del incidente, 
-                    los datos comprometidos y las medidas adoptadas, conforme a las mejores prácticas internacionales 
-                    y en coordinación con la autoridad sanitaria cuando corresponda.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-neutral-900 mb-2">Hosting y Localización de Datos</h3>
-                  <p className="text-neutral-700">
-                    Todos los datos de salud se almacenan en servidores ubicados físicamente en Chile, cumpliendo con 
-                    las recomendaciones de la Superintendencia de Salud sobre soberanía de datos médicos. No transferimos 
-                    información de salud fuera del territorio nacional sin autorización expresa del titular.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Contact Section */}
-        <div className="mt-12 text-center">
-          <p className="text-neutral-700 mb-4">
-            ¿Tienes preguntas sobre nuestras políticas?
+        <div className="mt-10 rounded-3xl bg-white p-7 text-center sm:p-9">
+          <p className="font-semibold text-[#1d1d1f]" style={{ fontSize: "17px" }}>¿Tienes dudas sobre tus datos?</p>
+          <p className="mt-1 font-light text-[#6e6e73]" style={{ fontSize: "15px" }}>
+            Escríbenos y te respondemos personalmente.
           </p>
-          <a
-            href="/contacto"
-            className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 shadow-lg shadow-blue-500/50 transition-all"
-          >
-            Contáctanos
-          </a>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <a href={`mailto:${CONTACTO}`}
+              className="rounded-full px-6 py-2.5 text-white transition-opacity hover:opacity-90"
+              style={{ fontSize: "14px", background: "#00C853" }}>
+              {CONTACTO}
+            </a>
+            <Link href="/contacto"
+              className="rounded-full border border-[#d2d2d7] px-6 py-2.5 text-[#1d1d1f] transition-colors hover:border-[#1d1d1f]"
+              style={{ fontSize: "14px" }}>
+              Contacto
+            </Link>
+          </div>
         </div>
       </div>
     </div>

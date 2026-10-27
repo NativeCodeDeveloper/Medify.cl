@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { apiFetch, guardarToken, mensajeDeError } from "@/lib/api";
+import { apiFetch, guardarToken, mensajeDeError, subirFoto } from "@/lib/api";
 import { ServiciosEditor, serviciosParaApi } from "@/componentes/PerfilCampos";
+import { sugerirCorreo } from "@/lib/correo";
 
 /* ─── Opciones ───────────────────────────────────────────────────── */
 /* ── Especialidades por categoría ── */
@@ -366,6 +367,7 @@ export default function UnirsePage() {
   };
 
   const rutValido = form.rut.length > 3 ? validateRUT(form.rut) : null;
+  const sugerenciaCorreo = sugerirCorreo(form.email); // "ana@gmil.com" → "ana@gmail.com"
   const passwordCorta = form.password.length > 0 && form.password.length < MIN_PASSWORD;
   const passwordMatch = form.password.length >= MIN_PASSWORD && form.password === form.confirmPassword;
   const passwordMismatch = form.confirmPassword && form.password !== form.confirmPassword;
@@ -392,7 +394,7 @@ export default function UnirsePage() {
     }
     if (step === 2) return true;
     // Sin link de Agenda Clínica el botón "Agendar" del perfil lleva a WhatsApp, por eso pasa a ser obligatorio
-    if (step === 3) return !!form.email && rutValido && passwordMatch && (agendaValida || !!form.whatsapp.trim());
+    if (step === 3) return !!form.email && !sugerenciaCorreo && rutValido && passwordMatch && (agendaValida || !!form.whatsapp.trim());
     return true;
   };
 
@@ -431,6 +433,13 @@ export default function UnirsePage() {
 
       const data = await apiFetch("/auth/registro", { method: "POST", body });
       guardarToken(data.token);
+      // La foto del paso 1 se sube recién ahora, con la sesión de la cuenta nueva. Si falla, la cuenta
+      // igual queda creada y la puede subir después desde su panel.
+      if (form.foto) {
+        await subirFoto("/auth/yo/foto", form.foto, "cuenta").catch(() => {
+          data.fotoPendiente = true;
+        });
+      }
       setRegistro(data);
     } catch (err) {
       setErrorEnvio(mensajeDeError(err));
@@ -596,7 +605,7 @@ export default function UnirsePage() {
                 />
               </label>
               <p className="mt-1.5 font-light text-[#6e6e73]" style={{ fontSize: "11px" }}>
-                JPG, PNG o WEBP · Máx 5 MB
+                JPG, PNG o WEBP
                 {/* TODO: upload a Cloudflare Images via POST /api/upload/image */}
               </p>
             </div>
@@ -830,7 +839,20 @@ export default function UnirsePage() {
       <div className="space-y-5">
         <div>
           <Label required>Email profesional</Label>
-          <Input type="email" placeholder="tu@email.com" value={form.email} onChange={e => set("email", e.target.value)} />
+          <Input type="email" placeholder="tu@email.com" value={form.email} onChange={e => set("email", e.target.value.trim())} />
+          {sugerenciaCorreo ? (
+            <p className="mt-1.5 text-[#1d1d1f]" style={{ fontSize: "12px" }}>
+              ¿Quisiste decir <strong>{sugerenciaCorreo}</strong>?{" "}
+              <button type="button" onClick={() => set("email", sugerenciaCorreo)}
+                className="font-medium text-[#00a344] underline underline-offset-2">
+                Usar este
+              </button>
+            </p>
+          ) : (
+            <p className="mt-1.5 font-light text-[#86868b]" style={{ fontSize: "12px" }}>
+              Aquí te llegarán la confirmación de registro y el aviso cuando tu perfil se publique. Revisa que esté bien escrito.
+            </p>
+          )}
         </div>
         <div>
           <Label required={!agendaValida}>WhatsApp (con código de país)</Label>
@@ -1085,6 +1107,11 @@ export default function UnirsePage() {
               <p className="font-semibold text-white mb-1" style={{ fontSize: "17px", letterSpacing: "-0.01em" }}>
                 ¡Tu cuenta está creada!
               </p>
+              {registro.fotoPendiente && (
+                <p className="mb-2 font-light" style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)" }}>
+                  No pudimos subir tu foto. Puedes agregarla desde tu panel.
+                </p>
+              )}
               <p className="font-light mb-6" style={{ fontSize: "14px", color: "rgba(255,255,255,0.55)" }}>
                 {registro.siguientePaso?.tipo === "pago"
                   ? "Confirma el pago para activar tu plan y publicar tu perfil."
@@ -1150,17 +1177,18 @@ export default function UnirsePage() {
               background: "linear-gradient(135deg,#00e676,#00C853)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
             }}>
-              Llega a más pacientes.
+              Haz visible tu consulta.
             </span>
           </h1>
           <p className="font-light leading-relaxed"
             style={{ fontSize: "17px", color: "rgba(255,255,255,0.4)" }}>
-            Profesionales verificados en todo Chile. {PLANES_HABILITADOS ? "Elige tu plan, completa" : "Crea tu cuenta gratis, completa"} tu perfil y empieza a recibir pacientes.
+            {/* Sin promesas de resultados (cantidad de pacientes o reservas): Medify da visibilidad, no garantiza demanda */}
+            {PLANES_HABILITADOS ? "Elige tu plan, crea tu perfil" : "Crea tu perfil gratis"}, muestra tus servicios y facilita que los pacientes te encuentren y agenden contigo.
           </p>
 
           {/* 3 bullets */}
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 mt-6">
-            {["Perfil activo en minutos", "Pacientes en todo Chile", "Sin contratos largos"].map(b => (
+            {["Registro gratuito", "Perfil revisado por nuestro equipo", "Sin contratos ni permanencia"].map(b => (
               <span key={b} className="flex items-center gap-2" style={{ fontSize: "13px", color: "rgba(255,255,255,0.45)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00C853]" />
                 {b}
