@@ -148,9 +148,10 @@ function Benefits() {
 
 /* ─── Estrellas de la tarjeta (mismo promedio que muestra el perfil) ─── */
 function Calificacion({ promedio, total }) {
-  if (total == null) return null; // resumen aún no cargado: no mostrar "sin reseñas" por error
+  // Resumen aún no cargado: se reserva el alto de la fila (para no mover la tarjeta) sin mostrar "sin reseñas" por error
+  if (total == null) return <div className="mt-1.5 h-[18px]" />;
   return (
-    <div className="mt-1.5 flex items-center gap-1.5" aria-label={total ? `${promedio} de 5 estrellas, ${total} reseña${total !== 1 ? "s" : ""}` : "Sin reseñas aún"}>
+    <div className="mt-1.5 flex h-[18px] items-center gap-1.5" aria-label={total ? `${promedio} de 5 estrellas, ${total} reseña${total !== 1 ? "s" : ""}` : "Sin reseñas aún"}>
       <div className="flex items-center gap-0.5" aria-hidden="true">
         {[1, 2, 3, 4, 5].map((n) => (
           <svg key={n} className="h-3.5 w-3.5" viewBox="0 0 20 20" fill={n <= Math.round(promedio) ? "#F59E0B" : "#E5E7EB"}>
@@ -181,11 +182,13 @@ function ProfessionalCard({ p }) {
         />
       </div>
       <div className="flex flex-1 flex-col p-5">
+        {/* Alturas fijas (especialidad 1 línea, nombre 2, dirección 2) para que estrellas, ubicación y botón
+         * queden alineados entre tarjetas sin importar el largo de cada texto */}
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#00a846]">{p.especialidad_principal}</p>
-            <h3 className="mt-1 flex items-center gap-2 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#1d1d1f]">
-              {p.nombre}
+          <div className="min-w-0">
+            <p className="truncate text-[11px] font-bold uppercase tracking-[0.12em] text-[#00a846]">{p.especialidad_principal}</p>
+            <h3 title={p.nombre} className="mt-1 flex min-h-[2.5em] items-start gap-2 text-[19px] font-semibold leading-tight tracking-[-0.025em] text-[#1d1d1f]">
+              <span className="line-clamp-2">{p.nombre}</span>
               {esProfesional && <BadgeCheck size={24} className="shrink-0 fill-[#00C853] text-white" />}
             </h3>
             <Calificacion promedio={p.calificacion} total={p.total_resenas} />
@@ -195,9 +198,9 @@ function ProfessionalCard({ p }) {
         <div className="mt-4 rounded-2xl bg-[#f6f7f6] p-3.5">
           <div className="flex items-start gap-2.5">
             <MapPin size={16} className="mt-0.5 shrink-0 text-[#00a846]" />
-            <div>
-              <p className="text-[12px] font-semibold text-[#1d1d1f]">{p.ciudad || p.ubicacion}</p>
-              <p className="mt-0.5 text-[11px] leading-4 text-[#6e6e73]">{p.direccion || p.ubicacion}</p>
+            <div className="min-w-0">
+              <p className="truncate text-[12px] font-semibold text-[#1d1d1f]">{p.ciudad || p.ubicacion}</p>
+              <p className="mt-0.5 line-clamp-2 min-h-8 text-[11px] leading-4 text-[#6e6e73]">{p.direccion || p.ubicacion}</p>
             </div>
           </div>
         </div>
